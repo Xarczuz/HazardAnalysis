@@ -1,4 +1,4 @@
-package Hazard.HazardAnalysis;
+package Hazard.HazardAnalysis.Views;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -9,6 +9,7 @@ public class StartView {
 		Text text = new Text();
 		text.setText("START VIEW");
 		grid.add(text, 1, 1);
+		//TODO
 		return grid;
 	}
 }

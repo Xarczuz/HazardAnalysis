@@ -1,4 +1,4 @@
-package Hazard.HazardAnalysis;
+package Hazard.HazardAnalysis.Views;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
