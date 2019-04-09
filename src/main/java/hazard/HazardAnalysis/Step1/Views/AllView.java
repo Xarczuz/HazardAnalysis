@@ -1,4 +1,4 @@
-package Hazard.HazardAnalysis.Views;
+package hazard.HazardAnalysis.Step1.Views;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -44,13 +44,14 @@ public class AllView {
 		grid.add(lv2, 1, 1);
 		grid.add(addButtonsToLists(lv2), 1, 2);
 
-		Text category3 = new Text("Relator");
-		category3.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(category3, 2, 0);
-		final ListView<String> lv3 = new ListView<String>();
-		lv3.setMinWidth(300);
-		grid.add(lv3, 2, 1);
-		grid.add(addButtonsToLists(lv3), 2, 2);
+		Text description = new Text("Description");
+		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		grid.add(description, 2, 0);
+		Text step1 = new Text("• SDF-Step 1: Identify the kind and role objects explicitly presented in the\n"
+				+ "  system description.");
+		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
+		step1.setWrappingWidth(400);
+		grid.add(step1, 2, 1);
 
 		return grid;
 	}

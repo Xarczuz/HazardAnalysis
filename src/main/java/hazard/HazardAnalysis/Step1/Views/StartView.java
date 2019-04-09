@@ -1,4 +1,4 @@
-package Hazard.HazardAnalysis.Views;
+package hazard.HazardAnalysis.Step1.Views;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;

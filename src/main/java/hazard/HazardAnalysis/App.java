@@ -1,6 +1,6 @@
-package Hazard.HazardAnalysis;
+package hazard.HazardAnalysis;
 
-import Hazard.HazardAnalysis.Views.MainView;
+import hazard.HazardAnalysis.Step1.Views.MainView;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -68,7 +68,6 @@ public class App extends Application {
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
 		border = av.view();
-
 		Scene scene = new Scene(border);
 
 		primaryStage.setScene(scene);

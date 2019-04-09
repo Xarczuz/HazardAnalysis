@@ -1,4 +1,4 @@
-package Hazard.HazardAnalysis.Views;
+package hazard.HazardAnalysis.Step1.Views;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -48,6 +48,7 @@ public class MainView {
 
 		Button btnLoad = new Button("Load");
 		btnLoad.setPrefSize(100, 20);
+		
 		Button btnSave = new Button("Save");
 		btnSave.setPrefSize(100, 20);
 
