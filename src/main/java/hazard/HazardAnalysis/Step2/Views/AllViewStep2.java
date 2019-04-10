@@ -100,6 +100,7 @@ public class AllViewStep2 {
 
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				AllViewStep3 av3 = new AllViewStep3(border, getGridPane());
 				getMainView().setCenter(av3.getGridPane());
@@ -111,6 +112,7 @@ public class AllViewStep2 {
 
 	private Button addEventToGoToPrevStep(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				getMainView().setCenter(getPrevGridPane());
 			}

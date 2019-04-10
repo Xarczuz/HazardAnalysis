@@ -72,6 +72,7 @@ public class  MainView {
 				new Hyperlink("ShutDown") };
 
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				border.setCenter(av.getGridPane());
 			}
@@ -79,6 +80,7 @@ public class  MainView {
 		options[0].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				border.setCenter(StartView.addGridPane());
 			}

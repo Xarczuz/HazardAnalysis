@@ -70,6 +70,7 @@ public class AllView {
 
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				AllViewStep2 av2 = new AllViewStep2(border, getGridPane());
 				getMainView().setCenter(av2.getGridPane());
@@ -86,12 +87,14 @@ public class AllView {
 		Button btnRemove = new Button();
 		btnRemove.setText("Remove");
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				lv.getItems().add("test");
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent e) {
 				if (lv.getItems().size() != 0)
 					lv.getItems().remove(lv.getItems().size() - 1);
