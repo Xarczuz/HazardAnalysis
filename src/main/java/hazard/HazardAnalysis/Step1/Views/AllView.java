@@ -71,7 +71,7 @@ public class AllView {
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				AllViewStep2 av2 = new AllViewStep2(border,getGridPane());
+				AllViewStep2 av2 = new AllViewStep2(border, getGridPane());
 				getMainView().setCenter(av2.getGridPane());
 			}
 		};

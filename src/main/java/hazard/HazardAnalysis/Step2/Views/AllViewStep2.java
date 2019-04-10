@@ -41,22 +41,20 @@ public class AllViewStep2 {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
 
-
-		
 		Text category = new Text("Kind");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
 		final ListView<String> lv = new ListView<String>();
 		lv.setMinWidth(300);
 		grid.add(lv, 0, 1);
-	
+
 		Text category2 = new Text("Roles");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
 		final ListView<String> lv2 = new ListView<String>();
 		lv2.setMinWidth(300);
 		lv2.setMaxHeight(200);
-		
+
 		Text category3 = new Text("Roles it can play    ");
 		category3.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		final ListView<String> lv3 = new ListView<String>();
@@ -66,23 +64,20 @@ public class AllViewStep2 {
 
 		gridRoles.add(category2, 0, 0);
 		gridRoles.add(lv2, 0, 1);
-		
+
 		Button btnAddLink = new Button("+");
 		Button btnRemoveLink = new Button("-");
 		GridPane gridTextAndBtn = new GridPane();
-		
-		
+
 		gridTextAndBtn.add(category3, 0, 0);
 		gridTextAndBtn.add(btnAddLink, 2, 0);
 		gridTextAndBtn.add(btnRemoveLink, 3, 0);
-		
+
 		gridRoles.add(gridTextAndBtn, 0, 2);
 		gridRoles.add(lv3, 0, 3);
-		
+
 		grid.add(gridRoles, 1, 1);
-		
-		
-		
+
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 2, 0);
@@ -94,7 +89,7 @@ public class AllViewStep2 {
 
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
-		
+
 		GridPane gridBtn = new GridPane();
 		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
@@ -102,10 +97,11 @@ public class AllViewStep2 {
 		grid.add(gridBtn, 2, 2);
 		return grid;
 	}
+
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				AllViewStep3 av3 = new AllViewStep3(border,getGridPane());
+				AllViewStep3 av3 = new AllViewStep3(border, getGridPane());
 				getMainView().setCenter(av3.getGridPane());
 			}
 		};
