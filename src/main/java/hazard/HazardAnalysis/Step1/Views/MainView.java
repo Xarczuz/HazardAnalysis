@@ -20,16 +20,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class MainView {
+public class  MainView {
 
 	BorderPane border = new BorderPane();
-	AllView av = new AllView();
+	AllView av = new AllView(border);
 
 	public BorderPane view() {
 
 		HBox hbox = addHBox();
 		border.setTop(hbox);
 		border.setLeft(addVBox());
+		
 		addStackPane(hbox); // Add stack to HBox in top region
 
 		border.setCenter(av.getGridPane());

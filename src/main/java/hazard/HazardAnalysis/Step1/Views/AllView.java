@@ -1,24 +1,32 @@
 package hazard.HazardAnalysis.Step1.Views;
 
+import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class AllView {
-	GridPane gp;
+	GridPane thisGp;
+	BorderPane border;
 
-	public AllView() {
-		this.gp = addGridPane();
+	public AllView(BorderPane border) {
+		this.thisGp = addGridPane();
+		this.border = border;
 	}
 
 	public GridPane getGridPane() {
-		return this.gp;
+		return this.thisGp;
+	}
+
+	public BorderPane getMainView() {
+		return this.border;
 	}
 
 	public GridPane addGridPane() {
@@ -53,7 +61,22 @@ public class AllView {
 		step1.setWrappingWidth(400);
 		grid.add(step1, 2, 1);
 
+		Button btnNextStep = new Button("Next Step");
+
+		grid.add(addNextStepEvent(btnNextStep), 2, 3);
+
 		return grid;
+	}
+
+	private Button addNextStepEvent(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				AllViewStep2 av2 = new AllViewStep2(border,getGridPane());
+				getMainView().setCenter(av2.getGridPane());
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
 	}
 
 	private GridPane addButtonsToLists(final ListView<String> lv) {
