@@ -56,7 +56,7 @@ public class AllView {
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 2, 0);
 		Text step1 = new Text("• SDF-Step 1: Identify the kind and role objects explicitly presented in the\n"
-				+ "  system description.");
+				+ "system description.");
 		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step1.setWrappingWidth(400);
 		grid.add(step1, 2, 1);
