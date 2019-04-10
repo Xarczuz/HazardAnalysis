@@ -1,10 +1,13 @@
 package hazard.HazardAnalysis.Step1.Views;
 
+import java.util.Optional;
+
 import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -15,10 +18,11 @@ import javafx.scene.text.Text;
 public class AllView {
 	GridPane thisGp;
 	BorderPane border;
-
+	AllViewStep2 av2;
 	public AllView(BorderPane border) {
 		this.thisGp = addGridPane();
 		this.border = border;
+		this.av2 = new AllViewStep2(border, getGridPane());
 	}
 
 	public GridPane getGridPane() {
@@ -41,8 +45,9 @@ public class AllView {
 		grid.add(category, 0, 0);
 		final ListView<String> lv = new ListView<String>();
 		lv.setMinWidth(300);
+
 		grid.add(lv, 0, 1);
-		grid.add(addButtonsToLists(lv), 0, 2);
+		grid.add(addButtonsToLists(lv, "Kind"), 0, 2);
 
 		Text category2 = new Text("Role");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -50,7 +55,7 @@ public class AllView {
 		final ListView<String> lv2 = new ListView<String>();
 		lv2.setMinWidth(300);
 		grid.add(lv2, 1, 1);
-		grid.add(addButtonsToLists(lv2), 1, 2);
+		grid.add(addButtonsToLists(lv2,"Role"), 1, 2);
 
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -72,7 +77,6 @@ public class AllView {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				AllViewStep2 av2 = new AllViewStep2(border, getGridPane());
 				getMainView().setCenter(av2.getGridPane());
 			}
 		};
@@ -80,7 +84,7 @@ public class AllView {
 		return btnNextStep;
 	}
 
-	private GridPane addButtonsToLists(final ListView<String> lv) {
+	private GridPane addButtonsToLists(final ListView<String> lv, String s) {
 
 		Button btnAdd = new Button();
 		btnAdd.setText("Add");
@@ -89,7 +93,19 @@ public class AllView {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				lv.getItems().add("test");
+				TextInputDialog dialog = new TextInputDialog("");
+
+				dialog.setTitle("Add");
+				dialog.setHeaderText("Enter new " + s);
+				dialog.setContentText(s + ":");
+
+				Optional<String> result = dialog.showAndWait();
+
+				if (result.isPresent()) {
+					lv.getItems().add(result.get());
+
+				}
+
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

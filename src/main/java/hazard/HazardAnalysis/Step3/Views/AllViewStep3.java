@@ -1,10 +1,13 @@
 package hazard.HazardAnalysis.Step3.Views;
 
+import java.util.Optional;
+
 import hazard.HazardAnalysis.Step4.Views.AllViewStep4;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -15,11 +18,13 @@ import javafx.scene.text.Text;
 public class AllViewStep3 {
 	GridPane thisGp, prevGp;
 	BorderPane border;
+	AllViewStep4 av4;
 
 	public AllViewStep3(BorderPane border, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.border = border;
+		this.av4 = new AllViewStep4(border, getGridPane());
 	}
 
 	public GridPane getGridPane() {
@@ -56,6 +61,26 @@ public class AllViewStep3 {
 		lv2.setMaxHeight(200);
 
 		Button btnAddLink1 = new Button("Add");
+
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				TextInputDialog dialog = new TextInputDialog("");
+
+				dialog.setTitle("Add Relator");
+				dialog.setHeaderText("Enter new relator");
+				dialog.setContentText("Relator:");
+
+				Optional<String> result = dialog.showAndWait();
+
+				if (result.isPresent()) {
+					lv2.getItems().add(result.get());
+				}
+
+			}
+		};
+		btnAddLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
 		Button btnRemoveLink1 = new Button("Remove");
 		GridPane gridTextAndBtn1 = new GridPane();
 
@@ -112,7 +137,6 @@ public class AllViewStep3 {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				AllViewStep4 av4 = new AllViewStep4(border, getGridPane());
 				getMainView().setCenter(av4.getGridPane());
 			}
 		};
@@ -120,14 +144,14 @@ public class AllViewStep3 {
 		return btnNextStep;
 	}
 
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
+	private Button addEventToGoToPrevStep(Button btnBack) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				getMainView().setCenter(getPrevGridPane());
 			}
 		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
+		btnBack.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnBack;
 	}
 }

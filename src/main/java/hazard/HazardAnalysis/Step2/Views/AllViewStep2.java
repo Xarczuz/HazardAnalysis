@@ -15,11 +15,13 @@ import javafx.scene.text.Text;
 public class AllViewStep2 {
 	GridPane thisGp, prevGp;
 	BorderPane border;
+	AllViewStep3 av3;
 
 	public AllViewStep2(BorderPane border, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.border = border;
+		this.av3 = new AllViewStep3(border, getGridPane());
 	}
 
 	public GridPane getGridPane() {
@@ -102,7 +104,7 @@ public class AllViewStep2 {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				AllViewStep3 av3 = new AllViewStep3(border, getGridPane());
+
 				getMainView().setCenter(av3.getGridPane());
 			}
 		};
