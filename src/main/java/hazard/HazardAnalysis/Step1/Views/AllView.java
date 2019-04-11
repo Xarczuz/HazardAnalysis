@@ -19,6 +19,7 @@ public class AllView {
 	GridPane thisGp;
 	BorderPane border;
 	AllViewStep2 av2;
+
 	public AllView(BorderPane border) {
 		this.thisGp = addGridPane();
 		this.border = border;
@@ -55,7 +56,7 @@ public class AllView {
 		final ListView<String> lv2 = new ListView<String>();
 		lv2.setMinWidth(300);
 		grid.add(lv2, 1, 1);
-		grid.add(addButtonsToLists(lv2,"Role"), 1, 2);
+		grid.add(addButtonsToLists(lv2, "Role"), 1, 2);
 
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -96,7 +97,7 @@ public class AllView {
 				TextInputDialog dialog = new TextInputDialog("");
 
 				dialog.setTitle("Add");
-				dialog.setHeaderText("Enter new " + s);
+				dialog.setHeaderText("Enter a new " + s);
 				dialog.setContentText(s + ":");
 
 				Optional<String> result = dialog.showAndWait();

@@ -68,7 +68,7 @@ public class AllViewStep3 {
 				TextInputDialog dialog = new TextInputDialog("");
 
 				dialog.setTitle("Add Relator");
-				dialog.setHeaderText("Enter new relator");
+				dialog.setHeaderText("Enter a new relator");
 				dialog.setContentText("Relator:");
 
 				Optional<String> result = dialog.showAndWait();

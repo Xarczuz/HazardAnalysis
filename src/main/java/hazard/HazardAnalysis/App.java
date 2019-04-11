@@ -1,5 +1,7 @@
 package hazard.HazardAnalysis;
 
+
+import hazard.HazardAnalysis.DataBase.CreateDataBase;
 import hazard.HazardAnalysis.Step1.Views.MainView;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -69,10 +71,11 @@ public class App extends Application {
 		MainView av = new MainView();
 		border = av.view();
 		Scene scene = new Scene(border);
-
+		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
+		CreateDataBase.createNewDatabase("test.db");
 	}
 
 	public static void main(String[] args) {
