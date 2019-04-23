@@ -2,6 +2,7 @@ package hazard.HazardAnalysis;
 
 
 import hazard.HazardAnalysis.DataBase.CreateDataBase;
+import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardAnalysis.Step1.Views.MainView;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -75,7 +76,13 @@ public class App extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
-		CreateDataBase.createNewDatabase("test.db");
+		//CreateDataBase.createNewDatabase("test.db");
+		CreateDataBase.createNewTable("test.db");
+		
+		DataBaseConnection.insert("kind","test");
+//		DataBaseConnection.delete("warehouses", 4);
+		
+		DataBaseConnection.selectAll();
 	}
 
 	public static void main(String[] args) {

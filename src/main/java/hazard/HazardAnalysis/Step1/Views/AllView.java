@@ -1,13 +1,20 @@
 package hazard.HazardAnalysis.Step1.Views;
 
+import java.util.List;
+import java.util.Observable;
 import java.util.Optional;
 
 import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
+import hazard.HazardClasses.Kind;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -34,6 +41,7 @@ public class AllView {
 		return this.border;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 
@@ -44,19 +52,29 @@ public class AllView {
 		Text category = new Text("Kind");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
-		final ListView<String> lv = new ListView<String>();
-		lv.setMinWidth(300);
+		final TableView<Kind> tb = new TableView<Kind>();
+		tb.setMinWidth(300);
+		TableColumn id = new TableColumn("ID");
+		TableColumn kind = new TableColumn("Kind");
+		id.setCellValueFactory(new PropertyValueFactory<Kind,Integer>("id"));
+		kind.setCellValueFactory(new PropertyValueFactory<Kind,String>("kind"));
+		
+		tb.getColumns().addAll(id, kind);
+		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 
-		grid.add(lv, 0, 1);
-		grid.add(addButtonsToLists(lv, "Kind"), 0, 2);
+		tb.setItems(kindList);
+
+
+		grid.add(tb, 0, 1);
+		grid.add(addButtonsToTable(tb, kindList, "Kind"), 0, 2);
 
 		Text category2 = new Text("Role");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 1, 0);
-		final ListView<String> lv2 = new ListView<String>();
-		lv2.setMinWidth(300);
-		grid.add(lv2, 1, 1);
-		grid.add(addButtonsToLists(lv2, "Role"), 1, 2);
+		final TableView tb2 = new TableView();
+		tb2.setMinWidth(300);
+		grid.add(tb2, 1, 1);
+//		grid.add(addButtonsToTable(tb2, "Role"), 1, 2);
 
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -85,7 +103,7 @@ public class AllView {
 		return btnNextStep;
 	}
 
-	private GridPane addButtonsToLists(final ListView<String> lv, String s) {
+	private GridPane addButtonsToTable(final TableView<Kind> tb, ObservableList<Kind> kindList, String s) {
 
 		Button btnAdd = new Button();
 		btnAdd.setText("Add");
@@ -103,18 +121,21 @@ public class AllView {
 				Optional<String> result = dialog.showAndWait();
 
 				if (result.isPresent()) {
-					lv.getItems().add(result.get());
+					Kind k = new Kind(result.get(), 1);
+
+					kindList.add(k);
 
 				}
 
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (lv.getItems().size() != 0)
-					lv.getItems().remove(lv.getItems().size() - 1);
+				if (tb.getItems().size() != 0)
+					tb.getItems().remove(tb.getItems().size() - 1);
 			}
 		};
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

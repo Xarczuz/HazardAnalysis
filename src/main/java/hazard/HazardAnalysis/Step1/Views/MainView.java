@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
 public class  MainView {
 
 	BorderPane border = new BorderPane();
-	AllView av = new AllView(border);
+	AllView allView = new AllView(border);
 
 	public BorderPane view() {
 
@@ -33,7 +33,7 @@ public class  MainView {
 		
 		addStackPane(hbox); // Add stack to HBox in top region
 
-		border.setCenter(av.getGridPane());
+		border.setCenter(allView.getGridPane());
 
 		return border;
 	}
@@ -74,7 +74,7 @@ public class  MainView {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(av.getGridPane());
+				border.setCenter(allView.getGridPane());
 			}
 		};
 		options[0].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
