@@ -1,11 +1,10 @@
 package hazard.HazardAnalysis.Step1.Views;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Optional;
-
+import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
+import java.util.Optional;
 import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -56,25 +55,33 @@ public class AllView {
 		tb.setMinWidth(300);
 		TableColumn id = new TableColumn("ID");
 		TableColumn kind = new TableColumn("Kind");
-		id.setCellValueFactory(new PropertyValueFactory<Kind,Integer>("id"));
-		kind.setCellValueFactory(new PropertyValueFactory<Kind,String>("kind"));
-		
+		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
+		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
+		kind.setMinWidth(200);
 		tb.getColumns().addAll(id, kind);
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
-
+		DataBaseConnection.selectAll("kind", kindList);
 		tb.setItems(kindList);
-
-
 		grid.add(tb, 0, 1);
 		grid.add(addButtonsToTable(tb, kindList, "Kind"), 0, 2);
 
 		Text category2 = new Text("Role");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 1, 0);
-		final TableView tb2 = new TableView();
+		final TableView<Role> tb2 = new TableView<Role>();
 		tb2.setMinWidth(300);
+		TableColumn id2 = new TableColumn("ID");
+		TableColumn role = new TableColumn("Role");
+		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
+		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
+		role.setMinWidth(200);
+		tb2.getColumns().addAll(id2, role);
+		ObservableList<Role> roleList = FXCollections.observableArrayList();
+		
+		DataBaseConnection.selectAll("role", roleList);
+		tb2.setItems(roleList);
 		grid.add(tb2, 1, 1);
-//		grid.add(addButtonsToTable(tb2, "Role"), 1, 2);
+		grid.add(addButtonsToTable(tb2, roleList, "Role"), 1, 2);
 
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -103,13 +110,14 @@ public class AllView {
 		return btnNextStep;
 	}
 
-	private GridPane addButtonsToTable(final TableView<Kind> tb, ObservableList<Kind> kindList, String s) {
+	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
 
 		Button btnAdd = new Button();
 		btnAdd.setText("Add");
 		Button btnRemove = new Button();
 		btnRemove.setText("Remove");
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(MouseEvent e) {
 				TextInputDialog dialog = new TextInputDialog("");
@@ -121,9 +129,17 @@ public class AllView {
 				Optional<String> result = dialog.showAndWait();
 
 				if (result.isPresent()) {
-					Kind k = new Kind(result.get(), 1);
+					if (s.contentEquals("Kind")) {
+						int id = DataBaseConnection.insert("kind", result.get());
+						Kind k = new Kind(id, result.get());
+						list.add((E) k);
 
-					kindList.add(k);
+					} else {
+						int id = DataBaseConnection.insert("role", result.get());
+						Role r = new Role(id, result.get());
+						list.add((E) r);
+
+					}
 
 				}
 

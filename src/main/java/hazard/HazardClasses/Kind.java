@@ -3,7 +3,7 @@ package hazard.HazardClasses;
 public class Kind {
 String kind;
 int id;
-public Kind(String kind, int id) {
+public Kind( int id,String kind) {
 	this.kind = kind;
 	this.id = id;
 }

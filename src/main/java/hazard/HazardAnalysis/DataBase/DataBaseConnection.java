@@ -7,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.Role;
+import javafx.collections.ObservableList;
+
 public class DataBaseConnection {
 	private static Connection connect() {
 		// SQLite connection string
@@ -20,8 +24,9 @@ public class DataBaseConnection {
 		return conn;
 	}
 
-	public static void selectAll() {
-		String sql = "SELECT id, name FROM kind";
+	@SuppressWarnings("unchecked")
+	public static <E> void selectAll(String table, ObservableList<E> list) {
+		String sql = "SELECT id, name FROM "+table;
 
 		try (Connection conn = connect();
 				Statement stmt = conn.createStatement();
@@ -29,37 +34,55 @@ public class DataBaseConnection {
 
 			// loop through the result set
 			while (rs.next()) {
-				System.out.println(rs.getInt("id") + "\t" + rs.getString("name"));
+				if(table.contentEquals("kind")) {
+					list.add((E) new Kind(rs.getInt("id"),rs.getString("name")));	
+				
+				}else {
+					list.add((E) new Role(rs.getInt("id"),rs.getString("name")));
+					System.out.println(rs.getInt("id")+rs.getString("name"));
+				
+				}
+				
 			}
+		
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	public static void insert(String table,String name) {
-		String sql = "INSERT INTO "+table+"(name) VALUES(?)";
+
+	public static int insert(String table, String name) {
+		String sql = "INSERT INTO " + table + "(name) VALUES(?)";
+
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.executeUpdate();
+			sql = "SELECT last_insert_rowid()";
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+
+			return rs.getInt(1);
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return -1;
+	}
+
+	public static void delete(String table, int id) {
+		String sql = "DELETE FROM " + table + " WHERE id = ?";
 
 		try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, name);
 
+			// set the corresponding param
+			pstmt.setInt(1, id);
+			// execute the delete statement
 			pstmt.executeUpdate();
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
-    public static void delete(String table,int id) {
-        String sql = "DELETE FROM "+table+" WHERE id = ?";
- 
-        try (Connection conn = connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
- 
-            // set the corresponding param
-            pstmt.setInt(1, id);
-            // execute the delete statement
-            pstmt.executeUpdate();
- 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }

@@ -34,10 +34,13 @@ public class CreateDataBase {
 		// SQL statement for creating a new table
 		String sql = "CREATE TABLE IF NOT EXISTS kind (\n" + "	id integer PRIMARY KEY,\n"
 				+ "	name text NOT NULL);";
+		String sql2 = "CREATE TABLE IF NOT EXISTS role (\n" + "	id integer PRIMARY KEY,\n"
+				+ "	name text NOT NULL);";
 
 		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
 			// create a new table
 			stmt.execute(sql);
+			stmt.execute(sql2);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

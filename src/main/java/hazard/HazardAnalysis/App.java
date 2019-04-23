@@ -76,13 +76,13 @@ public class App extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
-		//CreateDataBase.createNewDatabase("test.db");
-		CreateDataBase.createNewTable("test.db");
-		
-		DataBaseConnection.insert("kind","test");
+//		CreateDataBase.createNewDatabase("test.db");
+//		CreateDataBase.createNewTable("test.db");
+//		
+//		DataBaseConnection.insert("kind","test");
 //		DataBaseConnection.delete("warehouses", 4);
 		
-		DataBaseConnection.selectAll();
+//		DataBaseConnection.selectAll("Role",null);
 	}
 
 	public static void main(String[] args) {
