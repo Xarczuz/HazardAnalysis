@@ -1,6 +1,5 @@
 package hazard.HazardAnalysis;
 
-
 import hazard.HazardAnalysis.DataBase.CreateDataBase;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardAnalysis.Step1.Views.MainView;
@@ -54,6 +53,7 @@ import javafx.stage.Stage;
  * description for the UC01, as shown in Figure 3.5.
  *
  */
+
 public class App extends Application {
 
 	@Override
@@ -68,20 +68,22 @@ public class App extends Application {
 
 		primaryStage.setTitle("Hazard");
 
+		DataBaseConnection.setDatabase("test.db");
+		CreateDataBase.setDatabase("test.db");
+
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
 		border = av.view();
 		Scene scene = new Scene(border);
-		
+
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
-//		CreateDataBase.createNewDatabase("test.db");
-//		CreateDataBase.createNewTable("test.db");
-//		
+//		CreateDataBase.createNewDatabase();
+//		CreateDataBase.createNewTable();
 //		DataBaseConnection.insert("kind","test");
-//		DataBaseConnection.delete("warehouses", 4);
-		
+//		DataBaseConnection.delete("kind", 4);
+
 //		DataBaseConnection.selectAll("Role",null);
 	}
 

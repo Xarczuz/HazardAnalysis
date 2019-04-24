@@ -1,20 +1,19 @@
 package hazard.HazardClasses;
 
-public class Role {
-	int id;
+public class Role extends Hazard{
 	String role;
 
 	public Role(int id, String role) {
-		this.id = id;
+		super(id);
 		this.role = role;
 	}
 
 	public int getId() {
-		return id;
+		return super.getId();
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		super.setId(id);
 	}
 
 	public String getRole() {

@@ -1,22 +1,26 @@
 package hazard.HazardClasses;
 
-public class Kind {
-String kind;
-int id;
-public Kind( int id,String kind) {
-	this.kind = kind;
-	this.id = id;
-}
-public String getKind() {
-	return kind;
-}
-public void setKind(String kind) {
-	this.kind = kind;
-}
-public int getId() {
-	return id;
-}
-public void setId(int id) {
-	this.id = id;
-}
+public class Kind extends Hazard {
+	String kind;
+
+	public Kind(int id, String kind) {
+		super(id);
+		this.kind = kind;
+	}
+
+	public int getId() {
+		return super.getId();
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setId(int id) {
+		super.setId(id);
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
 }

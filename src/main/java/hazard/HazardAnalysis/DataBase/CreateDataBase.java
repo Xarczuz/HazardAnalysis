@@ -12,9 +12,11 @@ import java.sql.Statement;
  *
  */
 public class CreateDataBase {
-	public static void createNewDatabase(String fileName) {
+	private static String database;
 
-		String url = "jdbc:sqlite:" + fileName;
+	public static void createNewDatabase() {
+
+		String url = "jdbc:sqlite:" + database;
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
@@ -27,15 +29,13 @@ public class CreateDataBase {
 		}
 	}
 
-	public static void createNewTable(String fileName) {
+	public static void createNewTable() {
 		// SQLite connection string
-		String url = "jdbc:sqlite:" + fileName;
+		String url = "jdbc:sqlite:" + database;
 
 		// SQL statement for creating a new table
-		String sql = "CREATE TABLE IF NOT EXISTS kind (\n" + "	id integer PRIMARY KEY,\n"
-				+ "	name text NOT NULL);";
-		String sql2 = "CREATE TABLE IF NOT EXISTS role (\n" + "	id integer PRIMARY KEY,\n"
-				+ "	name text NOT NULL);";
+		String sql = "CREATE TABLE IF NOT EXISTS kind (\n" + "	id integer PRIMARY KEY,\n" + "	name text NOT NULL);";
+		String sql2 = "CREATE TABLE IF NOT EXISTS role (\n" + "	id integer PRIMARY KEY,\n" + "	name text NOT NULL);";
 
 		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
 			// create a new table
@@ -44,5 +44,13 @@ public class CreateDataBase {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public static String getDatabase() {
+		return database;
+	}
+
+	public static void setDatabase(String database) {
+		CreateDataBase.database = database;
 	}
 }

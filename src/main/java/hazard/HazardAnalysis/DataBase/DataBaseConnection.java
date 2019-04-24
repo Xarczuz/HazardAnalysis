@@ -12,9 +12,12 @@ import hazard.HazardClasses.Role;
 import javafx.collections.ObservableList;
 
 public class DataBaseConnection {
+
+	private static String database;
+
 	private static Connection connect() {
 		// SQLite connection string
-		String url = "jdbc:sqlite:test.db";
+		String url = "jdbc:sqlite:" + database;
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(url);
@@ -26,7 +29,7 @@ public class DataBaseConnection {
 
 	@SuppressWarnings("unchecked")
 	public static <E> void selectAll(String table, ObservableList<E> list) {
-		String sql = "SELECT id, name FROM "+table;
+		String sql = "SELECT id, name FROM " + table;
 
 		try (Connection conn = connect();
 				Statement stmt = conn.createStatement();
@@ -34,24 +37,23 @@ public class DataBaseConnection {
 
 			// loop through the result set
 			while (rs.next()) {
-				if(table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"),rs.getString("name")));	
-				
-				}else {
-					list.add((E) new Role(rs.getInt("id"),rs.getString("name")));
-					System.out.println(rs.getInt("id")+rs.getString("name"));
-				
+				if (table.contentEquals("kind")) {
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
+
+				} else {
+					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
+					System.out.println(rs.getInt("id") + rs.getString("name"));
+
 				}
-				
+
 			}
-		
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-
-	public static int insert(String table, String name) {
+	public static void insert(String table, String name) {
 		String sql = "INSERT INTO " + table + "(name) VALUES(?)";
 
 		try {
@@ -59,16 +61,11 @@ public class DataBaseConnection {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, name);
 			pstmt.executeUpdate();
-			sql = "SELECT last_insert_rowid()";
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-
-			return rs.getInt(1);
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		return -1;
+
 	}
 
 	public static void delete(String table, int id) {
@@ -84,5 +81,13 @@ public class DataBaseConnection {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public static String getDatabase() {
+		return database;
+	}
+
+	public static void setDatabase(String database) {
+		DataBaseConnection.database = database;
 	}
 }

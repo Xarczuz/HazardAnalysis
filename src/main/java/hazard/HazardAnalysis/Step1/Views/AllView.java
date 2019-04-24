@@ -3,6 +3,8 @@ package hazard.HazardAnalysis.Step1.Views;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
 import java.util.Optional;
+
+import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.Kind;
 import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
@@ -40,7 +42,8 @@ public class AllView {
 		return this.border;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
+	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 
@@ -51,37 +54,38 @@ public class AllView {
 		Text category = new Text("Kind");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
-		final TableView<Kind> tb = new TableView<Kind>();
-		tb.setMinWidth(300);
-		TableColumn id = new TableColumn("ID");
-		TableColumn kind = new TableColumn("Kind");
+		final TableView<Kind> tbKind = new TableView<Kind>();
+		tbKind.setMinWidth(300);
+		TableColumn<Kind, Integer> id = new TableColumn<Kind, Integer>("ID");
+		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
 		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
 		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
 		kind.setMinWidth(200);
-		tb.getColumns().addAll(id, kind);
+		tbKind.getColumns().addAll(id, kind);
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
-		tb.setItems(kindList);
-		grid.add(tb, 0, 1);
-		grid.add(addButtonsToTable(tb, kindList, "Kind"), 0, 2);
+		tbKind.setItems(kindList);
+		addReturnIDEvent(tbKind);
+		grid.add(tbKind, 0, 1);
+		grid.add(addButtonsToTable(tbKind, kindList, "Kind"), 0, 2);
 
 		Text category2 = new Text("Role");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 1, 0);
-		final TableView<Role> tb2 = new TableView<Role>();
-		tb2.setMinWidth(300);
-		TableColumn id2 = new TableColumn("ID");
-		TableColumn role = new TableColumn("Role");
+		final TableView<Role> tbRole = new TableView<Role>();
+		tbRole.setMinWidth(300);
+		TableColumn<Role, Integer> id2 = new TableColumn<Role, Integer>("ID");
+		TableColumn<Role, String> role = new TableColumn<Role, String>("Role");
 		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
 		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
 		role.setMinWidth(200);
-		tb2.getColumns().addAll(id2, role);
+		tbRole.getColumns().addAll(id2, role);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
-		
+
 		DataBaseConnection.selectAll("role", roleList);
-		tb2.setItems(roleList);
-		grid.add(tb2, 1, 1);
-		grid.add(addButtonsToTable(tb2, roleList, "Role"), 1, 2);
+		tbRole.setItems(roleList);
+		grid.add(tbRole, 1, 1);
+		grid.add(addButtonsToTable(tbRole, roleList, "Role"), 1, 2);
 
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -93,7 +97,6 @@ public class AllView {
 		grid.add(step1, 2, 1);
 
 		Button btnNextStep = new Button("Next Step");
-
 		grid.add(addNextStepEvent(btnNextStep), 2, 3);
 
 		return grid;
@@ -110,6 +113,17 @@ public class AllView {
 		return btnNextStep;
 	}
 
+	private <E> void addReturnIDEvent(TableView<E> tb) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+
+			}
+		};
+		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+	}
+
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
 
 		Button btnAdd = new Button();
@@ -117,7 +131,7 @@ public class AllView {
 		Button btnRemove = new Button();
 		btnRemove.setText("Remove");
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@SuppressWarnings("unchecked")
+			
 			@Override
 			public void handle(MouseEvent e) {
 				TextInputDialog dialog = new TextInputDialog("");
@@ -129,18 +143,9 @@ public class AllView {
 				Optional<String> result = dialog.showAndWait();
 
 				if (result.isPresent()) {
-					if (s.contentEquals("Kind")) {
-						int id = DataBaseConnection.insert("kind", result.get());
-						Kind k = new Kind(id, result.get());
-						list.add((E) k);
-
-					} else {
-						int id = DataBaseConnection.insert("role", result.get());
-						Role r = new Role(id, result.get());
-						list.add((E) r);
-
-					}
-
+					DataBaseConnection.insert(s.toLowerCase(), result.get());
+					list.clear();
+					DataBaseConnection.selectAll(s.toLowerCase(), list);
 				}
 
 			}
@@ -150,8 +155,17 @@ public class AllView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (tb.getItems().size() != 0)
-					tb.getItems().remove(tb.getItems().size() - 1);
+				if (tb.getItems().size() != 0 ) {
+					int index = tb.getSelectionModel().selectedIndexProperty().get();
+					if(index!=-1) {
+						Hazard o = (Hazard) tb.getItems().remove(index);
+						
+						DataBaseConnection.delete(s, o.getId());
+						
+					}
+				}
+
+
 			}
 		};
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
