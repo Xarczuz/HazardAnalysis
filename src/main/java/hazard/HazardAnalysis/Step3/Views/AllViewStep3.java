@@ -1,13 +1,16 @@
 package hazard.HazardAnalysis.Step3.Views;
 
-import java.util.Optional;
-
 import hazard.HazardAnalysis.Step4.Views.AllViewStep4;
+import hazard.HazardClasses.Role;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -39,6 +42,7 @@ public class AllViewStep3 {
 		return this.border;
 	}
 
+	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 
@@ -49,9 +53,20 @@ public class AllViewStep3 {
 		Text category = new Text("Roles");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
-		final ListView<String> lv = new ListView<String>();
-		lv.setMinWidth(300);
-		grid.add(lv, 0, 1);
+
+		final TableView<Role> tbRole = new TableView<Role>();
+		tbRole.setMinWidth(300);
+		
+		TableColumn<Role, Integer> id2 = new TableColumn<Role, Integer>("ID");
+		TableColumn<Role, String> role = new TableColumn<Role, String>("Role");
+		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
+		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
+		role.setMinWidth(200);
+		tbRole.getColumns().addAll(id2, role);
+		ObservableList<Role> roleList = FXCollections.observableArrayList();
+		// DataBaseConnection.selectAll("role", roleList);
+		tbRole.setItems(roleList);
+		grid.add(tbRole, 0, 1);
 
 		Text category2 = new Text("Relators ");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -62,24 +77,24 @@ public class AllViewStep3 {
 
 		Button btnAddLink1 = new Button("Add");
 
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				TextInputDialog dialog = new TextInputDialog("");
-
-				dialog.setTitle("Add Relator");
-				dialog.setHeaderText("Enter a new relator");
-				dialog.setContentText("Relator:");
-
-				Optional<String> result = dialog.showAndWait();
-
-				if (result.isPresent()) {
-					lv2.getItems().add(result.get());
-				}
-
-			}
-		};
-		btnAddLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+//		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+//			@Override
+//			public void handle(MouseEvent e) {
+//				TextInputDialog dialog = new TextInputDialog("");
+//
+//				dialog.setTitle("Add Relator");
+//				dialog.setHeaderText("Enter a new relator");
+//				dialog.setContentText("Relator:");
+//
+//				Optional<String> result = dialog.showAndWait();
+//
+//				if (result.isPresent()) {
+//					lv2.getItems().add(result.get());
+//				}
+//
+//			}
+//		};
+//		btnAddLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 		Button btnRemoveLink1 = new Button("Remove");
 		GridPane gridTextAndBtn1 = new GridPane();
@@ -98,8 +113,8 @@ public class AllViewStep3 {
 		lv3.setMinWidth(300);
 		lv3.setMaxHeight(200);
 
-		Button btnAddLink = new Button("Link");
-		Button btnRemoveLink = new Button("Unlink");
+		Button btnAddLink = new Button("+");
+		Button btnRemoveLink = new Button("-");
 		GridPane gridTextAndBtn2 = new GridPane();
 
 		gridTextAndBtn2.add(category3, 0, 0);

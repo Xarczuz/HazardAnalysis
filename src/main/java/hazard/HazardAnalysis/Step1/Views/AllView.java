@@ -133,6 +133,7 @@ public class AllView {
 					DataBaseConnection.insert(s.toLowerCase(), result.get());
 					list.clear();
 					DataBaseConnection.selectAll(s.toLowerCase(), list);
+					av2.updateTbKind();
 				}
 			}
 		};

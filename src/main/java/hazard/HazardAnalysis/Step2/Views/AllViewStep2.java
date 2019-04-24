@@ -43,6 +43,7 @@ public class AllViewStep2 {
 		return this.border;
 	}
 
+	ObservableList<Kind> kindList = FXCollections.observableArrayList();
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
@@ -63,9 +64,9 @@ public class AllViewStep2 {
 		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
 		kind.setMinWidth(200);
 		tbKind.getColumns().addAll(id, kind);
-		ObservableList<Kind> kindList = FXCollections.observableArrayList();
+		
 		DataBaseConnection.selectAll("kind", kindList);
-	
+
 		tbKind.setItems(kindList);
 		grid.add(tbKind, 0, 1);
 
@@ -82,10 +83,10 @@ public class AllViewStep2 {
 		role.setMinWidth(200);
 		tbRole.getColumns().addAll(id2, role);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
-		//DataBaseConnection.selectAll("role", roleList);
+		// DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
-		//addClickEvent(tbRole);
-		
+		// addClickEvent(tbRole);
+
 		GridPane gridRoles = new GridPane();
 		gridRoles.add(category2, 0, 0);
 		gridRoles.add(tbRole, 0, 1);
@@ -103,12 +104,15 @@ public class AllViewStep2 {
 		role2.setMinWidth(200);
 		tbRoleToPlay.getColumns().addAll(id3, role2);
 		ObservableList<Role> roleToPlayList = FXCollections.observableArrayList();
-		//DataBaseConnection.selectAll("role", roleToPlayList);
+		// DataBaseConnection.selectAll("role", roleToPlayList);
+
 		tbRoleToPlay.setItems(roleToPlayList);
-		//addClickEvent(tbRoleToPlay);
-		
+		// addClickEvent(tbRoleToPlay);
+
 		Button btnAddLink = new Button("+");
+		addLinkEvent(btnAddLink, tbRole, tbKind, roleToPlayList);
 		Button btnRemoveLink = new Button("-");
+		addRemoveLinkEvent(btnRemoveLink, roleList, tbKind, tbRoleToPlay);
 		GridPane gridTextAndBtn = new GridPane();
 
 		gridTextAndBtn.add(category3, 0, 0);
@@ -137,27 +141,72 @@ public class AllViewStep2 {
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
 
 		grid.add(gridBtn, 2, 2);
-		
-		addClickEventToKindTable(tbKind,roleList);
-		
+
+		addClickEventToKindTable(tbKind, roleList, roleToPlayList);
+
 		return grid;
 	}
-	private void addClickEventToKindTable(TableView<Kind> tb, ObservableList<Role> roleList) {
+
+	private void addClickEventToKindTable(TableView<Kind> tb, ObservableList<Role> roleList,
+			ObservableList<Role> roleToPlayList) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				int index = tb.getSelectionModel().selectedIndexProperty().get();
-				System.out.println(index);
-				DataBaseConnection.sql("Select * from role;", "role", roleList);
+				int id = tb.getItems().get(index).getId();
+
+				DataBaseConnection.sql(
+						"SELECT * FROM role WHERE NOT EXISTS(SELECT * FROM roletoplay WHERE role.id=roletoplay.roleid AND "
+								+ id + "=roletoplay.kindid);",
+						"role", roleList);
+				DataBaseConnection.sql("SELECT * FROM roletoplay WHERE kindid=" + id + ";", "roletoplay",
+						roleToPlayList);
 			}
 		};
 		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private void addLinkEvent(Button btnAddLink, TableView<Role> tbRole, TableView<Kind> tbKind,
+			ObservableList<Role> roleToPlayList) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int roleIndex = tbRole.getSelectionModel().selectedIndexProperty().get();
+				int kindIndex = tbKind.getSelectionModel().selectedIndexProperty().get();
+				if (roleIndex >= 0 && kindIndex >= 0) {
+					Role r = tbRole.getItems().remove(roleIndex);
+					Kind k = tbKind.getItems().get(kindIndex);
+					DataBaseConnection.insert("INSERT INTO roletoplay (role,roleid,kind,kindid) VALUES('" + r.getRole()
+							+ "'," + r.getId() + ",'" + k.getKind() + "'," + k.getId() + ")");
+					roleToPlayList.add(r);
+				}
+
+			}
+		};
+		btnAddLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private void addRemoveLinkEvent(Button btnRemoveLink, ObservableList<Role> tbRole, TableView<Kind> tbKind,
+			TableView<Role> tbRoleToPlay) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int tbRoleToPlayIndex = tbRoleToPlay.getSelectionModel().selectedIndexProperty().get();
+				int kindIndex = tbKind.getSelectionModel().selectedIndexProperty().get();
+				if (tbRoleToPlayIndex >= 0 && kindIndex >= 0) {
+					Role r = tbRoleToPlay.getItems().remove(tbRoleToPlayIndex);
+					Kind k = tbKind.getItems().get(kindIndex);
+					DataBaseConnection.deleteARoleToPlay("roletoplay", String.valueOf(r.getId()), String.valueOf(k.getId()));
+					tbRole.add(r);
+				}
+			}
+		};
+		btnRemoveLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-
 				getMainView().setCenter(av3.getGridPane());
 			}
 		};
@@ -174,5 +223,10 @@ public class AllViewStep2 {
 		};
 		btnPrevStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		return btnPrevStep;
+	}
+
+	public void updateTbKind() {
+		
+		DataBaseConnection.selectAll("kind", kindList);
 	}
 }

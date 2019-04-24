@@ -71,7 +71,7 @@ public class App extends Application {
 		DataBaseConnection.setDatabase("test.db");
 		CreateDataBase.setDatabase("test.db");
 //		CreateDataBase.createNewDatabase();
-//		CreateDataBase.createNewTable();
+		CreateDataBase.createNewTable();
 
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
@@ -81,7 +81,7 @@ public class App extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
-//		DataBaseConnection.insert("kind","test");
+	//DataBaseConnection.insert("INSERT INTO roletoplay (kind,role,roleid,kindid) VALUES('eg','eg',1,1)");
 //		DataBaseConnection.delete("kind", 4);
 
 //		DataBaseConnection.selectAll("Role",null);
