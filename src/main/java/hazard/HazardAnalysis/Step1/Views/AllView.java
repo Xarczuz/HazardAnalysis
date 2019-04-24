@@ -65,7 +65,7 @@ public class AllView {
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
 		tbKind.setItems(kindList);
-		addReturnIDEvent(tbKind);
+	
 		grid.add(tbKind, 0, 1);
 		grid.add(addButtonsToTable(tbKind, kindList, "Kind"), 0, 2);
 
@@ -113,16 +113,7 @@ public class AllView {
 		return btnNextStep;
 	}
 
-	private <E> void addReturnIDEvent(TableView<E> tb) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
 
-			}
-		};
-		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-	}
 
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
 
@@ -131,23 +122,18 @@ public class AllView {
 		Button btnRemove = new Button();
 		btnRemove.setText("Remove");
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			
 			@Override
 			public void handle(MouseEvent e) {
 				TextInputDialog dialog = new TextInputDialog("");
-
 				dialog.setTitle("Add");
 				dialog.setHeaderText("Enter a new " + s);
 				dialog.setContentText(s + ":");
-
 				Optional<String> result = dialog.showAndWait();
-
 				if (result.isPresent()) {
 					DataBaseConnection.insert(s.toLowerCase(), result.get());
 					list.clear();
 					DataBaseConnection.selectAll(s.toLowerCase(), list);
 				}
-
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -159,13 +145,9 @@ public class AllView {
 					int index = tb.getSelectionModel().selectedIndexProperty().get();
 					if(index!=-1) {
 						Hazard o = (Hazard) tb.getItems().remove(index);
-						
-						DataBaseConnection.delete(s, o.getId());
-						
+						DataBaseConnection.delete(s, o.getId());		
 					}
 				}
-
-
 			}
 		};
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

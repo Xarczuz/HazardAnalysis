@@ -70,6 +70,8 @@ public class App extends Application {
 
 		DataBaseConnection.setDatabase("test.db");
 		CreateDataBase.setDatabase("test.db");
+//		CreateDataBase.createNewDatabase();
+//		CreateDataBase.createNewTable();
 
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
@@ -79,8 +81,6 @@ public class App extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
-//		CreateDataBase.createNewDatabase();
-//		CreateDataBase.createNewTable();
 //		DataBaseConnection.insert("kind","test");
 //		DataBaseConnection.delete("kind", 4);
 

@@ -26,7 +26,31 @@ public class DataBaseConnection {
 		}
 		return conn;
 	}
+	@SuppressWarnings("unchecked")
+	public static <E> void sql(String sql,String table, ObservableList<E> list) {
+//		String sql = "SELECT id, name FROM " + table;
 
+		try (Connection conn = connect();
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql)) {
+
+			// loop through the result set
+			list.clear();
+			while (rs.next()) {
+				if (table.contentEquals("kind")) {
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
+
+				} else {
+					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
+				
+				}
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 	@SuppressWarnings("unchecked")
 	public static <E> void selectAll(String table, ObservableList<E> list) {
 		String sql = "SELECT id, name FROM " + table;

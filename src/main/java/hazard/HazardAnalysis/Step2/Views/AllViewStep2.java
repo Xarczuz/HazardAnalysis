@@ -65,6 +65,7 @@ public class AllViewStep2 {
 		tbKind.getColumns().addAll(id, kind);
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
+	
 		tbKind.setItems(kindList);
 		grid.add(tbKind, 0, 1);
 
@@ -81,11 +82,10 @@ public class AllViewStep2 {
 		role.setMinWidth(200);
 		tbRole.getColumns().addAll(id2, role);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
-
-		DataBaseConnection.selectAll("role", roleList);
+		//DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
-		;
-
+		//addClickEvent(tbRole);
+		
 		GridPane gridRoles = new GridPane();
 		gridRoles.add(category2, 0, 0);
 		gridRoles.add(tbRole, 0, 1);
@@ -103,10 +103,10 @@ public class AllViewStep2 {
 		role2.setMinWidth(200);
 		tbRoleToPlay.getColumns().addAll(id3, role2);
 		ObservableList<Role> roleToPlayList = FXCollections.observableArrayList();
-
-		DataBaseConnection.selectAll("role", roleToPlayList);
+		//DataBaseConnection.selectAll("role", roleToPlayList);
 		tbRoleToPlay.setItems(roleToPlayList);
-
+		//addClickEvent(tbRoleToPlay);
+		
 		Button btnAddLink = new Button("+");
 		Button btnRemoveLink = new Button("-");
 		GridPane gridTextAndBtn = new GridPane();
@@ -137,9 +137,22 @@ public class AllViewStep2 {
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
 
 		grid.add(gridBtn, 2, 2);
+		
+		addClickEventToKindTable(tbKind,roleList);
+		
 		return grid;
 	}
-
+	private void addClickEventToKindTable(TableView<Kind> tb, ObservableList<Role> roleList) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int index = tb.getSelectionModel().selectedIndexProperty().get();
+				System.out.println(index);
+				DataBaseConnection.sql("Select * from role;", "role", roleList);
+			}
+		};
+		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -152,14 +165,14 @@ public class AllViewStep2 {
 		return btnNextStep;
 	}
 
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
+	private Button addEventToGoToPrevStep(Button btnPrevStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				getMainView().setCenter(getPrevGridPane());
 			}
 		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
+		btnPrevStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnPrevStep;
 	}
 }
