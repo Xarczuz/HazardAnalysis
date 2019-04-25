@@ -1,9 +1,9 @@
 package hazard.HazardAnalysis.Step1.Views;
 
-import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
 import java.util.Optional;
 
+import hazard.HazardAnalysis.DataBase.DataBaseConnection;
+import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
 import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.Kind;
 import hazard.HazardClasses.Role;
@@ -34,14 +34,51 @@ public class AllView {
 		this.av2 = new AllViewStep2(border, getGridPane());
 	}
 
-	public GridPane getGridPane() {
-		return this.thisGp;
-	}
+	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
 
-	public BorderPane getMainView() {
-		return this.border;
-	}
+		Button btnAdd = new Button();
+		btnAdd.setText("Add");
+		Button btnRemove = new Button();
+		btnRemove.setText("Remove");
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				TextInputDialog dialog = new TextInputDialog("");
+				dialog.setTitle("Add");
+				dialog.setHeaderText("Enter a new " + s);
+				dialog.setContentText(s + ":");
+				Optional<String> result = dialog.showAndWait();
+				if (result.isPresent()) {
+					DataBaseConnection.insert(s.toLowerCase(), result.get());
+					list.clear();
+					DataBaseConnection.selectAll(s.toLowerCase(), list);
+					av2.updateTbKind();
+					av2.getNextView().updateTbRole();
+				}
+			}
+		};
+		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (tb.getItems().size() != 0) {
+					int index = tb.getSelectionModel().selectedIndexProperty().get();
+					if (index != -1) {
+						Hazard o = (Hazard) tb.getItems().remove(index);
+						DataBaseConnection.delete(s, o.getId());
+					}
+				}
+			}
+		};
+		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+		GridPane grid = new GridPane();
+		grid.add(btnAdd, 0, 0);
+		grid.add(btnRemove, 2, 0);
+
+		return grid;
+	}
 
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
@@ -55,7 +92,7 @@ public class AllView {
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
 		final TableView<Kind> tbKind = new TableView<Kind>();
-		tbKind.setMinWidth(300);
+		tbKind.setMinWidth(350);
 		TableColumn<Kind, Integer> id = new TableColumn<Kind, Integer>("ID");
 		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
 		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
@@ -65,7 +102,7 @@ public class AllView {
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
 		tbKind.setItems(kindList);
-	
+
 		grid.add(tbKind, 0, 1);
 		grid.add(addButtonsToTable(tbKind, kindList, "Kind"), 0, 2);
 
@@ -73,7 +110,7 @@ public class AllView {
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 1, 0);
 		final TableView<Role> tbRole = new TableView<Role>();
-		tbRole.setMinWidth(300);
+		tbRole.setMinWidth(350);
 		TableColumn<Role, Integer> id2 = new TableColumn<Role, Integer>("ID");
 		TableColumn<Role, String> role = new TableColumn<Role, String>("Role");
 		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
@@ -113,50 +150,11 @@ public class AllView {
 		return btnNextStep;
 	}
 
+	public GridPane getGridPane() {
+		return this.thisGp;
+	}
 
-
-	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
-
-		Button btnAdd = new Button();
-		btnAdd.setText("Add");
-		Button btnRemove = new Button();
-		btnRemove.setText("Remove");
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				TextInputDialog dialog = new TextInputDialog("");
-				dialog.setTitle("Add");
-				dialog.setHeaderText("Enter a new " + s);
-				dialog.setContentText(s + ":");
-				Optional<String> result = dialog.showAndWait();
-				if (result.isPresent()) {
-					DataBaseConnection.insert(s.toLowerCase(), result.get());
-					list.clear();
-					DataBaseConnection.selectAll(s.toLowerCase(), list);
-					av2.updateTbKind();
-				}
-			}
-		};
-		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-		eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				if (tb.getItems().size() != 0 ) {
-					int index = tb.getSelectionModel().selectedIndexProperty().get();
-					if(index!=-1) {
-						Hazard o = (Hazard) tb.getItems().remove(index);
-						DataBaseConnection.delete(s, o.getId());		
-					}
-				}
-			}
-		};
-		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-		GridPane grid = new GridPane();
-		grid.add(btnAdd, 0, 0);
-		grid.add(btnRemove, 2, 0);
-
-		return grid;
+	public BorderPane getMainView() {
+		return this.border;
 	}
 }

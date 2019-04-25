@@ -25,19 +25,6 @@ public class  MainView {
 	BorderPane border = new BorderPane();
 	AllView allView = new AllView(border);
 
-	public BorderPane view() {
-
-		HBox hbox = addHBox();
-		border.setTop(hbox);
-		border.setLeft(addVBox());
-		
-		addStackPane(hbox); // Add stack to HBox in top region
-
-		border.setCenter(allView.getGridPane());
-
-		return border;
-	}
-
 	public HBox addHBox() {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15, 12, 15, 12));
@@ -56,6 +43,30 @@ public class  MainView {
 		hbox.getChildren().addAll(btnNew, btnLoad, btnSave);
 
 		return hbox;
+	}
+
+	public void addStackPane(HBox hb) {
+		StackPane stack = new StackPane();
+
+		Rectangle helpIcon = new Rectangle(30.0, 25.0);
+		helpIcon.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+				new Stop[] { new Stop(0, Color.web("#4977A3")), new Stop(0.5, Color.web("#B0C6DA")),
+						new Stop(1, Color.web("#9CB6CF")), }));
+		helpIcon.setStroke(Color.web("#D0E6FA"));
+		helpIcon.setArcHeight(3.5);
+		helpIcon.setArcWidth(3.5);
+
+		Text helpText = new Text("?");
+		helpText.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
+		helpText.setFill(Color.WHITE);
+		helpText.setStroke(Color.web("#7080A0"));
+
+		stack.getChildren().addAll(helpIcon, helpText);
+		stack.setAlignment(Pos.CENTER_RIGHT); // Right-justify nodes in stack
+		StackPane.setMargin(helpText, new Insets(0, 10, 0, 0)); // Center "?"
+
+		hb.getChildren().add(stack); // Add to HBox from Example 1-2
+		HBox.setHgrow(stack, Priority.ALWAYS); // Give stack any extra space
 	}
 
 	public VBox addVBox() {
@@ -96,28 +107,17 @@ public class  MainView {
 		return vbox;
 	}
 
-	public void addStackPane(HBox hb) {
-		StackPane stack = new StackPane();
+	public BorderPane view() {
 
-		Rectangle helpIcon = new Rectangle(30.0, 25.0);
-		helpIcon.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-				new Stop[] { new Stop(0, Color.web("#4977A3")), new Stop(0.5, Color.web("#B0C6DA")),
-						new Stop(1, Color.web("#9CB6CF")), }));
-		helpIcon.setStroke(Color.web("#D0E6FA"));
-		helpIcon.setArcHeight(3.5);
-		helpIcon.setArcWidth(3.5);
+		HBox hbox = addHBox();
+		border.setTop(hbox);
+		border.setLeft(addVBox());
+		
+		addStackPane(hbox); // Add stack to HBox in top region
 
-		Text helpText = new Text("?");
-		helpText.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
-		helpText.setFill(Color.WHITE);
-		helpText.setStroke(Color.web("#7080A0"));
+		border.setCenter(allView.getGridPane());
 
-		stack.getChildren().addAll(helpIcon, helpText);
-		stack.setAlignment(Pos.CENTER_RIGHT); // Right-justify nodes in stack
-		StackPane.setMargin(helpText, new Insets(0, 10, 0, 0)); // Center "?"
-
-		hb.getChildren().add(stack); // Add to HBox from Example 1-2
-		HBox.setHgrow(stack, Priority.ALWAYS); // Give stack any extra space
+		return border;
 	}
 
 }

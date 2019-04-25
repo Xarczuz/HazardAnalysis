@@ -8,16 +8,18 @@ public class Role extends Hazard{
 		this.role = role;
 	}
 
+	@Override
 	public int getId() {
 		return super.getId();
 	}
 
-	public void setId(int id) {
-		super.setId(id);
-	}
-
 	public String getRole() {
 		return role;
+	}
+
+	@Override
+	public void setId(int id) {
+		super.setId(id);
 	}
 
 	public void setRole(String role) {

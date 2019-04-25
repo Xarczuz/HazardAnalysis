@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
 import javafx.collections.ObservableList;
 
@@ -27,76 +28,16 @@ public class DataBaseConnection {
 		return conn;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <E> void sql(String sql, String table, ObservableList<E> list) {
-//		String sql = "SELECT id, name FROM " + table;
+	public static void delete(String table, int id) {
+		String sql = "DELETE FROM " + table + " WHERE id = ?";
 
-		try (Connection conn = connect();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
-
-			// loop through the result set
-			list.clear();
-			while (rs.next()) {
-				if (table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
-
-				} else if (table.contentEquals("role")) {
-					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
-
-				} else if (table.contentEquals("roletoplay")) {
-					list.add((E) new Role(rs.getInt("roleid"), rs.getString("role")));
-					System.out.println(
-							rs.getInt("roleid") + rs.getString("role") + rs.getInt("kindid") + rs.getString("kind"));
-
-				}
-
-			}
-
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <E> void selectAll(String table, ObservableList<E> list) {
-		String sql = "SELECT id, name FROM " + table;
-
-		try (Connection conn = connect();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
-
-			// loop through the result set
-			list.clear();
-			while (rs.next()) {
-				if (table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
-
-				} else {
-					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
-
-				}
-
-			}
-
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	public static void insert(String table, String name) {
-		String sql = "INSERT INTO " + table + "(name) VALUES(?)";
-
-		try {
-			Connection conn = connect();
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, name);
+		try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
 	}
 
 	public static void deleteARoleToPlay(String table, String id1, String id2) {
@@ -115,6 +56,26 @@ public class DataBaseConnection {
 
 	}
 
+	public static void deleteRelatorToRole(String table, String id1, String id2) {
+		String sql = "Delete FROM " + table + " WHERE roleid=? AND relatorid=?;";
+
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id1);
+			pstmt.setString(2, id2);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	public static String getDatabase() {
+		return database;
+	}
+
 	public static void insert(String sql) {
 
 		try {
@@ -128,26 +89,80 @@ public class DataBaseConnection {
 
 	}
 
-	public static void delete(String table, int id) {
-		String sql = "DELETE FROM " + table + " WHERE id = ?";
+	public static void insert(String table, String name) {
+		String sql = "INSERT INTO " + table + "(name) VALUES(?)";
 
-		try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-			// set the corresponding param
-			pstmt.setInt(1, id);
-			// execute the delete statement
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
 			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <E> void selectAll(String table, ObservableList<E> list) {
+		String sql = "SELECT id, name FROM " + table;
+
+		try (Connection conn = connect();
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql)) {
+
+			// loop through the result set
+			list.clear();
+			while (rs.next()) {
+				if (table.contentEquals("kind")) {
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
+
+				} else if (table.contentEquals("role")) {
+					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
+
+				} else if (table.contentEquals("relator")) {
+					list.add((E) new Relator(rs.getInt("id"), rs.getString("name")));
+				}
+
+			}
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	public static String getDatabase() {
-		return database;
-	}
-
 	public static void setDatabase(String database) {
 		DataBaseConnection.database = database;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <E> void sql(String sql, String table, ObservableList<E> list) {
+		try (Connection conn = connect();
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql)) {
+
+			// loop through the result set
+			list.clear();
+			while (rs.next()) {
+				if (table.contentEquals("kind")) {
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
+				} else if (table.contentEquals("kindtorole")) {
+					list.add((E) new Kind(rs.getInt("kindid"), rs.getString("kind")));
+				} else if (table.contentEquals("role")) {
+					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
+				} else if (table.contentEquals("roletoplay")) {
+					list.add((E) new Role(rs.getInt("roleid"), rs.getString("role")));
+				} else if (table.contentEquals("relator")) {
+					list.add((E) new Relator(rs.getInt("id"), rs.getString("name")));
+				} else if (table.contentEquals("relatortorole")) {
+					list.add((E) new Relator(rs.getInt("relatorid"), rs.getString("relator")));
+				}
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

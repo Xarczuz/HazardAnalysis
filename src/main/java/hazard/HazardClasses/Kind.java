@@ -8,6 +8,7 @@ public class Kind extends Hazard {
 		this.kind = kind;
 	}
 
+	@Override
 	public int getId() {
 		return super.getId();
 	}
@@ -16,6 +17,7 @@ public class Kind extends Hazard {
 		return kind;
 	}
 
+	@Override
 	public void setId(int id) {
 		super.setId(id);
 	}

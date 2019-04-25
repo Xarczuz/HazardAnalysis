@@ -56,6 +56,10 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
@@ -70,7 +74,7 @@ public class App extends Application {
 
 		DataBaseConnection.setDatabase("test.db");
 		CreateDataBase.setDatabase("test.db");
-//		CreateDataBase.createNewDatabase();
+		CreateDataBase.createNewDatabase();
 		CreateDataBase.createNewTable();
 
 		BorderPane border = new BorderPane();
@@ -85,9 +89,5 @@ public class App extends Application {
 //		DataBaseConnection.delete("kind", 4);
 
 //		DataBaseConnection.selectAll("Role",null);
-	}
-
-	public static void main(String[] args) {
-		launch(args);
 	}
 }
