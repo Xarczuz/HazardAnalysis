@@ -89,13 +89,31 @@ public class DataBaseConnection {
 
 	}
 
-	public static void insert(String table, String name) {
+	public static void insertRoloeOrKind(String table, String name, Boolean start, boolean runtime, boolean shutdown) {
+		String sql = "INSERT INTO " + table + "(name,start,runtime,shutdown) VALUES(?,?,?,?)";
+
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setBoolean(2, start);
+			pstmt.setBoolean(3, runtime);
+			pstmt.setBoolean(4, shutdown);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+	public static void insertRelator(String table, String name) {
 		String sql = "INSERT INTO " + table + "(name) VALUES(?)";
 
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, name);
+
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -106,7 +124,7 @@ public class DataBaseConnection {
 
 	@SuppressWarnings("unchecked")
 	public static <E> void selectAll(String table, ObservableList<E> list) {
-		String sql = "SELECT id, name FROM " + table;
+		String sql = "SELECT * FROM " + table;
 
 		try (Connection conn = connect();
 				Statement stmt = conn.createStatement();
@@ -116,10 +134,12 @@ public class DataBaseConnection {
 			list.clear();
 			while (rs.next()) {
 				if (table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 
 				} else if (table.contentEquals("role")) {
-					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
+					list.add((E) new Role(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 
 				} else if (table.contentEquals("relator")) {
 					list.add((E) new Relator(rs.getInt("id"), rs.getString("name")));
@@ -146,11 +166,13 @@ public class DataBaseConnection {
 			list.clear();
 			while (rs.next()) {
 				if (table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"), rs.getString("name")));
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 				} else if (table.contentEquals("kindtorole")) {
 					list.add((E) new Kind(rs.getInt("kindid"), rs.getString("kind")));
 				} else if (table.contentEquals("role")) {
-					list.add((E) new Role(rs.getInt("id"), rs.getString("name")));
+					list.add((E) new Role(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 				} else if (table.contentEquals("roletoplay")) {
 					list.add((E) new Role(rs.getInt("roleid"), rs.getString("role")));
 				} else if (table.contentEquals("relator")) {
@@ -163,6 +185,17 @@ public class DataBaseConnection {
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void sqlUpdate(String sql) {
+		try {
+			Connection conn = connect();
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage() + "??");
 		}
 	}
 }

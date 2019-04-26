@@ -79,13 +79,21 @@ public class AllViewStep2 {
 		grid.add(category, 0, 0);
 
 		final TableView<Kind> tbKind = new TableView<Kind>();
-		tbKind.setMinWidth(350);
+		tbKind.setMaxWidth(350);
 		TableColumn<Kind, Integer> id = new TableColumn<Kind, Integer>("ID");
 		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
+		TableColumn<Kind, Boolean> start = new TableColumn<Kind, Boolean>("Start");
+		TableColumn<Kind, Boolean> runtime = new TableColumn<Kind, Boolean>("RunTime");
+		TableColumn<Kind, Boolean> shutdown = new TableColumn<Kind, Boolean>("ShutDown");
+		
 		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
 		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
-		kind.setMinWidth(200);
-		tbKind.getColumns().addAll(id, kind);
+		start.setCellValueFactory(new PropertyValueFactory<Kind,Boolean>("start"));
+		runtime.setCellValueFactory(new PropertyValueFactory<Kind,Boolean>("runtime"));
+		shutdown.setCellValueFactory(new PropertyValueFactory<Kind,Boolean>("shutdown"));
+		
+		kind.setMinWidth(100);
+		tbKind.getColumns().addAll(id, kind,start,runtime,shutdown);
 
 		DataBaseConnection.selectAll("kind", kindList);
 

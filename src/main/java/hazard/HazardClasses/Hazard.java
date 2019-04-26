@@ -2,6 +2,7 @@ package hazard.HazardClasses;
 
 public class Hazard {
 	int id;
+	
 
 	public Hazard(int id) {
 		this.id = id;

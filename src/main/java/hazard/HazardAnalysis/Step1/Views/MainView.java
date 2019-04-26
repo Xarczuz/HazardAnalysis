@@ -20,7 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class  MainView {
+public class MainView {
 
 	BorderPane border = new BorderPane();
 	AllView allView = new AllView(border);
@@ -36,7 +36,7 @@ public class  MainView {
 
 		Button btnLoad = new Button("Load");
 		btnLoad.setPrefSize(100, 20);
-		
+
 		Button btnSave = new Button("Save");
 		btnSave.setPrefSize(100, 20);
 
@@ -71,16 +71,15 @@ public class  MainView {
 
 	public VBox addVBox() {
 		VBox vbox = new VBox();
-	
+
 		vbox.setMinWidth(150);
 		vbox.setPadding(new Insets(10));
 		vbox.setSpacing(8);
-		Text title = new Text("Modes");
+		Text title = new Text("Step");
 		title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 		vbox.getChildren().add(title);
 
-		Hyperlink options[] = new Hyperlink[] { new Hyperlink("All"), new Hyperlink("Start"), new Hyperlink("Runtime"),
-				new Hyperlink("ShutDown") };
+		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"),new Hyperlink("Step 2"),new Hyperlink("Step 3"),new Hyperlink("Step 4") };
 
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -93,12 +92,27 @@ public class  MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(StartView.addGridPane());
+				border.setCenter(allView.getAv2().getGridPane());
 			}
 		};
 		options[1].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
-		for (int i = 0; i < 4; i++) {
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				border.setCenter(allView.getAv2().getNextView().getGridPane());
+			}
+		};
+		options[2].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				border.setCenter(allView.getAv2().getNextView().getNextView().getGridPane());
+			}
+		};
+		options[3].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+		for (int i = 0; i < options.length; i++) {
 
 			VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
 			vbox.getChildren().add(options[i]);
@@ -112,7 +126,7 @@ public class  MainView {
 		HBox hbox = addHBox();
 		border.setTop(hbox);
 		border.setLeft(addVBox());
-		
+
 		addStackPane(hbox); // Add stack to HBox in top region
 
 		border.setCenter(allView.getGridPane());

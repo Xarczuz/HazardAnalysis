@@ -1,7 +1,5 @@
 package hazard.HazardAnalysis.Step1.Views;
 
-import java.util.Optional;
-
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardAnalysis.Step2.Views.AllViewStep2;
 import hazard.HazardClasses.Hazard;
@@ -12,8 +10,11 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +28,11 @@ public class AllView {
 	GridPane thisGp;
 	BorderPane border;
 	AllViewStep2 av2;
+
+	public AllViewStep2 getAv2() {
+		av2.updateTbKind();
+		return av2;
+	}
 
 	public AllView(BorderPane border) {
 		this.thisGp = addGridPane();
@@ -47,14 +53,39 @@ public class AllView {
 				dialog.setTitle("Add");
 				dialog.setHeaderText("Enter a new " + s);
 				dialog.setContentText(s + ":");
-				Optional<String> result = dialog.showAndWait();
-				if (result.isPresent()) {
-					DataBaseConnection.insert(s.toLowerCase(), result.get());
-					list.clear();
-					DataBaseConnection.selectAll(s.toLowerCase(), list);
-					av2.updateTbKind();
-					av2.getNextView().updateTbRole();
-				}
+
+				TextField t = new TextField();
+				CheckBox st = new CheckBox("Start");
+				CheckBox rt = new CheckBox("runtime");
+				CheckBox sd = new CheckBox("ShutDown");
+				GridPane gp = new GridPane();
+				gp.setPadding(new Insets(5, 5, 5, 5));
+				t.setPadding(new Insets(5, 5, 5, 5));
+				gp.add(t, 0, 0);
+				gp.add(st, 0, 1);
+				gp.add(rt, 0, 2);
+				gp.add(sd, 0, 3);
+
+				dialog.getDialogPane().setContent(gp);
+
+				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+					@Override
+					public void handle(DialogEvent event) {
+						if (!t.getText().isEmpty()) {
+							DataBaseConnection.insertRoloeOrKind(s.toLowerCase(), t.getText(), st.isSelected(), rt.isSelected(),
+									sd.isSelected());
+							list.clear();
+							DataBaseConnection.selectAll(s.toLowerCase(), list);
+							av2.updateTbKind();
+							av2.getNextView().updateTbRole();
+						}
+					}
+				};
+
+				dialog.setOnCloseRequest(eventHandler);
+				dialog.show();
+				t.requestFocus();
+
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -92,17 +123,29 @@ public class AllView {
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
 		final TableView<Kind> tbKind = new TableView<Kind>();
-		tbKind.setMinWidth(350);
+		tbKind.setMaxWidth(350);
 		TableColumn<Kind, Integer> id = new TableColumn<Kind, Integer>("ID");
 		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
+
+		TableColumn<Kind, CheckBox> kStart = new TableColumn<Kind, CheckBox>("Start");
+		TableColumn<Kind, CheckBox> kRuntime = new TableColumn<Kind, CheckBox>("RunTime");
+		TableColumn<Kind, CheckBox> kShutdown = new TableColumn<Kind, CheckBox>("Shutdown");
+
 		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
 		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
-		kind.setMinWidth(200);
-		tbKind.getColumns().addAll(id, kind);
+
+		kStart.setCellValueFactory(new PropertyValueFactory<Kind, CheckBox>("cbstart"));
+		kStart.setStyle("-fx-alignment: CENTER;");
+		kRuntime.setCellValueFactory(new PropertyValueFactory<Kind, CheckBox>("cbruntime"));
+		kRuntime.setStyle("-fx-alignment: CENTER;");
+		kShutdown.setCellValueFactory(new PropertyValueFactory<Kind, CheckBox>("cbshutdown"));
+		kShutdown.setStyle("-fx-alignment: CENTER;");
+		id.setMaxWidth(30);
+		kind.setMinWidth(100);
+		tbKind.getColumns().addAll(id, kind, kStart, kRuntime, kShutdown);
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
 		tbKind.setItems(kindList);
-
 		grid.add(tbKind, 0, 1);
 		grid.add(addButtonsToTable(tbKind, kindList, "Kind"), 0, 2);
 
@@ -110,13 +153,27 @@ public class AllView {
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 1, 0);
 		final TableView<Role> tbRole = new TableView<Role>();
-		tbRole.setMinWidth(350);
+		tbRole.setMaxWidth(350);
 		TableColumn<Role, Integer> id2 = new TableColumn<Role, Integer>("ID");
 		TableColumn<Role, String> role = new TableColumn<Role, String>("Role");
+		TableColumn<Role, CheckBox> rStart = new TableColumn<Role, CheckBox>("Start");
+		TableColumn<Role, CheckBox> rRuntime = new TableColumn<Role, CheckBox>("RunTime");
+		TableColumn<Role, CheckBox> rShutdown = new TableColumn<Role, CheckBox>("Shutdown");
+
+		
 		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
 		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
-		role.setMinWidth(200);
-		tbRole.getColumns().addAll(id2, role);
+		
+		rStart.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbstart"));
+		rStart.setStyle("-fx-alignment: CENTER;");
+		rRuntime.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbruntime"));
+		rRuntime.setStyle("-fx-alignment: CENTER;");
+		rShutdown.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbshutdown"));
+		rShutdown.setStyle("-fx-alignment: CENTER;");
+
+		id2.setMaxWidth(30);
+		role.setMinWidth(100);
+		tbRole.getColumns().addAll(id2, role,rStart,rRuntime,rShutdown);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
 
 		DataBaseConnection.selectAll("role", roleList);
@@ -144,6 +201,7 @@ public class AllView {
 			@Override
 			public void handle(MouseEvent e) {
 				getMainView().setCenter(av2.getGridPane());
+				av2.updateTbKind();
 			}
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

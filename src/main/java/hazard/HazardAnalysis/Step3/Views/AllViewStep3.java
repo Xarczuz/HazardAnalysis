@@ -216,7 +216,7 @@ public class AllViewStep3 {
 
 				if (result.isPresent()) {
 					
-					DataBaseConnection.insert(s.toLowerCase(), result.get());
+					DataBaseConnection.insertRelator(s.toLowerCase(), result.get());
 					list.clear();
 					DataBaseConnection.selectAll(s.toLowerCase(), list);
 	
@@ -272,7 +272,9 @@ public class AllViewStep3 {
 		};
 		btnRemoveLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
-
+	public AllViewStep4 getNextView() {
+		return this.av4;
+	}
 	public void updateTbRole() {
 		DataBaseConnection.selectAll("role", roleList);
 	}

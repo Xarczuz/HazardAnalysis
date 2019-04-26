@@ -34,8 +34,8 @@ public class CreateDataBase {
 		String url = "jdbc:sqlite:" + database;
 
 		// SQL statement for creating a new table
-		String sql1 = "CREATE TABLE IF NOT EXISTS kind (id integer PRIMARY KEY, name text NOT NULL);";
-		String sql2 = "CREATE TABLE IF NOT EXISTS role (id integer PRIMARY KEY, name text NOT NULL);";
+		String sql1 = "CREATE TABLE IF NOT EXISTS kind (id integer PRIMARY KEY, name text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL);";
+		String sql2 = "CREATE TABLE IF NOT EXISTS role (id integer PRIMARY KEY, name text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL);";
 		String sql3 = "CREATE TABLE IF NOT EXISTS roletoplay (id integer PRIMARY KEY,kind text NOT NULL, kindid integer NOT NULL, role text NOT NULL, roleid integer NOT NULL);";
 		String sql4 = "CREATE TABLE IF NOT EXISTS relator (id integer PRIMARY KEY,name text NOT NULL);";
 		String sql5 = "CREATE TABLE IF NOT EXISTS relatortorole (id integer PRIMARY KEY, relator text NOT NULL, relatorid integer NOT NULL, role text NOT NULL, roleid integer NOT NULL);";
