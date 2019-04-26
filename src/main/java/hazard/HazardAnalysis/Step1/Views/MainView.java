@@ -100,14 +100,14 @@ public class MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(allView.getAv2().getNextView().getGridPane());
+				border.setCenter(allView.getAv2().getAv3().getGridPane());
 			}
 		};
 		options[2].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(allView.getAv2().getNextView().getNextView().getGridPane());
+				border.setCenter(allView.getAv2().getAv3().getAv4().getGridPane());
 			}
 		};
 		options[3].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

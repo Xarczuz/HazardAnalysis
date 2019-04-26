@@ -231,7 +231,7 @@ public class AllViewStep2 {
 		return this.border;
 	}
 
-	public AllViewStep3 getNextView() {
+	public AllViewStep3 getAv3() {
 		return this.av3;
 	}
 

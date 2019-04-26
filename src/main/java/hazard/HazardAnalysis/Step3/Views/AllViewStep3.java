@@ -272,7 +272,7 @@ public class AllViewStep3 {
 		};
 		btnRemoveLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
-	public AllViewStep4 getNextView() {
+	public AllViewStep4 getAv4() {
 		return this.av4;
 	}
 	public void updateTbRole() {

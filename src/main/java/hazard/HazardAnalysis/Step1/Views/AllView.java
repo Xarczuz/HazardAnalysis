@@ -77,7 +77,7 @@ public class AllView {
 							list.clear();
 							DataBaseConnection.selectAll(s.toLowerCase(), list);
 							av2.updateTbKind();
-							av2.getNextView().updateTbRole();
+							av2.getAv3().updateTbRole();
 						}
 					}
 				};
