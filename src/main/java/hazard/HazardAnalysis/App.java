@@ -76,7 +76,7 @@ public class App extends Application {
 		CreateDataBase.setDatabase("test.db");
 		CreateDataBase.createNewDatabase();
 		CreateDataBase.createNewTable();
-
+//DataBaseConnection.populateWithTestData();
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
 		border = av.view();

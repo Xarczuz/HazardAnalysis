@@ -23,7 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class AllView{
+public class AllViewStep1 {
 	GridPane thisGp;
 	BorderPane border;
 	AllViewStep2 av2;
@@ -31,13 +31,13 @@ public class AllView{
 	AllViewStep4 av4;
 	AllViewStep5 av5;
 
-	public AllView(BorderPane border) {
+	public AllViewStep1(BorderPane border) {
 		this.thisGp = addGridPane();
 		this.border = border;
-		this.av2 = new AllViewStep2(border, getGridPane());
-		this.av3 = new AllViewStep3(border, getAv2().getGridPane());
-		this.av4 = new AllViewStep4(border, getAv3().getGridPane());
-		this.av5 = new AllViewStep5(border, getAv4().getGridPane());
+		this.av2 = new AllViewStep2(this,border, getGridPane());
+		this.av3 = new AllViewStep3(this,border, getAv2().getGridPane());
+		this.av4 = new AllViewStep4(this,border, getAv3().getGridPane());
+		this.av5 = new AllViewStep5(this,border, getAv4().getGridPane());
 		this.av2.setNextGp(this.av3.getGridPane());
 		this.av3.setNextGp(this.av4.getGridPane());
 		this.av4.setNextGp(this.av5.getGridPane());
@@ -217,26 +217,23 @@ public class AllView{
 	}
 
 	public AllViewStep3 getAv3() {
-
+		av3.updateTbRole();
 		return av3;
 	}
 
 	public AllViewStep4 getAv4() {
-
 		return av4;
 	}
 
 	public AllViewStep5 getAv5() {
-
+		av5.updatePossibleVictimList();
 		return av5;
 	}
 
-	
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}
 
-	
 	public BorderPane getMainView() {
 		return this.border;
 	}

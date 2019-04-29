@@ -18,13 +18,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class AllViewStep4 implements AllViewInterface{
-	GridPane prevGp, thisGp,nextGp;
-
-	BorderPane mainView;
-
-	public AllViewStep4(BorderPane mainView, GridPane prevGp) {
+public class AllViewStep4 implements AllViewInterface {
+	private GridPane prevGp, thisGp, nextGp;
+	private BorderPane mainView;
+private AllViewStep1 av1;
+	public AllViewStep4(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
+		this.av1 = allViewStep1;
 		this.prevGp = prevGp;
 		this.mainView = mainView;
 	}
@@ -35,14 +35,17 @@ public class AllViewStep4 implements AllViewInterface{
 			@Override
 			public void handle(MouseEvent e) {
 				int index = tb.getSelectionModel().selectedIndexProperty().get();
-				int id = tb.getItems().get(index).getId();
+				if (index > -1) {
+					int id = tb.getItems().get(index).getId();
 
-				DataBaseConnection.sql(
-						"SELECT * FROM kind WHERE NOT EXISTS(SELECT * FROM roletoplay WHERE kind.id=roletoplay.kindid AND "
-								+ id + "=roletoplay.roleid);",
-						"kind", kindList);
-				DataBaseConnection.sql("SELECT * FROM roletoplay WHERE roleid=" + id + ";", "kindtorole",
-						kindToRoleList);
+					DataBaseConnection.sql(
+							"SELECT * FROM kind WHERE NOT EXISTS(SELECT * FROM roletoplay WHERE kind.id=roletoplay.kindid AND "
+									+ id + "=roletoplay.roleid);",
+							"kind", kindList);
+					DataBaseConnection.sql("SELECT * FROM roletoplay WHERE roleid=" + id + ";", "kindtorole",
+							kindToRoleList);
+
+				}
 			}
 		};
 		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -63,6 +66,9 @@ public class AllViewStep4 implements AllViewInterface{
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 
+		
+		
+		
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
@@ -86,7 +92,7 @@ public class AllViewStep4 implements AllViewInterface{
 		DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 0, 1);
-	
+
 		Text category2 = new Text("Kind");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		final TableView<Kind> tbKind = new TableView<Kind>();
@@ -101,10 +107,10 @@ public class AllViewStep4 implements AllViewInterface{
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 
 		tbKind.setItems(kindList);
-		GridPane gridKinds = new GridPane();		
+		GridPane gridKinds = new GridPane();
 		gridKinds.add(category2, 0, 0);
 		gridKinds.add(tbKind, 0, 1);
-		
+
 		Text category3 = new Text("Kind that can play the role");
 		category3.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		final TableView<Kind> tbKindToRole = new TableView<Kind>();
@@ -118,20 +124,20 @@ public class AllViewStep4 implements AllViewInterface{
 		tbKindToRole.getColumns().addAll(id3, kind2);
 		ObservableList<Kind> kindToRoleList = FXCollections.observableArrayList();
 		tbKindToRole.setItems(kindToRoleList);
-		
+
 		Button btnAddLink = new Button("+");
 		addLinkEvent(btnAddLink, tbRole, tbKind, kindToRoleList);
 		Button btnRemoveLink = new Button("-");
 		addRemoveLinkEvent(btnRemoveLink, kindList, tbRole, tbKindToRole);
 		GridPane gridTextAndBtn = new GridPane();
-		
+
 		gridTextAndBtn.add(category3, 0, 0);
 		gridTextAndBtn.add(btnAddLink, 2, 0);
 		gridTextAndBtn.add(btnRemoveLink, 3, 0);
-		
+
 		gridKinds.add(gridTextAndBtn, 0, 2);
 		gridKinds.add(tbKindToRole, 0, 3);
-		
+
 		grid.add(gridKinds, 1, 1);
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -151,7 +157,7 @@ public class AllViewStep4 implements AllViewInterface{
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
 
 		grid.add(gridBtn, 2, 2);
-		
+
 		addClickEventToRoleTable(tbRole, kindList, kindToRoleList);
 		return grid;
 	}
@@ -174,10 +180,12 @@ public class AllViewStep4 implements AllViewInterface{
 		};
 		btnAddLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
+
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				av1.getAv5().updatePossibleVictimList();
 				getMainView().setCenter(getNextGridPane());
 			}
 		};
@@ -195,25 +203,31 @@ public class AllViewStep4 implements AllViewInterface{
 				if (tbRoleToPlayIndex >= 0 && tbRoleIndex >= 0) {
 					Kind k = tbKindToRole.getItems().remove(tbRoleToPlayIndex);
 					Role r = tbRole.getItems().get(tbRoleIndex);
-					DataBaseConnection.deleteARoleToPlay("roletoplay", String.valueOf(r.getId()), String.valueOf(k.getId()));
+					DataBaseConnection.deleteARoleToPlay("roletoplay", String.valueOf(r.getId()),
+							String.valueOf(k.getId()));
 					kindList.add(k);
 				}
 			}
 		};
 		btnRemoveLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
+
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}
+
 	public BorderPane getMainView() {
 		return this.mainView;
 	}
+
 	public GridPane getNextGridPane() {
 		return this.nextGp;
 	}
+
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
 	}
+
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
 	}

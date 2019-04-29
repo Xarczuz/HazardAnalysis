@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.PossibleVictim;
 import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
 import javafx.collections.ObservableList;
@@ -90,7 +91,7 @@ public class DataBaseConnection {
 	}
 
 	public static void insertRoloeOrKind(String table, String name, Boolean start, boolean runtime, boolean shutdown) {
-		String sql = "INSERT INTO " + table + "(name,start,runtime,shutdown) VALUES(?,?,?,?)";
+		String sql = "INSERT INTO " + table + "(" + table + ",start,runtime,shutdown) VALUES(?,?,?,?)";
 
 		try {
 			Connection conn = connect();
@@ -106,13 +107,14 @@ public class DataBaseConnection {
 		}
 
 	}
-	public static void insertRelator(String table, String name) {
-		String sql = "INSERT INTO " + table + "(name) VALUES(?)";
+
+	public static void insertRelator(String table, String relator) {
+		String sql = "INSERT INTO " + "relator" + "(relator) VALUES(?)";
 
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, name);
+			pstmt.setString(1, relator);
 
 			pstmt.executeUpdate();
 
@@ -134,15 +136,15 @@ public class DataBaseConnection {
 			list.clear();
 			while (rs.next()) {
 				if (table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("kind"), rs.getBoolean("start"),
 							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 
 				} else if (table.contentEquals("role")) {
-					list.add((E) new Role(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+					list.add((E) new Role(rs.getInt("id"), rs.getString("role"), rs.getBoolean("start"),
 							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 
 				} else if (table.contentEquals("relator")) {
-					list.add((E) new Relator(rs.getInt("id"), rs.getString("name")));
+					list.add((E) new Relator(rs.getInt("id"), rs.getString("relator")));
 				}
 
 			}
@@ -166,19 +168,22 @@ public class DataBaseConnection {
 			list.clear();
 			while (rs.next()) {
 				if (table.contentEquals("kind")) {
-					list.add((E) new Kind(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+					list.add((E) new Kind(rs.getInt("id"), rs.getString("kind"), rs.getBoolean("start"),
 							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 				} else if (table.contentEquals("kindtorole")) {
 					list.add((E) new Kind(rs.getInt("kindid"), rs.getString("kind")));
 				} else if (table.contentEquals("role")) {
-					list.add((E) new Role(rs.getInt("id"), rs.getString("name"), rs.getBoolean("start"),
+					list.add((E) new Role(rs.getInt("id"), rs.getString("role"), rs.getBoolean("start"),
 							rs.getBoolean("runtime"), rs.getBoolean("shutdown")));
 				} else if (table.contentEquals("roletoplay")) {
 					list.add((E) new Role(rs.getInt("roleid"), rs.getString("role")));
 				} else if (table.contentEquals("relator")) {
-					list.add((E) new Relator(rs.getInt("id"), rs.getString("name")));
+					list.add((E) new Relator(rs.getInt("id"), rs.getString("relator")));
 				} else if (table.contentEquals("relatortorole")) {
 					list.add((E) new Relator(rs.getInt("relatorid"), rs.getString("relator")));
+				} else if (table.contentEquals("possiblevictim")) {
+					list.add((E) new PossibleVictim(rs.getString("kind"), rs.getString("role"),
+							rs.getString("relator")));
 				}
 
 			}
@@ -198,4 +203,23 @@ public class DataBaseConnection {
 			System.out.println(e.getMessage() + "??");
 		}
 	}
+
+	public static void populateWithTestData() {
+
+		insertRoloeOrKind("role", "being supported", true, false, true);
+		insertRoloeOrKind("role", "being lifted", true, false, true);
+		insertRoloeOrKind("role", "balance supporter", true, false, true);
+		insertRoloeOrKind("role", "object lifter", true, false, true);
+		insertRoloeOrKind("role", "electric consumer", true, false, true);
+		insertRoloeOrKind("role", "electricity source", true, false, true);
+		insertRoloeOrKind("kind", "patient", true, false, true);
+		insertRoloeOrKind("kind", "Robot Handle", true, false, true);
+		insertRoloeOrKind("kind", "Robot", true, false, true);
+		insertRoloeOrKind("kind", "Battery", true, false, true);
+		insertRelator("relator", "balance support");
+		insertRelator("relator", "liftup");
+		insertRelator("relator", "electric consumption");
+
+	}
+
 }

@@ -19,17 +19,15 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class AllViewStep2 implements AllViewInterface{
-	GridPane prevGp, thisGp,nextGp;
-
-	BorderPane mainView;
+	private GridPane prevGp, thisGp,nextGp;
+	private BorderPane mainView;
 	
 	ObservableList<Kind> kindList = FXCollections.observableArrayList();
 
-	public AllViewStep2(BorderPane mainView, GridPane prevGp) {
+	public AllViewStep2(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.mainView = mainView;
-	
 	}
 
 	private void addClickEventToKindTable(TableView<Kind> tb, ObservableList<Role> roleList,
@@ -242,7 +240,6 @@ public class AllViewStep2 implements AllViewInterface{
 	}
 
 	public void updateTbKind() {
-
 		DataBaseConnection.selectAll("kind", kindList);
 	}
 }

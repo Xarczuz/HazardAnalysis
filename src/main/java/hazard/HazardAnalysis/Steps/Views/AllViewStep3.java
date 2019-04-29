@@ -23,12 +23,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class AllViewStep3 implements AllViewInterface{
-	GridPane prevGp, thisGp,nextGp;
-	BorderPane mainView;
+	private GridPane prevGp, thisGp,nextGp;
+	private BorderPane mainView;
 
 	ObservableList<Role> roleList = FXCollections.observableArrayList();
 	
-	public AllViewStep3(BorderPane mainView, GridPane prevGp) {
+	public AllViewStep3(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.mainView = mainView;

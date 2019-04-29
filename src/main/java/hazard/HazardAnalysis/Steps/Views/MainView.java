@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
 public class MainView {
 
 	BorderPane border = new BorderPane();
-	AllView allView = new AllView(border);
+	AllViewStep1 allView = new AllViewStep1(border);
 
 	public HBox addHBox() {
 		HBox hbox = new HBox();
