@@ -2,7 +2,7 @@ package hazard.HazardAnalysis;
 
 import hazard.HazardAnalysis.DataBase.CreateDataBase;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardAnalysis.Step1.Views.MainView;
+import hazard.HazardAnalysis.Steps.Views.MainView;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
