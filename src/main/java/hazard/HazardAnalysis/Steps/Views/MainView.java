@@ -81,7 +81,7 @@ public class MainView {
 
 		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"), new Hyperlink("Step 2"),
 				new Hyperlink("Step 3"), new Hyperlink("Step 4"), new Hyperlink("Step 5"), new Hyperlink("Step 6"),
-				new Hyperlink("Step 7"), new Hyperlink("Step 8"), new Hyperlink("Step 9") };
+				new Hyperlink("Step 7") };
 
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -94,6 +94,7 @@ public class MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				allView.getAv2().updateTbKind();
 				border.setCenter(allView.getAv2().getGridPane());
 			}
 		};
@@ -102,6 +103,7 @@ public class MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				allView.getAv3().updateTbRole();
 				border.setCenter(allView.getAv3().getGridPane());
 			}
 		};
@@ -109,6 +111,7 @@ public class MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				allView.getAv4().updateTbRole();
 				border.setCenter(allView.getAv4().getGridPane());
 			}
 		};
@@ -116,6 +119,8 @@ public class MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				allView.getAv5().updateHazardList();
+				allView.getAv5().updatePossibleVictimList();
 				border.setCenter(allView.getAv5().getGridPane());
 			}
 		};

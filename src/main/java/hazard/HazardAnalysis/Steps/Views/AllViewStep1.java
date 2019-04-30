@@ -1,7 +1,7 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardClasses.Hazard;
+import hazard.HazardClasses.Play;
 import hazard.HazardClasses.Kind;
 import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
@@ -80,8 +80,10 @@ public class AllViewStep1 {
 									rt.isSelected(), sd.isSelected());
 							list.clear();
 							DataBaseConnection.selectAll(s.toLowerCase(), list);
-							av2.updateTbKind();
+							getAv2().updateTbKind();
 							getAv3().updateTbRole();
+							getAv4().updateTbRole();
+							
 						}
 					}
 				};
@@ -100,7 +102,7 @@ public class AllViewStep1 {
 				if (tb.getItems().size() != 0) {
 					int index = tb.getSelectionModel().selectedIndexProperty().get();
 					if (index != -1) {
-						Hazard o = (Hazard) tb.getItems().remove(index);
+						Play o = (Play) tb.getItems().remove(index);
 						DataBaseConnection.delete(s, o.getId());
 					}
 				}
@@ -222,11 +224,13 @@ public class AllViewStep1 {
 	}
 
 	public AllViewStep4 getAv4() {
+		av4.updateTbRole();
 		return av4;
 	}
 
 	public AllViewStep5 getAv5() {
 		av5.updatePossibleVictimList();
+		av5.updateHazardList();
 		return av5;
 	}
 

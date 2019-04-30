@@ -21,6 +21,8 @@ import javafx.scene.text.Text;
 public class AllViewStep4 implements AllViewInterface {
 	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
+	ObservableList<Role> roleList = FXCollections.observableArrayList();
+
 private AllViewStep1 av1;
 	public AllViewStep4(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
@@ -87,8 +89,7 @@ private AllViewStep1 av1;
 		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
 		role.setMinWidth(200);
 		tbRole.getColumns().addAll(id, role);
-		ObservableList<Role> roleList = FXCollections.observableArrayList();
-
+	
 		DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 0, 1);
@@ -186,6 +187,7 @@ private AllViewStep1 av1;
 			@Override
 			public void handle(MouseEvent e) {
 				av1.getAv5().updatePossibleVictimList();
+				av1.getAv5().updateHazardList();
 				getMainView().setCenter(getNextGridPane());
 			}
 		};
@@ -230,5 +232,8 @@ private AllViewStep1 av1;
 
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
+	}
+	public void updateTbRole() {
+		DataBaseConnection.selectAll("role", roleList);
 	}
 }

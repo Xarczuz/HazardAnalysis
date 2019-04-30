@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.Kind;
 import hazard.HazardClasses.PossibleVictim;
 import hazard.HazardClasses.Relator;
@@ -182,8 +183,10 @@ public class DataBaseConnection {
 				} else if (table.contentEquals("relatortorole")) {
 					list.add((E) new Relator(rs.getInt("relatorid"), rs.getString("relator")));
 				} else if (table.contentEquals("possiblevictim")) {
-					list.add((E) new PossibleVictim(rs.getString("kind"), rs.getString("role"),
-							rs.getString("relator")));
+					list.add((E) new PossibleVictim(rs.getString(1), rs.getString(2),
+							rs.getString(3),rs.getString(4),rs.getString(5)));
+				}else if (table.contentEquals("hazard")) {
+					list.add((E) new Hazard(rs.getInt("id"),rs.getString("hazard"), rs.getString("harm")));
 				}
 
 			}
@@ -219,6 +222,9 @@ public class DataBaseConnection {
 		insertRelator("relator", "balance support");
 		insertRelator("relator", "liftup");
 		insertRelator("relator", "electric consumption");
+		insert("INSERT INTO roletoplay (role,roleid,kind,kindid) VALUES('being supported',0,'patient',0)");
+		insert("INSERT INTO roletoplay (role,roleid,kind,kindid) VALUES('being lifted',1,'patient',0)");
+		
 
 	}
 

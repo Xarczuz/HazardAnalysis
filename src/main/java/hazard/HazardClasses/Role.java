@@ -5,7 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseEvent;
 
-public class Role extends Hazard{
+public class Role extends Play{
 	String role;
 	private Boolean start,runtime,shutdown;
 	private CheckBox cbstart,cbruntime,cbshutdown;

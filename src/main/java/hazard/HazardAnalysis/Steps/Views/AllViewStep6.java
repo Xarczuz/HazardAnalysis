@@ -4,9 +4,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
 public class AllViewStep6 implements AllViewInterface {
-//	private GridPane prevGp, thisGp,nextGp;
-//	private BorderPane mainView;
-//	
+	private GridPane prevGp, thisGp,nextGp;
+	private BorderPane mainView;
+	
 	@Override
 	public GridPane addGridPane() {
 		// TODO Auto-generated method stub

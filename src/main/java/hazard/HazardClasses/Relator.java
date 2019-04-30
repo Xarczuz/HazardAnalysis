@@ -1,6 +1,6 @@
 package hazard.HazardClasses;
 
-public class Relator extends Hazard {
+public class Relator extends Play {
 	String relator;
 
 	public Relator(int id, String relator) {

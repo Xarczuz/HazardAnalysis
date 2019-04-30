@@ -39,7 +39,7 @@ public class CreateDataBase {
 		String sql3 = "CREATE TABLE IF NOT EXISTS roletoplay (id integer PRIMARY KEY,kind text NOT NULL, kindid integer NOT NULL, role text NOT NULL, roleid integer NOT NULL);";
 		String sql4 = "CREATE TABLE IF NOT EXISTS relator (id integer PRIMARY KEY,relator text NOT NULL);";
 		String sql5 = "CREATE TABLE IF NOT EXISTS relatortorole (id integer PRIMARY KEY, relator text NOT NULL, relatorid integer NOT NULL, role text NOT NULL, roleid integer NOT NULL);";
-		String sql6 = "CREATE TABLE IF NOT EXISTS mishapvictim (id integer PRIMARY KEY, mishapvictim text NOT NULL, roleid integer NOT NULL, relatorid integer NOT NULL, kindid integer NOT NULL, harmtruthmaker text NOT NULL);";
+		String sql6 = "CREATE TABLE IF NOT EXISTS hazard (id integer PRIMARY KEY, hazard text NOT NULL, harm text NOT NULL);";
 
 		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
 			// create a new table

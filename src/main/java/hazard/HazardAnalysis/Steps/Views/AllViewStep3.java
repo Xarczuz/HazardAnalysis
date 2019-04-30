@@ -3,7 +3,7 @@ package hazard.HazardAnalysis.Steps.Views;
 import java.util.Optional;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardClasses.Hazard;
+import hazard.HazardClasses.Play;
 import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
@@ -265,7 +265,7 @@ public class AllViewStep3 implements AllViewInterface{
 				if (tb.getItems().size() != 0) {
 					int index = tb.getSelectionModel().selectedIndexProperty().get();
 					if (index != -1) {
-						Hazard o = tb.getItems().remove(index);
+						Play o = tb.getItems().remove(index);
 						DataBaseConnection.delete(s, o.getId());
 					}
 				}

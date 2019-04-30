@@ -1,16 +1,20 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
+import hazard.HazardClasses.Hazard;
+import hazard.HazardClasses.Play;
 import hazard.HazardClasses.PossibleVictim;
-import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -23,11 +27,19 @@ public class AllViewStep5 implements AllViewInterface {
 	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
 	ObservableList<PossibleVictim> possibleVictimList = FXCollections.observableArrayList();
+	ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 
 	public void updatePossibleVictimList() {
-		DataBaseConnection.sql(
-				"select kind.kind,role.role,relatortorole.relator from kind,role,relatortorole,roletoplay where (roletoplay.kindid = kind.id and roletoplay.roleid = role.id and relatortorole.roleid = role.id);",
+		DataBaseConnection.sql("SELECT DISTINCT\r\n" + "kind.kind,e1.role,e1.relator,e2.role,k2.kind\r\n" + "FROM\r\n"
+				+ " relatortorole e1,kind,roletoplay,kind k2,roletoplay r2\r\n"
+				+ "INNER JOIN relatortorole e2 ON e1.relatorid = e2.relatorid \r\n"
+				+ "   AND (e1.roleid <> e2.roleid AND e1.role <> e2.role) where roletoplay.kindid = kind.id and roletoplay.roleid = e1.roleid and  r2.kindid = k2.id and r2.roleid = e2.roleid;",
 				"possiblevictim", possibleVictimList);
+	}
+
+	public void updateHazardList() {
+		DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
+
 	}
 
 	public AllViewStep5(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
@@ -58,72 +70,65 @@ public class AllViewStep5 implements AllViewInterface {
 		Text category = new Text("Possible Mishap Vicitms");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
-		final TableView<PossibleVictim> tbRole = new TableView<PossibleVictim>();
-		tbRole.setMinWidth(350);
-		TableColumn<PossibleVictim, String> kind = new TableColumn<PossibleVictim, String>("Kind");
-		TableColumn<PossibleVictim, String> role = new TableColumn<PossibleVictim, String>("Role");
-		TableColumn<PossibleVictim, String> relator = new TableColumn<PossibleVictim, String>("Relator");
-
+		final TableView<PossibleVictim> tbPossibleVictim = new TableView<PossibleVictim>();
+		tbPossibleVictim.setMinWidth(800);
+		tbPossibleVictim.setMaxHeight(200);
+		TableColumn<PossibleVictim, String> kind = new TableColumn<PossibleVictim, String>("Environment Object");
+		TableColumn<PossibleVictim, String> role = new TableColumn<PossibleVictim, String>("Hazard Element");
+		TableColumn<PossibleVictim, String> relator = new TableColumn<PossibleVictim, String>("Exposure");
+		TableColumn<PossibleVictim, String> role2 = new TableColumn<PossibleVictim, String>("Playing Role");
+		TableColumn<PossibleVictim, String> kind2 = new TableColumn<PossibleVictim, String>("Possible Vicitm");
 		kind.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind"));
 		role.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role"));
 		relator.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("relator"));
-
-//		role.setMinWidth(200);
-		tbRole.getColumns().addAll(kind, role, relator);
+		role2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role2"));
+		kind2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind2"));
+		tbPossibleVictim.getColumns().addAll(kind, role, relator, kind2,role2);
 
 		updatePossibleVictimList();
-		tbRole.setItems(possibleVictimList);
-		grid.add(tbRole, 0, 1);
-
-		Button btnAdd = new Button("+");
-		Button btnRemove = new Button("-");
-
-		GridPane gridBtn1 = new GridPane();
-		gridBtn1.add(btnAdd, 0, 0);
-		gridBtn1.add(btnRemove, 0, 1);
-
-		grid.add(gridBtn1, 1, 1);
+		tbPossibleVictim.setItems(possibleVictimList);
+		grid.add(tbPossibleVictim, 0, 1);
 
 		Text category2 = new Text("Mishap Victim");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(category2, 2, 0);
-		final TableView<Role> tbVictim = new TableView<Role>();
-		tbVictim.setMaxWidth(350);
-		TableColumn<Role, Integer> id2 = new TableColumn<Role, Integer>("ID");
-		TableColumn<Role, String> victim = new TableColumn<Role, String>("Role");
-		TableColumn<Role, CheckBox> rStart = new TableColumn<Role, CheckBox>("Start");
-		TableColumn<Role, CheckBox> rRuntime = new TableColumn<Role, CheckBox>("RunTime");
-		TableColumn<Role, CheckBox> rShutdown = new TableColumn<Role, CheckBox>("Shutdown");
+		grid.add(category2, 0, 3);
+		final TableView<Hazard> tbVictim = new TableView<Hazard>();
+		tbVictim.setMinWidth(800);
+		tbVictim.setMaxHeight(200);
+		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
+		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
+		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
 
-		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
-		victim.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
+		hazard.setMinWidth(400);
+		hazardDescription.setMinWidth(350);
+		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
+		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
+		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
 
-		rStart.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbstart"));
-		rStart.setStyle("-fx-alignment: CENTER;");
-		rRuntime.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbruntime"));
-		rRuntime.setStyle("-fx-alignment: CENTER;");
-		rShutdown.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbshutdown"));
-		rShutdown.setStyle("-fx-alignment: CENTER;");
+		tbVictim.getColumns().addAll(id, hazard, hazardDescription);
+		updateHazardList();
+		tbVictim.setItems(hazardList);
+		grid.add(tbVictim, 0, 4);
 
-		id2.setMaxWidth(30);
-		victim.setMinWidth(100);
-//		tbVictim.getColumns().addAll(id2, role, rStart, rRuntime, rShutdown);
-		ObservableList<Role> victimList = FXCollections.observableArrayList();
-
-//		DataBaseConnection.selectAll("role", roleList);
-		tbVictim.setItems(victimList);
-		grid.add(tbVictim, 2, 1);
-		// grid.add(addButtonsToTable(tbVictim, victimList, "Role"), 1, 2);
+		Button btnAdd = new Button("+");
+		addVictimEvent(btnAdd, tbPossibleVictim, hazardList);
+		Button btnRemove = new Button("-");
+		removeVictimEvent(btnRemove, tbVictim);
+		GridPane gridBtn1 = new GridPane();
+		gridBtn1.add(btnAdd, 0, 0);
+		gridBtn1.add(btnRemove, 1, 0);
+		grid.add(gridBtn1, 0, 2);
 
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
-		Text step4 = new Text(
-				"• Step 5: Since the occurrence of a mishap event must have more than one mishap victim\r\n"
-						+ "to participate in the event, this step identifies all the possible mishap victims");
-		step4.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step4.setWrappingWidth(400);
-		grid.add(step4, 3, 1);
+		Text step5 = new Text(
+				"• Step 5: Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
+						+ "continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness,\r\n"
+						+ "explosion, etc.");
+		step5.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
+		step5.setWrappingWidth(300);
+		grid.add(step5, 3, 1);
 
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
@@ -147,6 +152,78 @@ public class AllViewStep5 implements AllViewInterface {
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		return btnNextStep;
+	}
+
+	private void addVictimEvent(Button btnAdd, TableView<PossibleVictim> tbPossibleVictim,
+			ObservableList<Hazard> hazardList) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (tbPossibleVictim.getSelectionModel().getSelectedIndex() <0) {
+					return;
+				}
+				TextInputDialog dialog = new TextInputDialog("");
+				dialog.setTitle("Add Mishap Victim");
+				dialog.setHeaderText(
+						"Enter a new title for the possible harm that can happen \nto the mishap victim and a more detailed description of it.");
+
+				TextField t = new TextField("Title of the possible harm");
+				TextArea ta = new TextArea("Descrption of the possible harm.");
+
+				GridPane gp = new GridPane();
+				gp.setPadding(new Insets(15, 15, 15, 15));
+				t.setPadding(new Insets(10, 5, 5, 5));
+
+				ta.setPadding(new Insets(10, 5, 5, 5));
+				gp.add(t, 0, 0);
+				gp.add(ta, 0, 1);
+
+				dialog.getDialogPane().setContent(gp);
+
+				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+					@Override
+					public void handle(DialogEvent event) {
+						int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
+						if (index > -1 && !t.getText().isEmpty() && !ta.getText().isEmpty()) {
+							PossibleVictim pv = tbPossibleVictim.getItems().get(index);
+
+							String hazard = pv.getRelator() + "(" + pv.getRole() + ":" + pv.getKind() + ")" + "("
+									+ pv.getRole2() + "<" + t.getText() + ">:" + pv.getKind2() + ")";
+							String harm = ta.getText();
+							DataBaseConnection
+									.insert("INSERT INTO hazard (hazard,harm) VALUES('" + hazard + "','" + harm + "')");
+
+							DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
+
+						}
+					}
+				};
+
+				dialog.setOnCloseRequest(eventHandler);
+				dialog.show();
+				t.requestFocus();
+
+			}
+		};
+		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+	}
+
+	private void removeVictimEvent(Button btnRemove, TableView<Hazard> tbVictim) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (tbVictim.getItems().size() != 0) {
+					int index = tbVictim.getSelectionModel().selectedIndexProperty().get();
+					if (index != -1) {
+						Play o = (Play) tbVictim.getItems().remove(index);
+						DataBaseConnection.delete("hazard", o.getId());
+					}
+				}
+			}
+		};
+		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
 	}
 
 	@Override
