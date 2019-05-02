@@ -24,24 +24,30 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class AllViewStep1 {
-	GridPane thisGp;
-	BorderPane border;
-	AllViewStep2 av2;
-	AllViewStep3 av3;
-	AllViewStep4 av4;
-	AllViewStep5 av5;
+	private GridPane thisGp;
+	private BorderPane border;
+	private AllViewStep2 av2;
+	private AllViewStep3 av3;
+	private AllViewStep4 av4;
+	private AllViewStep5 av5;
+	private AllViewStep6 av6;
+	private AllViewStep7 av7;
 
 	public AllViewStep1(BorderPane border) {
 		this.thisGp = addGridPane();
 		this.border = border;
-		this.av2 = new AllViewStep2(this,border, getGridPane());
-		this.av3 = new AllViewStep3(this,border, getAv2().getGridPane());
-		this.av4 = new AllViewStep4(this,border, getAv3().getGridPane());
-		this.av5 = new AllViewStep5(this,border, getAv4().getGridPane());
+		this.av2 = new AllViewStep2(this, border, getGridPane());
+		this.av3 = new AllViewStep3(this, border, getAv2().getGridPane());
+		this.av4 = new AllViewStep4(this, border, getAv3().getGridPane());
+		this.av5 = new AllViewStep5(this, border, getAv4().getGridPane());
+		this.av6 = new AllViewStep6(this, border, getAv5().getGridPane());
+		this.av7 = new AllViewStep7(getAv5().getGridPane());
+
 		this.av2.setNextGp(this.av3.getGridPane());
 		this.av3.setNextGp(this.av4.getGridPane());
 		this.av4.setNextGp(this.av5.getGridPane());
-//		this.av5.setNextGp(this.av3.getGridPane());
+		this.av5.setNextGp(this.av6.getGridPane());
+		this.av6.setNextGp(this.av7.getGridPane());
 	}
 
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
@@ -83,7 +89,7 @@ public class AllViewStep1 {
 							getAv2().updateTbKind();
 							getAv3().updateTbRole();
 							getAv4().updateTbRole();
-							
+
 						}
 					}
 				};
@@ -234,12 +240,21 @@ public class AllViewStep1 {
 		return av5;
 	}
 
+	public AllViewStep6 getAv6() {
+
+		return av6;
+	}
+
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}
 
 	public BorderPane getMainView() {
 		return this.border;
+	}
+
+	public AllViewStep7 getAv7() {
+		return av7;
 	}
 
 }

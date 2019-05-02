@@ -26,6 +26,7 @@ import javafx.scene.text.Text;
 public class AllViewStep5 implements AllViewInterface {
 	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
+	private AllViewStep1 av1;
 	ObservableList<PossibleVictim> possibleVictimList = FXCollections.observableArrayList();
 	ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 
@@ -46,6 +47,7 @@ public class AllViewStep5 implements AllViewInterface {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.mainView = mainView;
+		this.av1 = allViewStep1;
 	}
 
 	private Button addEventToGoToPrevStep(Button btnNextStep) {
@@ -76,20 +78,20 @@ public class AllViewStep5 implements AllViewInterface {
 		TableColumn<PossibleVictim, String> kind = new TableColumn<PossibleVictim, String>("Environment Object");
 		TableColumn<PossibleVictim, String> role = new TableColumn<PossibleVictim, String>("Hazard Element");
 		TableColumn<PossibleVictim, String> relator = new TableColumn<PossibleVictim, String>("Exposure");
-		TableColumn<PossibleVictim, String> role2 = new TableColumn<PossibleVictim, String>("Playing Role");
-		TableColumn<PossibleVictim, String> kind2 = new TableColumn<PossibleVictim, String>("Possible Vicitm");
+		TableColumn<PossibleVictim, String> role2 = new TableColumn<PossibleVictim, String>("Possible Vicitm");
+		TableColumn<PossibleVictim, String> kind2 = new TableColumn<PossibleVictim, String>("Environment Object");
 		kind.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind"));
 		role.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role"));
 		relator.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("relator"));
 		role2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role2"));
 		kind2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind2"));
-		tbPossibleVictim.getColumns().addAll(kind, role, relator, kind2,role2);
+		tbPossibleVictim.getColumns().addAll(kind, role, relator, kind2, role2);
 
 		updatePossibleVictimList();
 		tbPossibleVictim.setItems(possibleVictimList);
 		grid.add(tbPossibleVictim, 0, 1);
 
-		Text category2 = new Text("Mishap Victim");
+		Text category2 = new Text("Mishap Victims");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 0, 3);
 		final TableView<Hazard> tbVictim = new TableView<Hazard>();
@@ -146,7 +148,7 @@ public class AllViewStep5 implements AllViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-
+				av1.getAv6().updateHazardList();
 				getMainView().setCenter(getNextGridPane());
 			}
 		};
@@ -159,7 +161,7 @@ public class AllViewStep5 implements AllViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (tbPossibleVictim.getSelectionModel().getSelectedIndex() <0) {
+				if (tbPossibleVictim.getSelectionModel().getSelectedIndex() < 0) {
 					return;
 				}
 				TextInputDialog dialog = new TextInputDialog("");

@@ -125,6 +125,21 @@ public class MainView {
 			}
 		};
 		options[4].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				allView.getAv6().updateHazardList();
+				border.setCenter(allView.getAv6().getGridPane());
+			}
+		};
+		options[5].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				border.setCenter(allView.getAv7().getGridPane());
+			}
+		};
+		options[6].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 		for (int i = 0; i < options.length; i++) {
 
