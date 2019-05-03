@@ -179,7 +179,8 @@ public class ViewStep7 implements ViewInterface {
 					DataBaseConnection.sqlUpdate("UPDATE hazard SET severity=" + returnRiskValue(comboBox.getValue())
 							+ ", probability=" + returnRiskValue(comboBox2.getValue()) + ", riskevaluation="
 							+ (returnRiskValue(comboBox2.getValue()) * returnRiskValue(comboBox.getValue())) + ", risk="
-							+ true + " where hazard.id=" + id + ";");
+							+ ch.isSelected() + " where hazard.id=" + id + ";");
+
 				}
 
 			}
