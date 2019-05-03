@@ -202,6 +202,7 @@ public class DataBaseConnection {
 							rs.getString(5)));
 				} else if (table.contentEquals("hazard")) {
 					list.add((E) new Hazard(rs.getInt("id"), rs.getString("hazard"), rs.getString("harm")));
+					
 				} else if (table.contentEquals("cause")) {
 					list.add((E) new Cause(rs.getInt("id"), rs.getString("cause"), rs.getInt("hazardid")));
 				}
@@ -370,9 +371,9 @@ public class DataBaseConnection {
 
 			}
 
-			sheet.autoSizeColumn(0, true);
-			sheet.autoSizeColumn(1, true);
-			sheet.autoSizeColumn(2, true);
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
 
 			File currDir = new File(".");
 			String path = currDir.getAbsolutePath();

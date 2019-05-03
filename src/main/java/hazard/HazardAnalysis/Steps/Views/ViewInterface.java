@@ -3,7 +3,7 @@ package hazard.HazardAnalysis.Steps.Views;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
-public interface AllViewInterface {
+public interface ViewInterface {
 	
 	public GridPane addGridPane();
 
@@ -15,5 +15,5 @@ public interface AllViewInterface {
 	
 	public GridPane getPrevGridPane();
 	
-	public void setNextGp(GridPane nexpGp);
+	public void setNextGp(GridPane nextGp);
 }

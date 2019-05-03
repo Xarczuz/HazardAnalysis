@@ -18,13 +18,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class AllViewStep2 implements AllViewInterface{
+public class ViewStep2 implements ViewInterface{
 	private GridPane prevGp, thisGp,nextGp;
 	private BorderPane mainView;
 	
 	ObservableList<Kind> kindList = FXCollections.observableArrayList();
 
-	public AllViewStep2(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep2(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.mainView = mainView;

@@ -23,31 +23,42 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class AllViewStep1 {
+public class ViewStep1 {
 	private GridPane thisGp;
 	private BorderPane border;
-	private AllViewStep2 av2;
-	private AllViewStep3 av3;
-	private AllViewStep4 av4;
-	private AllViewStep5 av5;
-	private AllViewStep6 av6;
-	private AllViewStep7 av7;
+	private ViewStep2 av2;
+	private ViewStep3 av3;
+	private ViewStep4 av4;
+	private ViewStep5 av5;
+	private ViewStep6 av6;
+	private ViewStep7 av7;
+	private ViewStep8 av8;
+	private ViewStep9 av9;
 
-	public AllViewStep1(BorderPane border) {
+	public ViewStep1(BorderPane border) {
 		this.thisGp = addGridPane();
 		this.border = border;
-		this.av2 = new AllViewStep2(this, border, getGridPane());
-		this.av3 = new AllViewStep3(this, border, getAv2().getGridPane());
-		this.av4 = new AllViewStep4(this, border, getAv3().getGridPane());
-		this.av5 = new AllViewStep5(this, border, getAv4().getGridPane());
-		this.av6 = new AllViewStep6(this, border, getAv5().getGridPane());
-		this.av7 = new AllViewStep7(getAv5().getGridPane());
+		this.av2 = new ViewStep2(this, border, getGridPane());
+		this.av3 = new ViewStep3(this, border, getAv2().getGridPane());
+		this.av4 = new ViewStep4(this, border, getAv3().getGridPane());
+		this.av5 = new ViewStep5(this, border, getAv4().getGridPane());
+		this.av6 = new ViewStep6(this, border, getAv5().getGridPane());
+		this.av7 = new ViewStep7(this, border, getAv6().getGridPane());
+		this.av8 = new ViewStep8(this, border, getAv7().getGridPane());
+		this.av9 = new ViewStep9(this, border, getAv8().getGridPane());
 
 		this.av2.setNextGp(this.av3.getGridPane());
 		this.av3.setNextGp(this.av4.getGridPane());
 		this.av4.setNextGp(this.av5.getGridPane());
 		this.av5.setNextGp(this.av6.getGridPane());
 		this.av6.setNextGp(this.av7.getGridPane());
+		this.av7.setNextGp(this.av8.getGridPane());
+		this.av8.setNextGp(this.av9.getGridPane());
+		
+	}
+
+	public ViewStep8 getAv8() {
+		return this.av8;
 	}
 
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
@@ -219,28 +230,28 @@ public class AllViewStep1 {
 		return btnNextStep;
 	}
 
-	public AllViewStep2 getAv2() {
+	public ViewStep2 getAv2() {
 		av2.updateTbKind();
 		return av2;
 	}
 
-	public AllViewStep3 getAv3() {
+	public ViewStep3 getAv3() {
 		av3.updateTbRole();
 		return av3;
 	}
 
-	public AllViewStep4 getAv4() {
+	public ViewStep4 getAv4() {
 		av4.updateTbRole();
 		return av4;
 	}
 
-	public AllViewStep5 getAv5() {
+	public ViewStep5 getAv5() {
 		av5.updatePossibleVictimList();
 		av5.updateHazardList();
 		return av5;
 	}
 
-	public AllViewStep6 getAv6() {
+	public ViewStep6 getAv6() {
 
 		return av6;
 	}
@@ -253,7 +264,7 @@ public class AllViewStep1 {
 		return this.border;
 	}
 
-	public AllViewStep7 getAv7() {
+	public ViewStep7 getAv7() {
 		return av7;
 	}
 

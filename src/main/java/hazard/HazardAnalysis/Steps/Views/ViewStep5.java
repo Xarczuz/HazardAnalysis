@@ -23,10 +23,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class AllViewStep5 implements AllViewInterface {
+public class ViewStep5 implements ViewInterface {
 	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
-	private AllViewStep1 av1;
+	private ViewStep1 av1;
 	ObservableList<PossibleVictim> possibleVictimList = FXCollections.observableArrayList();
 	ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 
@@ -43,11 +43,11 @@ public class AllViewStep5 implements AllViewInterface {
 
 	}
 
-	public AllViewStep5(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep5(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.mainView = mainView;
-		this.av1 = allViewStep1;
+		this.av1 = viewStep1;
 	}
 
 	private Button addEventToGoToPrevStep(Button btnNextStep) {
@@ -169,9 +169,10 @@ public class AllViewStep5 implements AllViewInterface {
 				dialog.setHeaderText(
 						"Enter a new title for the possible harm that can happen \nto the mishap victim and a more detailed description of it.");
 
-				TextField t = new TextField("Title of the possible harm");
-				TextArea ta = new TextArea("Descrption of the possible harm.");
-
+				TextField t = new TextField();
+				TextArea ta = new TextArea();
+				t.setPromptText("Title of the possible harm.");
+				ta.setPromptText("Descrption of the possible harm.");
 				GridPane gp = new GridPane();
 				gp.setPadding(new Insets(15, 15, 15, 15));
 				t.setPadding(new Insets(10, 5, 5, 5));
@@ -186,7 +187,9 @@ public class AllViewStep5 implements AllViewInterface {
 					@Override
 					public void handle(DialogEvent event) {
 						int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
-						if (index > -1 && !t.getText().isEmpty() && !ta.getText().isEmpty()) {
+						if (dialog.getResult() != null && index > -1 && !t.getText().isEmpty()
+								&& !ta.getText().isEmpty()) {
+
 							PossibleVictim pv = tbPossibleVictim.getItems().get(index);
 
 							String hazard = pv.getRelator() + "(" + pv.getRole() + ":" + pv.getKind() + ")" + "("

@@ -21,16 +21,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class AllViewStep6 implements AllViewInterface {
+public class ViewStep6 implements ViewInterface {
 	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
 	private ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 	private ObservableList<Cause> causeList = FXCollections.observableArrayList();
+	private ViewStep1 vs1;
 
-	public AllViewStep6(AllViewStep1 allViewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep6(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
 		this.mainView = mainView;
+		this.vs1 = viewStep1;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,17 +65,17 @@ public class AllViewStep6 implements AllViewInterface {
 		tbHazard.setItems(hazardList);
 		grid.add(tbHazard, 0, 1);
 
-		Text category2 = new Text("Causes that might lead to the hazard");
+		Text category2 = new Text("Pre-initiating events that might lead to the hazard");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 0, 3);
 		final TableView<Cause> tbCause = new TableView<Cause>();
 		tbCause.setMinWidth(800);
 		tbCause.setMaxHeight(200);
-		TableColumn<Cause, String> kind = new TableColumn<Cause, String>("Pre-initiating event for hazard");
-		kind.setMinWidth(400);
-		kind.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
+		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
+		cause.setMinWidth(400);
+		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
 
-		tbCause.getColumns().addAll(kind);
+		tbCause.getColumns().addAll(cause);
 
 		tbCause.setItems(causeList);
 		grid.add(tbCause, 0, 4);
@@ -89,9 +91,9 @@ public class AllViewStep6 implements AllViewInterface {
 		step6.setWrappingWidth(300);
 		grid.add(step6, 3, 1);
 
-		Button btnAdd = new Button("+");
+		Button btnAdd = new Button("Add Event");
 		addCauseEvent(btnAdd, tbHazard, causeList);
-		Button btnRemove = new Button("-");
+		Button btnRemove = new Button("Remove Event");
 		removeCauseEvent(btnRemove, tbCause, causeList);
 		GridPane gridBtn1 = new GridPane();
 		gridBtn1.add(btnAdd, 0, 0);
@@ -112,12 +114,11 @@ public class AllViewStep6 implements AllViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-
 				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
-				int id = tbHazard.getItems().get(index).getId();
-
-				DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-
+				if (index > -1) {
+					int id = tbHazard.getItems().get(index).getId();
+					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
+				}
 			}
 		};
 		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -159,7 +160,6 @@ public class AllViewStep6 implements AllViewInterface {
 					DataBaseConnection.insertCause(result.get(), h.getId());
 					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";", "cause",
 							list);
-
 				}
 
 			}
@@ -172,10 +172,9 @@ public class AllViewStep6 implements AllViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-
+				vs1.getAv7().updateHazardList();
 				getMainView().setCenter(getNextGridPane());
 
-		
 			}
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -220,7 +219,6 @@ public class AllViewStep6 implements AllViewInterface {
 
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
-
 	}
 
 }

@@ -1,5 +1,9 @@
 package hazard.HazardAnalysis.Steps.Views;
 
+import java.io.File;
+
+import hazard.HazardAnalysis.DataBase.CreateDataBase;
+import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,11 +23,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class MainView {
 
 	BorderPane border = new BorderPane();
-	AllViewStep1 allView = new AllViewStep1(border);
+	ViewStep1 allView;
+	private Stage pStage;
 
 	public HBox addHBox() {
 		HBox hbox = new HBox();
@@ -32,17 +39,65 @@ public class MainView {
 		hbox.setStyle("-fx-background-color: #336699;");
 
 		Button btnNew = new Button("New");
+		addNewEvent(btnNew);
 		btnNew.setPrefSize(100, 20);
 
 		Button btnLoad = new Button("Load");
+		addLoadEvent(btnLoad);
 		btnLoad.setPrefSize(100, 20);
 
-		Button btnSave = new Button("Save");
-		btnSave.setPrefSize(100, 20);
-
-		hbox.getChildren().addAll(btnNew, btnLoad, btnSave);
+		hbox.getChildren().addAll(btnNew, btnLoad);
 
 		return hbox;
+	}
+
+	private Button addLoadEvent(Button btnLoad) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Load database");
+				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
+				File file = fileChooser.showOpenDialog(pStage);
+				if (file != null) {
+					DataBaseConnection.setDatabase(file.getPath());
+					CreateDataBase.setDatabase(file.getPath());
+					allView = new ViewStep1(border);
+					border.setLeft(addVBox());
+					border.setCenter(allView.getGridPane());
+				}
+
+			}
+		};
+		btnLoad.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnLoad;
+	}
+
+	private Button addNewEvent(Button btnNew) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("New database");
+				fileChooser.setInitialFileName(".db");
+				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
+				File file = fileChooser.showSaveDialog(pStage);
+				if (file != null && file.getName().contains(".db")) {
+					DataBaseConnection.setDatabase(file.getPath());
+					CreateDataBase.setDatabase(file.getPath());
+					CreateDataBase.createNewDatabase();
+					CreateDataBase.createNewTable();
+
+//					DataBaseConnection.populateWithTestData();
+					allView = new ViewStep1(border);
+					border.setLeft(addVBox());
+					border.setCenter(allView.getGridPane());
+				}
+
+			}
+		};
+		btnNew.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNew;
 	}
 
 	public void addStackPane(HBox hb) {
@@ -81,7 +136,7 @@ public class MainView {
 
 		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"), new Hyperlink("Step 2"),
 				new Hyperlink("Step 3"), new Hyperlink("Step 4"), new Hyperlink("Step 5"), new Hyperlink("Step 6"),
-				new Hyperlink("Step 7") };
+				new Hyperlink("Step 7"), new Hyperlink("Step 8") };
 
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -136,10 +191,18 @@ public class MainView {
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				allView.getAv7().updateHazardList();
 				border.setCenter(allView.getAv7().getGridPane());
 			}
 		};
 		options[6].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				border.setCenter(allView.getAv8().getGridPane());
+			}
+		};
+		options[7].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 		for (int i = 0; i < options.length; i++) {
 
@@ -150,15 +213,14 @@ public class MainView {
 		return vbox;
 	}
 
-	public BorderPane view() {
-
+	public BorderPane view(Stage primaryStage) {
+		this.pStage = primaryStage;
 		HBox hbox = addHBox();
 		border.setTop(hbox);
-		border.setLeft(addVBox());
+		// border.setLeft(addVBox());
+		// border.setCenter(allView.getGridPane());
 
 		addStackPane(hbox); // Add stack to HBox in top region
-
-		border.setCenter(allView.getGridPane());
 
 		return border;
 	}
