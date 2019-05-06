@@ -22,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class ViewStep1 {
 	private GridPane thisGp;
@@ -34,8 +35,14 @@ public class ViewStep1 {
 	private ViewStep7 av7;
 	private ViewStep8 av8;
 	private ViewStep9 av9;
+	private Stage pStage;
 
-	public ViewStep1(BorderPane border) {
+	public Stage getpStage() {
+		return pStage;
+	}
+
+	public ViewStep1(Stage pStage, BorderPane border) {
+		this.pStage = pStage;
 		this.thisGp = addGridPane();
 		this.border = border;
 		this.av2 = new ViewStep2(this, border, getGridPane());
@@ -54,7 +61,7 @@ public class ViewStep1 {
 		this.av6.setNextGp(this.av7.getGridPane());
 		this.av7.setNextGp(this.av8.getGridPane());
 		this.av8.setNextGp(this.av9.getGridPane());
-		
+
 	}
 
 	public ViewStep8 getAv8() {

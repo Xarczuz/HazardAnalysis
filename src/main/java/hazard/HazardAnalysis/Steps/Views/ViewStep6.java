@@ -218,7 +218,7 @@ public class ViewStep6 implements ViewInterface {
 	}
 
 	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
 
 }

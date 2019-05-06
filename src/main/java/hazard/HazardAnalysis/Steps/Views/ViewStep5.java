@@ -39,7 +39,7 @@ public class ViewStep5 implements ViewInterface {
 	}
 
 	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 
 	}
 
@@ -198,7 +198,7 @@ public class ViewStep5 implements ViewInterface {
 							DataBaseConnection
 									.insert("INSERT INTO hazard (hazard,harm) VALUES('" + hazard + "','" + harm + "')");
 
-							DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
+							DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 
 						}
 					}

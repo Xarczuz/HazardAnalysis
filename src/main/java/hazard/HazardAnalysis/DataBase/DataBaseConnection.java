@@ -201,10 +201,16 @@ public class DataBaseConnection {
 					list.add((E) new PossibleVictim(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
 							rs.getString(5)));
 				} else if (table.contentEquals("hazard")) {
-					list.add((E) new Hazard(rs.getInt("id"), rs.getString("hazard"), rs.getString("harm")));
-					
+					Hazard hz = new Hazard(rs.getInt("id"), rs.getString("hazard"), rs.getString("harm"));
+					Double d = rs.getDouble("riskevaluation");
+					if (d != 0) {
+						hz.setRisk(String.valueOf(rs.getBoolean("risk")));
+					}
+					list.add((E) hz);
+
 				} else if (table.contentEquals("cause")) {
 					list.add((E) new Cause(rs.getInt("id"), rs.getString("cause"), rs.getInt("hazardid")));
+
 				}
 
 			}
@@ -262,7 +268,7 @@ public class DataBaseConnection {
 
 	}
 
-	public static void exportData() {
+	public static void exportData(File file) {
 
 		try {
 			Connection conn = connect();
@@ -367,17 +373,67 @@ public class DataBaseConnection {
 					cellCauses.setCellStyle(style);
 
 				}
-				rowIndex++;
 
+				Statement stmt3 = conn.createStatement();
+				String sql3 = "select *  from hazard where hazard.id=" + rs.getInt("id") + ";";
+				ResultSet rs3 = stmt3.executeQuery(sql3);
+
+				Row severityAndProbability = sheet.createRow(rowIndex);
+				rowIndex++;
+				Cell headerCellSAP = severityAndProbability.createCell(0);
+				headerCellSAP.setCellValue("Severity");
+				headerCellSAP.setCellStyle(headerStyle);
+				headerCellSAP = severityAndProbability.createCell(1);
+				headerCellSAP.setCellValue("Probability");
+				headerCellSAP.setCellStyle(headerStyle);
+
+				Row sapRow = sheet.createRow(rowIndex);
+				rowIndex++;
+				Cell sapCell = sapRow.createCell(0);
+				sapCell.setCellValue(rs3.getString("severity"));
+				sapCell.setCellStyle(style);
+				sapCell = sapRow.createCell(1);
+				sapCell.setCellValue(rs3.getString("probability"));
+				sapCell.setCellStyle(style);
+
+				Row riskRow = sheet.createRow(rowIndex);
+				rowIndex++;
+				Cell headerCellRisk = riskRow.createCell(0);
+				headerCellRisk.setCellValue("Risk Evaluation");
+				headerCellRisk.setCellStyle(headerStyle);
+				headerCellRisk = riskRow.createCell(1);
+				headerCellRisk.setCellValue("Risk");
+				headerCellRisk.setCellStyle(headerStyle);
+
+				Row riskValueRow = sheet.createRow(rowIndex);
+				rowIndex++;
+				Cell riskValueCell = riskValueRow.createCell(0);
+				riskValueCell.setCellValue(rs3.getString("riskevaluation"));
+				riskValueCell.setCellStyle(style);
+				riskValueCell = riskValueRow.createCell(1);
+				CellStyle styleRisk = workbook.createCellStyle();
+				styleRisk.setWrapText(false);
+				styleRisk.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+				String risk = "Denied";
+				if (rs3.getBoolean("risk")) {
+					risk = "Accept";
+					styleRisk.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+				} else {
+					styleRisk.setFillForegroundColor(IndexedColors.RED.getIndex());
+				}
+				riskValueCell.setCellValue(risk);
+				riskValueCell.setCellStyle(styleRisk);
+
+				rowIndex++;
 			}
 
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
-			sheet.autoSizeColumn(2);
+			// sheet.autoSizeColumn(2);
 
-			File currDir = new File(".");
-			String path = currDir.getAbsolutePath();
-			String fileLocation = path.substring(0, path.length() - 1) + "temp.xlsx";
+			
+			String fileLocation = file.getPath();
 
 			FileOutputStream outputStream = new FileOutputStream(fileLocation);
 			workbook.write(outputStream);

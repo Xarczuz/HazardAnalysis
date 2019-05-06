@@ -10,17 +10,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 public class ViewStep7 implements ViewInterface {
 	private GridPane prevGp, thisGp, nextGp;
@@ -66,7 +63,28 @@ public class ViewStep7 implements ViewInterface {
 		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
 		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
 		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
+		tbHazard.setRowFactory(new Callback<TableView<Hazard>, TableRow<Hazard>>() {
+			@Override
+			public TableRow<Hazard> call(TableView<Hazard> param) {
+				final TableRow<Hazard> row = new TableRow<Hazard>() {
+					@Override
+					protected void updateItem(Hazard item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!hazardList.isEmpty() && !empty) {
+							if (!item.getRisk().isEmpty()) {
+								if (!empty && item.getRisk().contentEquals("true")) {
+									setStyle("-fx-background-color: #7FFF00;");
+								} else if (!empty && item.getRisk().contentEquals("false")) {
+									setStyle("-fx-background-color: red;");
+								}
+							}
+						}
+					}
+				};
 
+				return row;
+			}
+		});
 		tbHazard.getColumns().addAll(id, hazard, hazardDescription);
 		addClickEventToTbHazard(tbHazard, causeList);
 		updateHazardList();
@@ -117,7 +135,6 @@ public class ViewStep7 implements ViewInterface {
 	}
 
 	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Hazard> tbHazard) {
-		// TODO Auto-generated method stub
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -135,22 +152,25 @@ public class ViewStep7 implements ViewInterface {
 				ObservableList<String> options2 = FXCollections.observableArrayList("High-75%", "Medium-50%",
 						"Low-25%");
 				final ComboBox<String> comboBox2 = new ComboBox<String>(options2);
-
+				Text severity = new Text("Severity");
+				Text probability = new Text("Probability");
 				GridPane gp = new GridPane();
-				gp.setPadding(new Insets(15, 15, 15, 15));
-				gp.add(comboBox, 0, 0);
-				gp.add(comboBox2, 1, 0);
+				// gp.setPadding(new Insets(15, 15, 15, 15));
+				gp.add(severity, 0, 0);
+				gp.add(probability, 1, 0);
+				gp.add(comboBox, 0, 1);
+				gp.add(comboBox2, 1, 1);
 
 				Text riskEvaluation = new Text("Risk Evaluation:");
 
 				Text riskEvaluationNr = new Text();
 
-				gp.add(riskEvaluation, 2, 0);
-				gp.add(riskEvaluationNr, 3, 0);
+				gp.add(riskEvaluation, 3, 1);
+				gp.add(riskEvaluationNr, 4, 1);
 
-				CheckBox ch = new CheckBox("Accept");
+				CheckBox ch = new CheckBox("Accept Risk");
 				ch.setPadding(new Insets(15, 15, 15, 15));
-				gp.add(ch, 4, 0);
+				gp.add(ch, 5, 1);
 				dialog.getDialogPane().setContent(gp);
 
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
@@ -182,15 +202,10 @@ public class ViewStep7 implements ViewInterface {
 							+ ch.isSelected() + " where hazard.id=" + id + ";");
 
 				}
-
+				updateHazardList();
 			}
+
 		};
-
-		tbHazard.setStyle("-fx-background-color: #FFD9D9;");
-		// TODO Change Background color by applysing a css file and set the row to a
-		// class to is defined in the css red/green.
-		// https://stackoverflow.com/questions/36088600/highlighting-multiple-cells-in-a-javafx-tablerow
-
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 	}
@@ -208,7 +223,7 @@ public class ViewStep7 implements ViewInterface {
 	}
 
 	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT id,hazard,harm FROM hazard;", "hazard", hazardList);
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
 
 	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
@@ -230,7 +245,6 @@ public class ViewStep7 implements ViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				DataBaseConnection.exportData();
 				getMainView().setCenter(getNextGridPane());
 			}
 		};

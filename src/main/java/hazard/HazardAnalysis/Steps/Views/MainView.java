@@ -62,7 +62,7 @@ public class MainView {
 				if (file != null) {
 					DataBaseConnection.setDatabase(file.getPath());
 					CreateDataBase.setDatabase(file.getPath());
-					allView = new ViewStep1(border);
+					allView = new ViewStep1(pStage,border);
 					border.setLeft(addVBox());
 					border.setCenter(allView.getGridPane());
 				}
@@ -89,7 +89,7 @@ public class MainView {
 					CreateDataBase.createNewTable();
 
 //					DataBaseConnection.populateWithTestData();
-					allView = new ViewStep1(border);
+					allView = new ViewStep1(pStage,border);
 					border.setLeft(addVBox());
 					border.setCenter(allView.getGridPane());
 				}
@@ -217,9 +217,6 @@ public class MainView {
 		this.pStage = primaryStage;
 		HBox hbox = addHBox();
 		border.setTop(hbox);
-		// border.setLeft(addVBox());
-		// border.setCenter(allView.getGridPane());
-
 		addStackPane(hbox); // Add stack to HBox in top region
 
 		return border;
