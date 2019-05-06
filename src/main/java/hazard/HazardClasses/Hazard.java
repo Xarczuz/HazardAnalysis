@@ -5,14 +5,6 @@ public class Hazard extends Play {
 	String hazardDescription;
 	String risk;
 
-	public String getRisk() {
-		return risk;
-	}
-
-	public void setRisk(String risk) {
-		this.risk = risk;
-	}
-
 	public Hazard(int id, String hazard, String hazardDescription) {
 		super(id);
 		this.hazard = hazard;
@@ -24,16 +16,24 @@ public class Hazard extends Play {
 		return hazard;
 	}
 
-	public void setHazard(String hazard) {
-		this.hazard = hazard;
-	}
-
 	public String getHazardDescription() {
 		return hazardDescription;
 	}
 
+	public String getRisk() {
+		return risk;
+	}
+
+	public void setHazard(String hazard) {
+		this.hazard = hazard;
+	}
+
 	public void setHazardDescription(String hazardDescription) {
 		this.hazardDescription = hazardDescription;
+	}
+
+	public void setRisk(String risk) {
+		this.risk = risk;
 	}
 
 }

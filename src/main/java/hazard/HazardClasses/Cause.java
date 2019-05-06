@@ -15,12 +15,12 @@ public class Cause extends Play {
 		return cause;
 	}
 
-	public void setCause(String cause) {
-		this.cause = cause;
-	}
-
 	public int getHazardID() {
 		return hazardID;
+	}
+
+	public void setCause(String cause) {
+		this.cause = cause;
 	}
 
 	public void setHazardID(int hazardID) {

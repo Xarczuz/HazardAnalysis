@@ -39,6 +39,32 @@ public class ViewStep7 implements ViewInterface {
 		this.mainView = border;
 	}
 
+	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
+				if (index > -1) {
+					int id = tbHazard.getItems().get(index).getId();
+					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
+				}
+			}
+		};
+		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+	}
+
+	private Button addEventToGoToPrevStep(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				getMainView().setCenter(getPrevGridPane());
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
@@ -134,6 +160,17 @@ public class ViewStep7 implements ViewInterface {
 		return grid;
 	}
 
+	private Button addNextStepEvent(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				getMainView().setCenter(getNextGridPane());
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
+	}
+
 	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Hazard> tbHazard) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -210,64 +247,6 @@ public class ViewStep7 implements ViewInterface {
 
 	}
 
-	private Double returnRiskValue(String s) {
-
-		if (s.toLowerCase().contains("high"))
-			return .75D;
-		if (s.toLowerCase().contains("medium"))
-			return .50D;
-		if (s.toLowerCase().contains("low"))
-			return .25D;
-
-		return 0D;
-	}
-
-	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-	}
-
-	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
-				if (index > -1) {
-					int id = tbHazard.getItems().get(index).getId();
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-				}
-			}
-		};
-		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-	}
-
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getNextGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
-	}
-
 	@Override
 	public GridPane getGridPane() {
 		return this.thisGp;
@@ -284,8 +263,29 @@ public class ViewStep7 implements ViewInterface {
 	}
 
 	@Override
+	public GridPane getPrevGridPane() {
+		return this.prevGp;
+	}
+
+	private Double returnRiskValue(String s) {
+
+		if (s.toLowerCase().contains("high"))
+			return .75D;
+		if (s.toLowerCase().contains("medium"))
+			return .50D;
+		if (s.toLowerCase().contains("low"))
+			return .25D;
+
+		return 0D;
+	}
+
+	@Override
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
+	}
+
+	public void updateHazardList() {
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
 
 }

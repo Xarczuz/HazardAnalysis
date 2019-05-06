@@ -18,10 +18,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class ViewStep2 implements ViewInterface{
-	private GridPane prevGp, thisGp,nextGp;
+public class ViewStep2 implements ViewInterface {
+	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
-	
+
 	ObservableList<Kind> kindList = FXCollections.observableArrayList();
 
 	public ViewStep2(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
@@ -83,15 +83,15 @@ public class ViewStep2 implements ViewInterface{
 		TableColumn<Kind, Boolean> start = new TableColumn<Kind, Boolean>("Start");
 		TableColumn<Kind, Boolean> runtime = new TableColumn<Kind, Boolean>("RunTime");
 		TableColumn<Kind, Boolean> shutdown = new TableColumn<Kind, Boolean>("ShutDown");
-		
+
 		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
 		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
-		start.setCellValueFactory(new PropertyValueFactory<Kind,Boolean>("start"));
-		runtime.setCellValueFactory(new PropertyValueFactory<Kind,Boolean>("runtime"));
-		shutdown.setCellValueFactory(new PropertyValueFactory<Kind,Boolean>("shutdown"));
-		
+		start.setCellValueFactory(new PropertyValueFactory<Kind, Boolean>("start"));
+		runtime.setCellValueFactory(new PropertyValueFactory<Kind, Boolean>("runtime"));
+		shutdown.setCellValueFactory(new PropertyValueFactory<Kind, Boolean>("shutdown"));
+
 		kind.setMinWidth(100);
-		tbKind.getColumns().addAll(id, kind,start,runtime,shutdown);
+		tbKind.getColumns().addAll(id, kind, start, runtime, shutdown);
 
 		DataBaseConnection.selectAll("kind", kindList);
 
@@ -240,6 +240,7 @@ public class ViewStep2 implements ViewInterface{
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
 	}
+
 	@Override
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;

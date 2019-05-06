@@ -5,10 +5,15 @@ import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseEvent;
 
-public class Role extends Play{
+public class Role extends Play {
 	String role;
-	private Boolean start,runtime,shutdown;
-	private CheckBox cbstart,cbruntime,cbshutdown;
+	private Boolean start, runtime, shutdown;
+	private CheckBox cbstart, cbruntime, cbshutdown;
+
+	public Role(int id, String role) {
+		super(id);
+		this.role = role;
+	}
 
 	public Role(int id, String role, boolean start, boolean runtime, boolean shutdown) {
 		super(id);
@@ -23,11 +28,6 @@ public class Role extends Play{
 		this.cbruntime.setSelected(runtime);
 		this.cbshutdown.setSelected(shutdown);
 		addClickEventToCheckBox();
-	}
-
-	public Role(int id, String role) {
-		super(id);
-		this.role = role;
 	}
 
 	private void addClickEventToCheckBox() {
@@ -110,6 +110,7 @@ public class Role extends Play{
 	public void setId(int id) {
 		super.setId(id);
 	}
+
 	public void setRole(String role) {
 		this.role = role;
 	}

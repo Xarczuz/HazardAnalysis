@@ -35,6 +35,57 @@ public class ViewStep6 implements ViewInterface {
 		this.vs1 = viewStep1;
 	}
 
+	private void addCauseEvent(Button btnAdd, TableView<Hazard> tbHazard, ObservableList<Cause> list) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				TextInputDialog dialog = new TextInputDialog("");
+
+				dialog.setTitle("Add Cause");
+				dialog.setHeaderText("Enter a new cause");
+				dialog.setContentText("Cause:");
+				int index = tbHazard.getSelectionModel().getSelectedIndex();
+				Optional<String> result = dialog.showAndWait();
+
+				if (result.isPresent() && index > -1) {
+					Hazard h = tbHazard.getItems().get(index);
+					DataBaseConnection.insertCause(result.get(), h.getId());
+					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";", "cause",
+							list);
+				}
+
+			}
+		};
+		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+	}
+
+	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
+				if (index > -1) {
+					int id = tbHazard.getItems().get(index).getId();
+					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
+				}
+			}
+		};
+		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+	}
+
+	private Button addEventToGoToPrevStep(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				getMainView().setCenter(getPrevGridPane());
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
@@ -110,64 +161,6 @@ public class ViewStep6 implements ViewInterface {
 		return grid;
 	}
 
-	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
-				if (index > -1) {
-					int id = tbHazard.getItems().get(index).getId();
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-				}
-			}
-		};
-		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-	}
-
-	private void removeCauseEvent(Button btnRemove, TableView<Cause> tbCause, ObservableList<Cause> list) {
-
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int index = tbCause.getSelectionModel().getSelectedIndex();
-				if (index > -1) {
-					int id = tbCause.getItems().get(index).getId();
-					DataBaseConnection.delete("cause", id);
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-
-				}
-
-			}
-		};
-		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	private void addCauseEvent(Button btnAdd, TableView<Hazard> tbHazard, ObservableList<Cause> list) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				TextInputDialog dialog = new TextInputDialog("");
-
-				dialog.setTitle("Add Cause");
-				dialog.setHeaderText("Enter a new cause");
-				dialog.setContentText("Cause:");
-				int index = tbHazard.getSelectionModel().getSelectedIndex();
-				Optional<String> result = dialog.showAndWait();
-
-				if (result.isPresent() && index > -1) {
-					Hazard h = tbHazard.getItems().get(index);
-					DataBaseConnection.insertCause(result.get(), h.getId());
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";", "cause",
-							list);
-				}
-
-			}
-		};
-		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-	}
-
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -175,17 +168,6 @@ public class ViewStep6 implements ViewInterface {
 				vs1.getAv7().updateHazardList();
 				getMainView().setCenter(getNextGridPane());
 
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
 			}
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -210,6 +192,24 @@ public class ViewStep6 implements ViewInterface {
 	@Override
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
+	}
+
+	private void removeCauseEvent(Button btnRemove, TableView<Cause> tbCause, ObservableList<Cause> list) {
+
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int index = tbCause.getSelectionModel().getSelectedIndex();
+				if (index > -1) {
+					int id = tbCause.getItems().get(index).getId();
+					DataBaseConnection.delete("cause", id);
+					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
+
+				}
+
+			}
+		};
+		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	@Override

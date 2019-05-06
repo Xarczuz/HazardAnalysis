@@ -7,8 +7,13 @@ import javafx.scene.input.MouseEvent;
 
 public class Kind extends Play {
 	private String kind;
-	private Boolean start,runtime,shutdown;
-	private CheckBox cbstart,cbruntime,cbshutdown;
+	private Boolean start, runtime, shutdown;
+	private CheckBox cbstart, cbruntime, cbshutdown;
+
+	public Kind(int id, String kind) {
+		super(id);
+		this.kind = kind;
+	}
 
 	public Kind(int id, String kind, boolean start, boolean runtime, boolean shutdown) {
 		super(id);
@@ -23,12 +28,7 @@ public class Kind extends Play {
 		this.cbruntime.setSelected(runtime);
 		this.cbshutdown.setSelected(shutdown);
 		addClickEventToCheckBox();
-		
-	}
 
-	public Kind(int id, String kind) {
-		super(id);
-		this.kind = kind;
 	}
 
 	private void addClickEventToCheckBox() {
@@ -101,9 +101,11 @@ public class Kind extends Play {
 	public void setCbstart(CheckBox cbstart) {
 		this.cbstart = cbstart;
 	}
+
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
+
 	public void setRuntime(Boolean runtime) {
 		this.runtime = runtime;
 	}
@@ -115,7 +117,5 @@ public class Kind extends Play {
 	public void setStart(Boolean start) {
 		this.start = start;
 	}
-
-	
 
 }

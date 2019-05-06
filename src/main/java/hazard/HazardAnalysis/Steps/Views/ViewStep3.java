@@ -22,12 +22,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class ViewStep3 implements ViewInterface{
-	private GridPane prevGp, thisGp,nextGp;
+public class ViewStep3 implements ViewInterface {
+	private GridPane prevGp, thisGp, nextGp;
 	private BorderPane mainView;
 
 	ObservableList<Role> roleList = FXCollections.observableArrayList();
-	
+
 	public ViewStep3(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
@@ -181,15 +181,15 @@ public class ViewStep3 implements ViewInterface{
 				if (roleIndex >= 0 && relatorIndex >= 0) {
 					Relator rel = tbRelator.getItems().remove(relatorIndex);
 					Role rol = tbRole.getItems().get(roleIndex);
-					DataBaseConnection.insert("INSERT INTO relatortorole (relator,relatorid,role,roleid) VALUES('" + rel.getRelator()
-							+ "'," + rel.getId() + ",'" + rol.getRole() + "'," + rol.getId() + ");");
+					DataBaseConnection.insert("INSERT INTO relatortorole (relator,relatorid,role,roleid) VALUES('"
+							+ rel.getRelator() + "'," + rel.getId() + ",'" + rol.getRole() + "'," + rol.getId() + ");");
 					relatorToRoleList.add(rel);
 				}
-
 			}
 		};
 		btnAddLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
+
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -206,26 +206,21 @@ public class ViewStep3 implements ViewInterface{
 			@Override
 			public void handle(MouseEvent e) {
 				TextInputDialog dialog = new TextInputDialog("");
-
 				dialog.setTitle("Add Relator");
 				dialog.setHeaderText("Enter a new relator");
 				dialog.setContentText("Relator:");
-
 				Optional<String> result = dialog.showAndWait();
-
 				if (result.isPresent()) {
-					
 					DataBaseConnection.insertRelator(s.toLowerCase(), result.get());
 					list.clear();
 					DataBaseConnection.selectAll(s.toLowerCase(), list);
-	
 				}
-
 			}
 		};
 		btnAddLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 	}
+
 	private void addRemoveLinkEvent(Button btnRemoveLink, ObservableList<Relator> relatorList, TableView<Role> tbRole,
 			TableView<Relator> tbRelatorToRole) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -236,7 +231,8 @@ public class ViewStep3 implements ViewInterface{
 				if (tbRelatorToRoleIndex >= 0 && roleIndex >= 0) {
 					Relator rel = tbRelatorToRole.getItems().remove(tbRelatorToRoleIndex);
 					Role role = tbRole.getItems().get(roleIndex);
-					DataBaseConnection.deleteRelatorToRole("relatortorole", String.valueOf(role.getId()), String.valueOf(rel.getId()));
+					DataBaseConnection.deleteRelatorToRole("relatortorole", String.valueOf(role.getId()),
+							String.valueOf(rel.getId()));
 					relatorList.add(rel);
 				}
 			}
@@ -258,10 +254,12 @@ public class ViewStep3 implements ViewInterface{
 	public GridPane getNextGridPane() {
 		return this.nextGp;
 	}
+
 	@Override
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
 	}
+
 	private void removeRelatorEventToBtn(Button btnRemoveLink1, String s, TableView<Relator> tb) {
 
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -278,11 +276,13 @@ public class ViewStep3 implements ViewInterface{
 		};
 		btnRemoveLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
+
 	@Override
-	public void setNextGp( GridPane nextGp) {
-		 	this.nextGp = nextGp;
-		
+	public void setNextGp(GridPane nextGp) {
+		this.nextGp = nextGp;
+
 	}
+
 	public void updateTbRole() {
 		DataBaseConnection.selectAll("role", roleList);
 	}

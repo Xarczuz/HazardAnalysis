@@ -37,10 +37,6 @@ public class ViewStep1 {
 	private ViewStep9 av9;
 	private Stage pStage;
 
-	public Stage getpStage() {
-		return pStage;
-	}
-
 	public ViewStep1(Stage pStage, BorderPane border) {
 		this.pStage = pStage;
 		this.thisGp = addGridPane();
@@ -62,10 +58,6 @@ public class ViewStep1 {
 		this.av7.setNextGp(this.av8.getGridPane());
 		this.av8.setNextGp(this.av9.getGridPane());
 
-	}
-
-	public ViewStep8 getAv8() {
-		return this.av8;
 	}
 
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
@@ -263,6 +255,14 @@ public class ViewStep1 {
 		return av6;
 	}
 
+	public ViewStep7 getAv7() {
+		return av7;
+	}
+
+	public ViewStep8 getAv8() {
+		return this.av8;
+	}
+
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}
@@ -271,8 +271,8 @@ public class ViewStep1 {
 		return this.border;
 	}
 
-	public ViewStep7 getAv7() {
-		return av7;
+	public Stage getpStage() {
+		return pStage;
 	}
 
 }

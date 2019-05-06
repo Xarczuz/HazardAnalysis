@@ -30,19 +30,6 @@ public class ViewStep5 implements ViewInterface {
 	ObservableList<PossibleVictim> possibleVictimList = FXCollections.observableArrayList();
 	ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 
-	public void updatePossibleVictimList() {
-		DataBaseConnection.sql("SELECT DISTINCT\r\n" + "kind.kind,e1.role,e1.relator,e2.role,k2.kind\r\n" + "FROM\r\n"
-				+ " relatortorole e1,kind,roletoplay,kind k2,roletoplay r2\r\n"
-				+ "INNER JOIN relatortorole e2 ON e1.relatorid = e2.relatorid \r\n"
-				+ "   AND (e1.roleid <> e2.roleid AND e1.role <> e2.role) where roletoplay.kindid = kind.id and roletoplay.roleid = e1.roleid and  r2.kindid = k2.id and r2.roleid = e2.roleid;",
-				"possiblevictim", possibleVictimList);
-	}
-
-	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-
-	}
-
 	public ViewStep5(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.prevGp = prevGp;
@@ -214,23 +201,6 @@ public class ViewStep5 implements ViewInterface {
 
 	}
 
-	private void removeVictimEvent(Button btnRemove, TableView<Hazard> tbVictim) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				if (tbVictim.getItems().size() != 0) {
-					int index = tbVictim.getSelectionModel().selectedIndexProperty().get();
-					if (index != -1) {
-						Play o = tbVictim.getItems().remove(index);
-						DataBaseConnection.delete("hazard", o.getId());
-					}
-				}
-			}
-		};
-		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-	}
-
 	@Override
 	public GridPane getGridPane() {
 		return this.thisGp;
@@ -251,8 +221,38 @@ public class ViewStep5 implements ViewInterface {
 		return this.prevGp;
 	}
 
+	private void removeVictimEvent(Button btnRemove, TableView<Hazard> tbVictim) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (tbVictim.getItems().size() != 0) {
+					int index = tbVictim.getSelectionModel().selectedIndexProperty().get();
+					if (index != -1) {
+						Play o = tbVictim.getItems().remove(index);
+						DataBaseConnection.delete("hazard", o.getId());
+					}
+				}
+			}
+		};
+		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+	}
+
 	@Override
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
+	}
+
+	public void updateHazardList() {
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+
+	}
+
+	public void updatePossibleVictimList() {
+		DataBaseConnection.sql("SELECT DISTINCT\r\n" + "kind.kind,e1.role,e1.relator,e2.role,k2.kind\r\n" + "FROM\r\n"
+				+ " relatortorole e1,kind,roletoplay,kind k2,roletoplay r2\r\n"
+				+ "INNER JOIN relatortorole e2 ON e1.relatorid = e2.relatorid \r\n"
+				+ "   AND (e1.roleid <> e2.roleid AND e1.role <> e2.role) where roletoplay.kindid = kind.id and roletoplay.roleid = e1.roleid and  r2.kindid = k2.id and r2.roleid = e2.roleid;",
+				"possiblevictim", possibleVictimList);
 	}
 }

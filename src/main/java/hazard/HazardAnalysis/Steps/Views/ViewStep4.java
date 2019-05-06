@@ -23,7 +23,8 @@ public class ViewStep4 implements ViewInterface {
 	private BorderPane mainView;
 	ObservableList<Role> roleList = FXCollections.observableArrayList();
 
-private ViewStep1 av1;
+	private ViewStep1 av1;
+
 	public ViewStep4(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
 		this.thisGp = addGridPane();
 		this.av1 = viewStep1;
@@ -39,14 +40,12 @@ private ViewStep1 av1;
 				int index = tb.getSelectionModel().selectedIndexProperty().get();
 				if (index > -1) {
 					int id = tb.getItems().get(index).getId();
-
 					DataBaseConnection.sql(
 							"SELECT * FROM kind WHERE NOT EXISTS(SELECT * FROM roletoplay WHERE kind.id=roletoplay.kindid AND "
 									+ id + "=roletoplay.roleid);",
 							"kind", kindList);
 					DataBaseConnection.sql("SELECT * FROM roletoplay WHERE roleid=" + id + ";", "kindtorole",
 							kindToRoleList);
-
 				}
 			}
 		};
@@ -69,9 +68,6 @@ private ViewStep1 av1;
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 
-		
-		
-		
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
@@ -90,7 +86,7 @@ private ViewStep1 av1;
 		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
 		role.setMinWidth(200);
 		tbRole.getColumns().addAll(id, role);
-	
+
 		DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 0, 1);
@@ -239,6 +235,7 @@ private ViewStep1 av1;
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
 	}
+
 	public void updateTbRole() {
 		DataBaseConnection.selectAll("role", roleList);
 	}

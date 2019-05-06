@@ -68,7 +68,6 @@ public class MainView {
 					border.setLeft(addVBox());
 					border.setCenter(allView.getGridPane());
 				}
-
 			}
 		};
 		btnLoad.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -91,13 +90,11 @@ public class MainView {
 					CreateDataBase.setDatabase(file.getPath());
 					CreateDataBase.createNewDatabase();
 					CreateDataBase.createNewTable();
-
 //					DataBaseConnection.populateWithTestData();
 					allView = new ViewStep1(pStage, border);
 					border.setLeft(addVBox());
 					border.setCenter(allView.getGridPane());
 				}
-
 			}
 		};
 		btnNew.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -209,11 +206,9 @@ public class MainView {
 		options[7].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 		for (int i = 0; i < options.length; i++) {
-
 			VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
 			vbox.getChildren().add(options[i]);
 		}
-
 		return vbox;
 	}
 

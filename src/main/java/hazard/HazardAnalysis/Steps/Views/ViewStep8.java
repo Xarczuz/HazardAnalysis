@@ -26,29 +26,15 @@ public class ViewStep8 implements ViewInterface {
 		this.vs1 = viewStep1;
 	}
 
-	@Override
-	public GridPane addGridPane() {
-
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		ProgressIndicator p1 = new ProgressIndicator();
-		grid.add(p1, 0, 1);
-		p1.setProgress(0);
-		Button btnExport = new Button("Export to excel");
-		addExportEvent(btnExport, p1);
-		grid.add(btnExport, 0, 0);
-
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 3, 2);
-
-		return grid;
+	private Button addEventToGoToPrevStep(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				getMainView().setCenter(getPrevGridPane());
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
 	}
 
 	private void addExportEvent(Button btnExport, ProgressIndicator p1) {
@@ -82,6 +68,31 @@ public class ViewStep8 implements ViewInterface {
 
 	}
 
+	@Override
+	public GridPane addGridPane() {
+
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(10, 10, 0, 10));
+		ProgressIndicator p1 = new ProgressIndicator();
+		grid.add(p1, 0, 1);
+		p1.setProgress(0);
+		Button btnExport = new Button("Export to excel");
+		addExportEvent(btnExport, p1);
+		grid.add(btnExport, 0, 0);
+
+		Button btnBack = new Button("Back");
+		Button btnNextStep = new Button("Next Step");
+		GridPane gridBtn = new GridPane();
+
+		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
+		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
+		grid.add(gridBtn, 3, 2);
+
+		return grid;
+	}
+
 	private Button addNextStepEvent(Button btnNextStep) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -91,22 +102,6 @@ public class ViewStep8 implements ViewInterface {
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		return btnNextStep;
-	}
-
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
 	}
 
 	@Override
@@ -122,6 +117,11 @@ public class ViewStep8 implements ViewInterface {
 	@Override
 	public GridPane getNextGridPane() {
 		return this.nextGp;
+	}
+
+	@Override
+	public GridPane getPrevGridPane() {
+		return this.prevGp;
 	}
 
 	@Override

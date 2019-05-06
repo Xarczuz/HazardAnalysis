@@ -51,7 +51,7 @@ public class CreateDataBase {
 			stmt.execute(sql5);
 			stmt.execute(sql6);
 			stmt.execute(sql7);
-			
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
