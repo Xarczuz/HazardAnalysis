@@ -26,6 +26,8 @@ import hazard.HazardClasses.PossibleVictim;
 import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class DataBaseConnection {
 
@@ -438,6 +440,7 @@ public class DataBaseConnection {
 			FileOutputStream outputStream = new FileOutputStream(fileLocation);
 			workbook.write(outputStream);
 			workbook.close();
+	        
 
 		} catch (Exception e) {
 			e.printStackTrace();
