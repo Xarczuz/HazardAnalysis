@@ -1,6 +1,7 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import hazard.HazardAnalysis.DataBase.CreateDataBase;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
@@ -56,6 +57,7 @@ public class MainView {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
+				fileChooser.setInitialDirectory(new File(Paths.get("").toAbsolutePath().toString()));
 				fileChooser.setTitle("Load database");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
 				File file = fileChooser.showOpenDialog(pStage);
@@ -78,6 +80,7 @@ public class MainView {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
+				fileChooser.setInitialDirectory(new File(Paths.get("").toAbsolutePath().toString()));
 				fileChooser.setTitle("New database");
 				fileChooser.setInitialFileName(".db");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
