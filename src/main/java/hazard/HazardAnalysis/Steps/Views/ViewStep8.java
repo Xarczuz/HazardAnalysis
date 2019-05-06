@@ -1,6 +1,7 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import javafx.event.EventHandler;
@@ -53,15 +54,23 @@ public class ViewStep8 implements ViewInterface {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
+				fileChooser.setInitialDirectory(new File(Paths.get("").toAbsolutePath().toString()));
 				fileChooser.setTitle("New Excel");
 				fileChooser.setInitialFileName(".xlsx");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
 				File file = fileChooser.showSaveDialog(vs1.getpStage());
-				DataBaseConnection.exportData(file);
 				Alert a = new Alert(AlertType.INFORMATION);
-				a.setTitle("Export Done");
-				a.setContentText("Exported data to: " + file.getPath());
-				a.show();
+				if (file != null) {
+					DataBaseConnection.exportData(file);
+					a.setTitle("Export Done");
+					a.setContentText("Export Done");
+					a.show();
+				}else {
+					a.setTitle("Export Failed");
+					a.setContentText("Export Failed");
+					a.show();
+					
+				}
 			}
 		};
 		btnExport.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -90,10 +99,12 @@ public class ViewStep8 implements ViewInterface {
 		return btnNextStep;
 	}
 
+	@Override
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
 	}
 
+	@Override
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}

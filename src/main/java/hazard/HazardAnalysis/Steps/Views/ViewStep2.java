@@ -63,6 +63,7 @@ public class ViewStep2 implements ViewInterface{
 		return btnPrevStep;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
@@ -220,21 +221,26 @@ public class ViewStep2 implements ViewInterface{
 		btnRemoveLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
+	@Override
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}
 
+	@Override
 	public BorderPane getMainView() {
 		return this.mainView;
 	}
 
+	@Override
 	public GridPane getNextGridPane() {
 		return this.nextGp;
 	}
 
+	@Override
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
 	}
+	@Override
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
 	}

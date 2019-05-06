@@ -26,8 +26,6 @@ import hazard.HazardClasses.PossibleVictim;
 import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 public class DataBaseConnection {
 
@@ -432,8 +430,6 @@ public class DataBaseConnection {
 
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
-			// sheet.autoSizeColumn(2);
-
 			
 			String fileLocation = file.getPath();
 

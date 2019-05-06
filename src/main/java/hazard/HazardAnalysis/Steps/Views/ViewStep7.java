@@ -263,10 +263,12 @@ public class ViewStep7 implements ViewInterface {
 		return btnNextStep;
 	}
 
+	@Override
 	public GridPane getPrevGridPane() {
 		return this.prevGp;
 	}
 
+	@Override
 	public GridPane getGridPane() {
 		return this.thisGp;
 	}

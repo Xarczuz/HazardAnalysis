@@ -221,7 +221,7 @@ public class ViewStep5 implements ViewInterface {
 				if (tbVictim.getItems().size() != 0) {
 					int index = tbVictim.getSelectionModel().selectedIndexProperty().get();
 					if (index != -1) {
-						Play o = (Play) tbVictim.getItems().remove(index);
+						Play o = tbVictim.getItems().remove(index);
 						DataBaseConnection.delete("hazard", o.getId());
 					}
 				}
@@ -251,6 +251,7 @@ public class ViewStep5 implements ViewInterface {
 		return this.prevGp;
 	}
 
+	@Override
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
 	}
