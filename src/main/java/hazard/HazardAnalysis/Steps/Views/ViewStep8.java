@@ -69,6 +69,7 @@ public class ViewStep8 implements ViewInterface {
 					a.setTitle("Export Done");
 					a.setContentText("Export Done");
 					a.show();
+					p1.setProgress(1);
 				} else {
 					a.setTitle("Export Failed");
 					a.setContentText("Export Failed");
