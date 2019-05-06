@@ -1,8 +1,8 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardClasses.Play;
 import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.Play;
 import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

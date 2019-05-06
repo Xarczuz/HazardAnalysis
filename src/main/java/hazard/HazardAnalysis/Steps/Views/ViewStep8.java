@@ -1,14 +1,14 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import java.io.File;
-import java.nio.file.Paths;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -33,9 +33,11 @@ public class ViewStep8 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
-
+		ProgressIndicator p1 = new ProgressIndicator();
+		grid.add(p1, 0, 1);
+		p1.setProgress(0);
 		Button btnExport = new Button("Export to excel");
-		addExportEvent(btnExport);
+		addExportEvent(btnExport, p1);
 		grid.add(btnExport, 0, 0);
 
 		Button btnBack = new Button("Back");
@@ -49,12 +51,14 @@ public class ViewStep8 implements ViewInterface {
 		return grid;
 	}
 
-	private void addExportEvent(Button btnExport) {
+	private void addExportEvent(Button btnExport, ProgressIndicator p1) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				p1.setProgress(-1D);
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setInitialDirectory(new File(Paths.get("").toAbsolutePath().toString()));
+				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
+				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
 				fileChooser.setTitle("New Excel");
 				fileChooser.setInitialFileName(".xlsx");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
@@ -65,11 +69,11 @@ public class ViewStep8 implements ViewInterface {
 					a.setTitle("Export Done");
 					a.setContentText("Export Done");
 					a.show();
-				}else {
+				} else {
 					a.setTitle("Export Failed");
 					a.setContentText("Export Failed");
 					a.show();
-					
+					p1.setProgress(0);
 				}
 			}
 		};

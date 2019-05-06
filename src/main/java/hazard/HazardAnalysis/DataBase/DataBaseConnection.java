@@ -427,16 +427,15 @@ public class DataBaseConnection {
 
 				rowIndex++;
 			}
-
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
 			
 			String fileLocation = file.getPath();
-
 			FileOutputStream outputStream = new FileOutputStream(fileLocation);
+		
 			workbook.write(outputStream);
 			workbook.close();
-	        
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
