@@ -40,24 +40,20 @@ public class ViewStep6 implements ViewInterface {
 			@Override
 			public void handle(MouseEvent e) {
 				TextInputDialog dialog = new TextInputDialog("");
-
 				dialog.setTitle("Add Cause");
 				dialog.setHeaderText("Enter a new cause");
 				dialog.setContentText("Cause:");
 				int index = tbHazard.getSelectionModel().getSelectedIndex();
 				Optional<String> result = dialog.showAndWait();
-
 				if (result.isPresent() && index > -1) {
 					Hazard h = tbHazard.getItems().get(index);
 					DataBaseConnection.insertCause(result.get(), h.getId());
 					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";", "cause",
 							list);
 				}
-
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
@@ -72,7 +68,6 @@ public class ViewStep6 implements ViewInterface {
 			}
 		};
 		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	private Button addEventToGoToPrevStep(Button btnNextStep) {
@@ -93,7 +88,6 @@ public class ViewStep6 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
-
 		Text category1 = new Text("Hazards");
 		category1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category1, 0, 0);
@@ -103,19 +97,16 @@ public class ViewStep6 implements ViewInterface {
 		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
 		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
 		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
-
 		hazard.setMinWidth(400);
 		hazardDescription.setMinWidth(350);
 		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
 		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
 		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
-
 		tbHazard.getColumns().addAll(id, hazard, hazardDescription);
 		addClickEventToTbHazard(tbHazard, causeList);
 		updateHazardList();
 		tbHazard.setItems(hazardList);
 		grid.add(tbHazard, 0, 1);
-
 		Text category2 = new Text("Pre-initiating events that might lead to the hazard");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 0, 3);
@@ -125,12 +116,9 @@ public class ViewStep6 implements ViewInterface {
 		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
 		cause.setMinWidth(400);
 		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
-
 		tbCause.getColumns().addAll(cause);
-
 		tbCause.setItems(causeList);
 		grid.add(tbCause, 0, 4);
-
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
@@ -141,7 +129,6 @@ public class ViewStep6 implements ViewInterface {
 		step6.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step6.setWrappingWidth(300);
 		grid.add(step6, 3, 1);
-
 		Button btnAdd = new Button("Add Event");
 		addCauseEvent(btnAdd, tbHazard, causeList);
 		Button btnRemove = new Button("Remove Event");
@@ -150,14 +137,12 @@ public class ViewStep6 implements ViewInterface {
 		gridBtn1.add(btnAdd, 0, 0);
 		gridBtn1.add(btnRemove, 1, 0);
 		grid.add(gridBtn1, 0, 2);
-
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
 		GridPane gridBtn = new GridPane();
 		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
 		grid.add(gridBtn, 3, 2);
-
 		return grid;
 	}
 
@@ -167,7 +152,6 @@ public class ViewStep6 implements ViewInterface {
 			public void handle(MouseEvent e) {
 				vs1.getAv7().updateHazardList();
 				getMainView().setCenter(getNextGridPane());
-
 			}
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -195,7 +179,6 @@ public class ViewStep6 implements ViewInterface {
 	}
 
 	private void removeCauseEvent(Button btnRemove, TableView<Cause> tbCause, ObservableList<Cause> list) {
-
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -204,9 +187,7 @@ public class ViewStep6 implements ViewInterface {
 					int id = tbCause.getItems().get(index).getId();
 					DataBaseConnection.delete("cause", id);
 					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-
 				}
-
 			}
 		};
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -220,5 +201,4 @@ public class ViewStep6 implements ViewInterface {
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
-
 }

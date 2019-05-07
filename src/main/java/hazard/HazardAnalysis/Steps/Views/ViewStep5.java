@@ -1,5 +1,8 @@
 package hazard.HazardAnalysis.Steps.Views;
 
+import java.awt.Color;
+
+import hazard.HazardAnalysis.PossibleVictimGraph;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.Play;
@@ -55,8 +58,7 @@ public class ViewStep5 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
-
-		Text category = new Text("Possible Mishap Vicitms");
+		Text category = new Text("Possible Mishap Vicitms double click for graph");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
 		final TableView<PossibleVictim> tbPossibleVictim = new TableView<PossibleVictim>();
@@ -73,11 +75,25 @@ public class ViewStep5 implements ViewInterface {
 		role2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role2"));
 		kind2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind2"));
 		tbPossibleVictim.getColumns().addAll(kind, role, relator, kind2, role2);
-
 		updatePossibleVictimList();
 		tbPossibleVictim.setItems(possibleVictimList);
 		grid.add(tbPossibleVictim, 0, 1);
-
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2) {
+					int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
+					PossibleVictim pv = tbPossibleVictim.getItems().get(index);
+					PossibleVictimGraph frame = new PossibleVictimGraph(pv);
+					frame.setResizable(true);
+					frame.setSize(300, 300);
+					frame.setBackground(Color.WHITE);
+					frame.setForeground(Color.WHITE);
+					frame.setVisible(true);
+				}
+			}
+		};
+		tbPossibleVictim.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		Text category2 = new Text("Mishap Victims");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 0, 3);
@@ -87,18 +103,15 @@ public class ViewStep5 implements ViewInterface {
 		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
 		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
 		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
-
 		hazard.setMinWidth(400);
 		hazardDescription.setMinWidth(350);
 		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
 		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
 		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
-
 		tbVictim.getColumns().addAll(id, hazard, hazardDescription);
 		updateHazardList();
 		tbVictim.setItems(hazardList);
 		grid.add(tbVictim, 0, 4);
-
 		Button btnAdd = new Button("+");
 		addVictimEvent(btnAdd, tbPossibleVictim, hazardList);
 		Button btnRemove = new Button("-");
@@ -107,7 +120,6 @@ public class ViewStep5 implements ViewInterface {
 		gridBtn1.add(btnAdd, 0, 0);
 		gridBtn1.add(btnRemove, 1, 0);
 		grid.add(gridBtn1, 0, 2);
-
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
@@ -118,16 +130,12 @@ public class ViewStep5 implements ViewInterface {
 		step5.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step5.setWrappingWidth(300);
 		grid.add(step5, 3, 1);
-
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
-
 		GridPane gridBtn = new GridPane();
 		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-
 		grid.add(gridBtn, 3, 2);
-
 		return grid;
 	}
 
@@ -155,7 +163,6 @@ public class ViewStep5 implements ViewInterface {
 				dialog.setTitle("Add Mishap Victim");
 				dialog.setHeaderText(
 						"Enter a new title for the possible harm that can happen \nto the mishap victim and a more detailed description of it.");
-
 				TextField t = new TextField();
 				TextArea ta = new TextArea();
 				t.setPromptText("Title of the possible harm.");
@@ -163,42 +170,32 @@ public class ViewStep5 implements ViewInterface {
 				GridPane gp = new GridPane();
 				gp.setPadding(new Insets(15, 15, 15, 15));
 				t.setPadding(new Insets(10, 5, 5, 5));
-
 				ta.setPadding(new Insets(10, 5, 5, 5));
 				gp.add(t, 0, 0);
 				gp.add(ta, 0, 1);
-
 				dialog.getDialogPane().setContent(gp);
-
 				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
 					@Override
 					public void handle(DialogEvent event) {
 						int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
 						if (dialog.getResult() != null && index > -1 && !t.getText().isEmpty()
 								&& !ta.getText().isEmpty()) {
-
 							PossibleVictim pv = tbPossibleVictim.getItems().get(index);
-
 							String hazard = pv.getRelator() + "(" + pv.getRole() + ":" + pv.getKind() + ")" + "("
 									+ pv.getRole2() + "<" + t.getText() + ">:" + pv.getKind2() + ")";
 							String harm = ta.getText();
 							DataBaseConnection
 									.insert("INSERT INTO hazard (hazard,harm) VALUES('" + hazard + "','" + harm + "')");
-
 							DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-
 						}
 					}
 				};
-
 				dialog.setOnCloseRequest(eventHandler);
 				dialog.show();
 				t.requestFocus();
-
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	@Override
@@ -235,7 +232,6 @@ public class ViewStep5 implements ViewInterface {
 			}
 		};
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	@Override
@@ -245,7 +241,6 @@ public class ViewStep5 implements ViewInterface {
 
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-
 	}
 
 	public void updatePossibleVictimList() {

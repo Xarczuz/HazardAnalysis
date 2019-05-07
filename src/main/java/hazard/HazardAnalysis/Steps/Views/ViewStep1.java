@@ -49,7 +49,6 @@ public class ViewStep1 {
 		this.av7 = new ViewStep7(this, border, getAv6().getGridPane());
 		this.av8 = new ViewStep8(this, border, getAv7().getGridPane());
 		this.av9 = new ViewStep9(this, border, getAv8().getGridPane());
-
 		this.av2.setNextGp(this.av3.getGridPane());
 		this.av3.setNextGp(this.av4.getGridPane());
 		this.av4.setNextGp(this.av5.getGridPane());
@@ -57,11 +56,9 @@ public class ViewStep1 {
 		this.av6.setNextGp(this.av7.getGridPane());
 		this.av7.setNextGp(this.av8.getGridPane());
 		this.av8.setNextGp(this.av9.getGridPane());
-
 	}
 
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
-
 		Button btnAdd = new Button();
 		btnAdd.setText("Add");
 		Button btnRemove = new Button();
@@ -73,7 +70,6 @@ public class ViewStep1 {
 				dialog.setTitle("Add");
 				dialog.setHeaderText("Enter a new " + s);
 				dialog.setContentText(s + ":");
-
 				TextField t = new TextField();
 				CheckBox st = new CheckBox("Start");
 				CheckBox rt = new CheckBox("runtime");
@@ -85,9 +81,7 @@ public class ViewStep1 {
 				gp.add(st, 0, 1);
 				gp.add(rt, 0, 2);
 				gp.add(sd, 0, 3);
-
 				dialog.getDialogPane().setContent(gp);
-
 				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
 					@Override
 					public void handle(DialogEvent event) {
@@ -99,19 +93,15 @@ public class ViewStep1 {
 							getAv2().updateTbKind();
 							getAv3().updateTbRole();
 							getAv4().updateTbRole();
-
 						}
 					}
 				};
-
 				dialog.setOnCloseRequest(eventHandler);
 				dialog.show();
 				t.requestFocus();
-
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -125,22 +115,18 @@ public class ViewStep1 {
 			}
 		};
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 		GridPane grid = new GridPane();
 		grid.add(btnAdd, 0, 0);
 		grid.add(btnRemove, 2, 0);
-
 		return grid;
 	}
 
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
-
 		Text category = new Text("Kind");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
@@ -148,14 +134,11 @@ public class ViewStep1 {
 		tbKind.setMaxWidth(350);
 		TableColumn<Kind, Integer> id = new TableColumn<Kind, Integer>("ID");
 		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
-
 		TableColumn<Kind, CheckBox> kStart = new TableColumn<Kind, CheckBox>("Start");
 		TableColumn<Kind, CheckBox> kRuntime = new TableColumn<Kind, CheckBox>("RunTime");
 		TableColumn<Kind, CheckBox> kShutdown = new TableColumn<Kind, CheckBox>("Shutdown");
-
 		id.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
 		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
-
 		kStart.setCellValueFactory(new PropertyValueFactory<Kind, CheckBox>("cbstart"));
 		kStart.setStyle("-fx-alignment: CENTER;");
 		kRuntime.setCellValueFactory(new PropertyValueFactory<Kind, CheckBox>("cbruntime"));
@@ -170,7 +153,6 @@ public class ViewStep1 {
 		tbKind.setItems(kindList);
 		grid.add(tbKind, 0, 1);
 		grid.add(addButtonsToTable(tbKind, kindList, "Kind"), 0, 2);
-
 		Text category2 = new Text("Role");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 1, 0);
@@ -181,27 +163,22 @@ public class ViewStep1 {
 		TableColumn<Role, CheckBox> rStart = new TableColumn<Role, CheckBox>("Start");
 		TableColumn<Role, CheckBox> rRuntime = new TableColumn<Role, CheckBox>("RunTime");
 		TableColumn<Role, CheckBox> rShutdown = new TableColumn<Role, CheckBox>("Shutdown");
-
 		id2.setCellValueFactory(new PropertyValueFactory<Role, Integer>("id"));
 		role.setCellValueFactory(new PropertyValueFactory<Role, String>("role"));
-
 		rStart.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbstart"));
 		rStart.setStyle("-fx-alignment: CENTER;");
 		rRuntime.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbruntime"));
 		rRuntime.setStyle("-fx-alignment: CENTER;");
 		rShutdown.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbshutdown"));
 		rShutdown.setStyle("-fx-alignment: CENTER;");
-
 		id2.setMaxWidth(30);
 		role.setMinWidth(100);
 		tbRole.getColumns().addAll(id2, role, rStart, rRuntime, rShutdown);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
-
 		DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 1, 1);
 		grid.add(addButtonsToTable(tbRole, roleList, "Role"), 1, 2);
-
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 2, 0);
@@ -210,10 +187,8 @@ public class ViewStep1 {
 		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step1.setWrappingWidth(400);
 		grid.add(step1, 2, 1);
-
 		Button btnNextStep = new Button("Next Step");
 		grid.add(addNextStepEvent(btnNextStep), 2, 3);
-
 		return grid;
 	}
 
@@ -251,7 +226,6 @@ public class ViewStep1 {
 	}
 
 	public ViewStep6 getAv6() {
-
 		return av6;
 	}
 
@@ -274,5 +248,4 @@ public class ViewStep1 {
 	public Stage getpStage() {
 		return pStage;
 	}
-
 }

@@ -58,7 +58,6 @@ public class Role extends Play {
 			}
 		};
 		this.cbshutdown.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	public CheckBox getCbruntime() {
@@ -126,5 +125,4 @@ public class Role extends Play {
 	public void setStart(Boolean start) {
 		this.start = start;
 	}
-
 }

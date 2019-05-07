@@ -65,12 +65,10 @@ public class ViewStep8 implements ViewInterface {
 			}
 		};
 		btnExport.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	@Override
 	public GridPane addGridPane() {
-
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -81,15 +79,12 @@ public class ViewStep8 implements ViewInterface {
 		Button btnExport = new Button("Export to excel");
 		addExportEvent(btnExport, p1);
 		grid.add(btnExport, 0, 0);
-
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
 		GridPane gridBtn = new GridPane();
-
 		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
 		grid.add(gridBtn, 3, 2);
-
 		return grid;
 	}
 
@@ -128,5 +123,4 @@ public class ViewStep8 implements ViewInterface {
 	public void setNextGp(GridPane nextGp) {
 		this.nextGp = nextGp;
 	}
-
 }

@@ -15,9 +15,7 @@ public class CreateDataBase {
 	private static String database;
 
 	public static void createNewDatabase() {
-
 		String url = "jdbc:sqlite:" + database;
-
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
@@ -32,7 +30,6 @@ public class CreateDataBase {
 	public static void createNewTable() {
 		// SQLite connection string
 		String url = "jdbc:sqlite:" + database;
-
 		// SQL statement for creating a new table
 		String sql1 = "CREATE TABLE IF NOT EXISTS kind (id integer PRIMARY KEY, kind text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL);";
 		String sql2 = "CREATE TABLE IF NOT EXISTS role (id integer PRIMARY KEY, role text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL);";
@@ -41,7 +38,6 @@ public class CreateDataBase {
 		String sql5 = "CREATE TABLE IF NOT EXISTS relatortorole (id integer PRIMARY KEY, relator text NOT NULL, relatorid integer NOT NULL, role TEXT NOT NULL, roleid INTEGER NOT NULL);";
 		String sql6 = "CREATE TABLE IF NOT EXISTS hazard (id INTEGER PRIMARY KEY, hazard TEXT NOT NULL, harm TEXT NOT NULL, severity REAL, probability REAL, riskevaluation REAL, risk BIT);";
 		String sql7 = "CREATE TABLE IF NOT EXISTS cause (id INTEGER PRIMARY KEY, cause TEXT NOT NULL, hazardid INTEGER NOT NULL);";
-
 		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
 			// create a new table
 			stmt.execute(sql1);
@@ -51,7 +47,6 @@ public class CreateDataBase {
 			stmt.execute(sql5);
 			stmt.execute(sql6);
 			stmt.execute(sql7);
-
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

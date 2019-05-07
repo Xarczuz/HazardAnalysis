@@ -28,7 +28,6 @@ public class Kind extends Play {
 		this.cbruntime.setSelected(runtime);
 		this.cbshutdown.setSelected(shutdown);
 		addClickEventToCheckBox();
-
 	}
 
 	private void addClickEventToCheckBox() {
@@ -59,7 +58,6 @@ public class Kind extends Play {
 			}
 		};
 		this.cbshutdown.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	public CheckBox getCbruntime() {
@@ -117,5 +115,4 @@ public class Kind extends Play {
 	public void setStart(Boolean start) {
 		this.start = start;
 	}
-
 }

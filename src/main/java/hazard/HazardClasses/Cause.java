@@ -8,7 +8,6 @@ public class Cause extends Play {
 		super(id);
 		this.cause = cause;
 		this.hazardID = hazardID;
-
 	}
 
 	public String getCause() {
@@ -26,5 +25,4 @@ public class Cause extends Play {
 	public void setHazardID(int hazardID) {
 		this.hazardID = hazardID;
 	}
-
 }

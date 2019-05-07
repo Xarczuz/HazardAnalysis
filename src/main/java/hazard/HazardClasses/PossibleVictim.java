@@ -1,7 +1,6 @@
 package hazard.HazardClasses;
 
 public class PossibleVictim {
-
 	private String kind;
 	private String role;
 	private String relator;
@@ -9,7 +8,6 @@ public class PossibleVictim {
 	private String kind2;
 
 	public PossibleVictim(String kind, String role, String relator, String role2, String kind2) {
-
 		this.kind = kind;
 		this.role = role;
 		this.relator = relator;
@@ -56,5 +54,4 @@ public class PossibleVictim {
 	public void setRole2(String role2) {
 		this.role2 = role2;
 	}
-
 }

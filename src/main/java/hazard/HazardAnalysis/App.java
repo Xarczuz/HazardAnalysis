@@ -51,32 +51,26 @@ import javafx.stage.Stage;
  * description for the UC01, as shown in Figure 3.5.
  *
  */
-
 public class App extends Application {
-
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
 		primaryStage.setX(primaryScreenBounds.getMinX());
 		primaryStage.setY(primaryScreenBounds.getMinY());
 		primaryStage.setWidth(primaryScreenBounds.getWidth());
 		primaryStage.setHeight(primaryScreenBounds.getHeight() - 5);
-
 		primaryStage.setTitle("Hazard");
-
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
 		border = av.view(primaryStage);
 		Scene scene = new Scene(border);
-
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Hazard");
 		primaryStage.show();
+		
 	}
 }

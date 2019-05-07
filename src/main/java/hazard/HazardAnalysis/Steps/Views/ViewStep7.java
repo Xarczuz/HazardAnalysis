@@ -51,7 +51,6 @@ public class ViewStep7 implements ViewInterface {
 			}
 		};
 		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	private Button addEventToGoToPrevStep(Button btnNextStep) {
@@ -68,12 +67,10 @@ public class ViewStep7 implements ViewInterface {
 	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
-
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
-
 		Text category1 = new Text("Hazards");
 		category1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category1, 0, 0);
@@ -83,7 +80,6 @@ public class ViewStep7 implements ViewInterface {
 		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
 		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
 		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
-
 		hazard.setMinWidth(400);
 		hazardDescription.setMinWidth(350);
 		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
@@ -107,7 +103,6 @@ public class ViewStep7 implements ViewInterface {
 						}
 					}
 				};
-
 				return row;
 			}
 		});
@@ -116,7 +111,6 @@ public class ViewStep7 implements ViewInterface {
 		updateHazardList();
 		tbHazard.setItems(hazardList);
 		grid.add(tbHazard, 0, 1);
-
 		Text category2 = new Text("Pre-initiating events that might lead to the hazard");
 		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category2, 0, 3);
@@ -126,12 +120,9 @@ public class ViewStep7 implements ViewInterface {
 		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
 		cause.setMinWidth(400);
 		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
-
 		tbCause.getColumns().addAll(cause);
-
 		tbCause.setItems(causeList);
 		grid.add(tbCause, 0, 4);
-
 		Text description = new Text("Description");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
@@ -140,23 +131,17 @@ public class ViewStep7 implements ViewInterface {
 		step7.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step7.setWrappingWidth(300);
 		grid.add(step7, 3, 1);
-
 		Button btnAdd = new Button("Add Severity And Probability");
 		addSeverityAndProbabilityEvent(btnAdd, tbHazard);
-//		Button btnRemove = new Button("Remove Event");
-//		removeSeverityAndProbabilityEvent(btnRemove);
 		GridPane gridBtn1 = new GridPane();
 		gridBtn1.add(btnAdd, 0, 0);
-//		gridBtn1.add(btnRemove, 1, 0);
 		grid.add(gridBtn1, 0, 2);
-
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
 		GridPane gridBtn = new GridPane();
 		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
 		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
 		grid.add(gridBtn, 3, 2);
-
 		return grid;
 	}
 
@@ -183,7 +168,6 @@ public class ViewStep7 implements ViewInterface {
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Severity And Probability");
 				dialog.setHeaderText("Enter the Severity of the Hazard And the Probability of it happening.");
-
 				ObservableList<String> options = FXCollections.observableArrayList("High-75%", "Medium-50%", "Low-25%");
 				final ComboBox<String> comboBox = new ComboBox<String>(options);
 				ObservableList<String> options2 = FXCollections.observableArrayList("High-75%", "Medium-50%",
@@ -192,24 +176,18 @@ public class ViewStep7 implements ViewInterface {
 				Text severity = new Text("Severity");
 				Text probability = new Text("Probability");
 				GridPane gp = new GridPane();
-				// gp.setPadding(new Insets(15, 15, 15, 15));
 				gp.add(severity, 0, 0);
 				gp.add(probability, 1, 0);
 				gp.add(comboBox, 0, 1);
 				gp.add(comboBox2, 1, 1);
-
 				Text riskEvaluation = new Text("Risk Evaluation:");
-
 				Text riskEvaluationNr = new Text();
-
 				gp.add(riskEvaluation, 3, 1);
 				gp.add(riskEvaluationNr, 4, 1);
-
 				CheckBox ch = new CheckBox("Accept Risk");
 				ch.setPadding(new Insets(15, 15, 15, 15));
 				gp.add(ch, 5, 1);
 				dialog.getDialogPane().setContent(gp);
-
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@SuppressWarnings("rawtypes")
 					@Override
@@ -230,21 +208,17 @@ public class ViewStep7 implements ViewInterface {
 						}
 					}
 				});
-
 				Optional<String> op = dialog.showAndWait();
 				if (op.isPresent() && !riskEvaluationNr.getText().contentEquals("")) {
 					DataBaseConnection.sqlUpdate("UPDATE hazard SET severity=" + returnRiskValue(comboBox.getValue())
 							+ ", probability=" + returnRiskValue(comboBox2.getValue()) + ", riskevaluation="
 							+ (returnRiskValue(comboBox2.getValue()) * returnRiskValue(comboBox.getValue())) + ", risk="
 							+ ch.isSelected() + " where hazard.id=" + id + ";");
-
 				}
 				updateHazardList();
 			}
-
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
 	}
 
 	@Override
@@ -268,14 +242,12 @@ public class ViewStep7 implements ViewInterface {
 	}
 
 	private Double returnRiskValue(String s) {
-
 		if (s.toLowerCase().contains("high"))
 			return .75D;
 		if (s.toLowerCase().contains("medium"))
 			return .50D;
 		if (s.toLowerCase().contains("low"))
 			return .25D;
-
 		return 0D;
 	}
 
@@ -287,5 +259,4 @@ public class ViewStep7 implements ViewInterface {
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
-
 }

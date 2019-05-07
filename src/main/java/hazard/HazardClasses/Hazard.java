@@ -35,5 +35,4 @@ public class Hazard extends Play {
 	public void setRisk(String risk) {
 		this.risk = risk;
 	}
-
 }

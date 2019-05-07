@@ -8,24 +8,9 @@ public class ViewStep9 implements ViewInterface {
 		// TODO Auto-generated constructor stub
 	}
 
-	// private void addClickEventExport(Button export) {
-//	EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-//		@Override
-//		public void handle(MouseEvent e) {
-//
-//			DataBaseConnection.exportData();
-//		}
-//	};
-//	export.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-//}
 	@Override
 	public GridPane addGridPane() {
 		// TODO Auto-generated method stub
-
-//		Button export = new Button("Export to Excel");
-//		addClickEventExport(export);
-//		grid.add(export, 5, 5);
-
 		return null;
 	}
 
@@ -56,7 +41,5 @@ public class ViewStep9 implements ViewInterface {
 	@Override
 	public void setNextGp(GridPane nextGp) {
 		// TODO Auto-generated method stub
-
 	}
-
 }
