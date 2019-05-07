@@ -44,7 +44,9 @@ public class DataBaseConnection {
 
 	public static void delete(String table, int id) {
 		String sql = "DELETE FROM " + table + " WHERE id = ?";
-		try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -303,9 +305,10 @@ public class DataBaseConnection {
 	@SuppressWarnings("unchecked")
 	public static <E> void selectAll(String table, ObservableList<E> list) {
 		String sql = "SELECT * FROM " + table;
-		try (Connection conn = connect();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try {
+			Connection conn = connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
 			list.clear();
 			while (rs.next()) {
 				if (table.contentEquals("kind")) {
@@ -331,9 +334,10 @@ public class DataBaseConnection {
 
 	@SuppressWarnings("unchecked")
 	public static <E> void sql(String sql, String table, ObservableList<E> list) {
-		try (Connection conn = connect();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try  {
+			Connection conn = connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
 			list.clear();
 			while (rs.next()) {
 				if (table.contentEquals("kind")) {
