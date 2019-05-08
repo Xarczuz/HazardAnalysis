@@ -101,7 +101,7 @@ public class DataBaseConnection {
 				headerStyle.setBorderBottom(BorderStyle.THIN);
 				headerStyle.setBorderLeft(BorderStyle.THIN);
 				XSSFFont font = ((XSSFWorkbook) workbook).createFont();
-				font.setFontName("Arial");
+				font.setFontName("Liberation Sans");
 				font.setFontHeightInPoints((short) 16);
 				font.setBold(true);
 				headerStyle.setFont(font);
@@ -120,7 +120,7 @@ public class DataBaseConnection {
 				style.setBorderBottom(BorderStyle.THIN);
 				style.setBorderLeft(BorderStyle.THIN);
 				font = ((XSSFWorkbook) workbook).createFont();
-				font.setFontName("Arial");
+				font.setFontName("Liberation Sans");
 				font.setFontHeightInPoints((short) 12);
 				style.setFont(font);
 				Row row = sheet.createRow(rowIndex);

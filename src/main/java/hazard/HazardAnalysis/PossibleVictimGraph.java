@@ -26,6 +26,7 @@ public class PossibleVictimGraph extends JFrame {
 			Object v3 = graph.insertVertex(parent, null, pv.getRelator(), 240, 150, 100, 40,"fillColor=white;");
 			Object v4 = graph.insertVertex(parent, null, pv.getRole2(), 240, 150, 100, 40,"fillColor=grey;");
 			Object v5 = graph.insertVertex(parent, null, pv.getKind2(), 240, 150, 100, 40,"fillColor=blue;");
+			
 			graph.insertEdge(parent, null, "", v1, v2);
 			graph.insertEdge(parent, null, "", v2, v3);
 			graph.insertEdge(parent, null, "", v5, v4);

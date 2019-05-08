@@ -54,12 +54,18 @@ public class ViewStep8 implements ViewInterface {
 					DataBaseConnection.exportData(file);
 					a.setTitle("Export Done");
 					a.setContentText("Export Done");
+					vs1.getpStage().setAlwaysOnTop(true);
+					vs1.getpStage().toFront();
 					a.show();
+					vs1.getpStage().setAlwaysOnTop(false);
 					p1.setProgress(1);
 				} else {
 					a.setTitle("Export Failed");
 					a.setContentText("Export Failed");
+					vs1.getpStage().setAlwaysOnTop(true);
+					vs1.getpStage().toFront();
 					a.show();
+					vs1.getpStage().setAlwaysOnTop(false);
 					p1.setProgress(0);
 				}
 			}

@@ -1,8 +1,7 @@
 package hazard.HazardAnalysis.Steps.Views;
 
-import java.awt.Color;
-
 import hazard.HazardAnalysis.PossibleVictimGraph;
+import hazard.HazardAnalysis.SystemGraph;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.Play;
@@ -61,6 +60,17 @@ public class ViewStep5 implements ViewInterface {
 		Text category = new Text("Possible Mishap Vicitms double click for graph");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
+		Button btnGraph = new Button("Press me");
+		grid.add(btnGraph, 1, 0);
+		EventHandler<MouseEvent> eh = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				SystemGraph frame = new SystemGraph();
+				frame.setResizable(true);
+				frame.setSize(1200, 800);
+				frame.setVisible(true);
+			}};
+		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
 		final TableView<PossibleVictim> tbPossibleVictim = new TableView<PossibleVictim>();
 		tbPossibleVictim.setMinWidth(800);
 		tbPossibleVictim.setMaxHeight(200);
@@ -83,13 +93,13 @@ public class ViewStep5 implements ViewInterface {
 			public void handle(MouseEvent event) {
 				if (event.getClickCount() == 2) {
 					int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
-					PossibleVictim pv = tbPossibleVictim.getItems().get(index);
-					PossibleVictimGraph frame = new PossibleVictimGraph(pv);
-					frame.setResizable(true);
-					frame.setSize(300, 300);
-					frame.setBackground(Color.WHITE);
-					frame.setForeground(Color.WHITE);
-					frame.setVisible(true);
+					if(index>=0) {
+						PossibleVictim pv = tbPossibleVictim.getItems().get(index);
+						PossibleVictimGraph frame = new PossibleVictimGraph(pv);
+						frame.setResizable(true);
+						frame.setSize(300, 300);
+						frame.setVisible(true);						
+					}
 				}
 			}
 		};
