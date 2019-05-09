@@ -1,0 +1,13 @@
+.gridpane{
+	-fx-border-width: 0.0 5.0 5.0 5.0; 
+	-fx-border-color: black black black black;
+    -fx-background-color: #F0F8FF;
+    -fx-background-radius: 5.0;
+    -fx-padding: 10;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+.heading{
+	-fx-font-size: 20.0;
+	-fx-font-weight:BOLD;
+}

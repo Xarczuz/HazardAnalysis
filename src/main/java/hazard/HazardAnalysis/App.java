@@ -11,7 +11,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-
 /**
  * @author chjunchi
  *
@@ -31,7 +30,6 @@ public class App extends Application {
 		primaryStage.setTitle("Hazard");
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
-		
 		border = av.view(primaryStage);
 		Scene scene = new Scene(border);
 		primaryStage.setScene(scene);

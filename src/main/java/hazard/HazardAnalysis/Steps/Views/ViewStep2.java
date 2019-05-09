@@ -6,7 +6,6 @@ import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -64,10 +63,8 @@ public class ViewStep2 implements ViewInterface {
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
+		grid.getStyleClass().add("gridpane");
+		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Kind");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);

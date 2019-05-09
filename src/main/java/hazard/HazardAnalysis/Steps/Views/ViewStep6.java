@@ -8,7 +8,6 @@ import hazard.HazardClasses.Hazard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -85,10 +84,8 @@ public class ViewStep6 implements ViewInterface {
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
+		grid.getStyleClass().add("gridpane");
+		grid.getStylesheets().add("resources/center.css");
 		Text category1 = new Text("Hazards");
 		category1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category1, 0, 0);
@@ -123,10 +120,9 @@ public class ViewStep6 implements ViewInterface {
 		Text description = new Text("Step 6");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
-		Text step6 = new Text(
-				"Explore all the possible pre-initiating events that can bring about the specific\r\n"
-						+ "hazardous situation by going through the hazard element, harmtruthmakers,\r\n"
-						+ "and exposures, respectively.");
+		Text step6 = new Text("Explore all the possible pre-initiating events that can bring about the specific\r\n"
+				+ "hazardous situation by going through the hazard element, harmtruthmakers,\r\n"
+				+ "and exposures, respectively.");
 		step6.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step6.setWrappingWidth(300);
 		grid.add(step6, 3, 1);

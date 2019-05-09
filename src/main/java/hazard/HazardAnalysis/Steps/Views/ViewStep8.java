@@ -1,7 +1,6 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -31,10 +30,8 @@ public class ViewStep8 implements ViewInterface {
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
+		grid.getStyleClass().add("gridpane");
+		grid.getStylesheets().add("resources/center.css");
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
 		GridPane gridBtn = new GridPane();

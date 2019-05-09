@@ -35,7 +35,8 @@ public class MainView {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15, 12, 15, 12));
 		hbox.setSpacing(10);
-		hbox.setStyle("-fx-background-color: linear-gradient(to right,#00BFFF, yellow);-fx-border-width: 0 0 5 0; -fx-border-color: black black black black;");
+		hbox.setStyle(
+				"-fx-background-color: linear-gradient(to right,#00BFFF, yellow);-fx-border-width: 0 0 5 0; -fx-border-color: black black black black;");
 		Button btnNew = new Button("New");
 		addNewEvent(btnNew);
 		btnNew.setPrefSize(100, 20);
@@ -51,8 +52,8 @@ public class MainView {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
-				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
-				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
+//				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
+//				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
 				fileChooser.setTitle("Load database");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
 				File file = fileChooser.showOpenDialog(pStage);
@@ -74,8 +75,8 @@ public class MainView {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
-				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
-				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
+//				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
+//				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
 				fileChooser.setTitle("New database");
 				fileChooser.setInitialFileName(".db");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
@@ -207,6 +208,7 @@ public class MainView {
 
 	public BorderPane view(Stage primaryStage) {
 		this.pStage = primaryStage;
+		border.setStyle("-fx-background-color: #F0F8FF;");
 		HBox hbox = addHBox();
 		border.setTop(hbox);
 		addStackPane(hbox); // Add stack to HBox in top region

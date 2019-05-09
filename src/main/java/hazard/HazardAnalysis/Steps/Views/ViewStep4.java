@@ -6,7 +6,6 @@ import hazard.HazardClasses.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -66,15 +65,10 @@ public class ViewStep4 implements ViewInterface {
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
+		grid.getStyleClass().add("gridpane");
+		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Roles");
-		category.setId("tt");
-		category.setStyle("#tt{color:red;}");
-		category.applyCss();
-		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
 		final TableView<Role> tbRole = new TableView<Role>();
 		tbRole.setMinWidth(350);
@@ -88,7 +82,7 @@ public class ViewStep4 implements ViewInterface {
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 0, 1);
 		Text category2 = new Text("Kind");
-		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category2.getStyleClass().add("heading");
 		final TableView<Kind> tbKind = new TableView<Kind>();
 		tbKind.setMinWidth(350);
 		tbKind.setMaxHeight(200);
@@ -104,7 +98,7 @@ public class ViewStep4 implements ViewInterface {
 		gridKinds.add(category2, 0, 0);
 		gridKinds.add(tbKind, 0, 1);
 		Text category3 = new Text("Kind that can play the role");
-		category3.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category3.getStyleClass().add("heading");
 		final TableView<Kind> tbKindToRole = new TableView<Kind>();
 		tbKindToRole.setMinWidth(350);
 		tbKindToRole.setMaxHeight(200);
@@ -128,7 +122,7 @@ public class ViewStep4 implements ViewInterface {
 		gridKinds.add(tbKindToRole, 0, 3);
 		grid.add(gridKinds, 1, 1);
 		Text description = new Text("Step 4");
-		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		description.getStyleClass().add("heading");
 		grid.add(description, 2, 0);
 		Text step4 = new Text("For each role object obtained in Step 1, Step 2 and\r\n"
 				+ "Step 3, identify all the kind objects that can play the role, considering\r\n"

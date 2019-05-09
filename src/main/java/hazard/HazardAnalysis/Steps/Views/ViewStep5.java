@@ -56,10 +56,8 @@ public class ViewStep5 implements ViewInterface {
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
+		grid.getStyleClass().add("gridpane");
+		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Possible Mishap Vicitms double click for graph");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);

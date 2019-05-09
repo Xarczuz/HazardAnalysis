@@ -4,7 +4,6 @@ import java.io.File;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -43,8 +42,8 @@ public class ViewStep9 implements ViewInterface {
 			public void handle(MouseEvent e) {
 				p1.setProgress(-1D);
 				FileChooser fileChooser = new FileChooser();
-				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
-				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
+//				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
+//				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
 				fileChooser.setTitle("New Excel");
 				fileChooser.setInitialFileName(".xlsx");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
@@ -70,10 +69,8 @@ public class ViewStep9 implements ViewInterface {
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(10, 10, 0, 10));
-		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
+		grid.getStyleClass().add("gridpane");
+		grid.getStylesheets().add("resources/center.css");
 		ProgressIndicator p1 = new ProgressIndicator();
 		grid.add(p1, 0, 1);
 		p1.setProgress(0);
