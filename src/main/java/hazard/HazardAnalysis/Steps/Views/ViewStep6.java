@@ -88,6 +88,7 @@ public class ViewStep6 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
+		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
 		Text category1 = new Text("Hazards");
 		category1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category1, 0, 0);
@@ -119,11 +120,11 @@ public class ViewStep6 implements ViewInterface {
 		tbCause.getColumns().addAll(cause);
 		tbCause.setItems(causeList);
 		grid.add(tbCause, 0, 4);
-		Text description = new Text("Description");
+		Text description = new Text("Step 6");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
 		Text step6 = new Text(
-				"• Step 6: Explore all the possible pre-initiating events that can bring about the specific\r\n"
+				"Explore all the possible pre-initiating events that can bring about the specific\r\n"
 						+ "hazardous situation by going through the hazard element, harmtruthmakers,\r\n"
 						+ "and exposures, respectively.");
 		step6.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));

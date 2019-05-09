@@ -124,6 +124,7 @@ public class ViewStep1 {
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
+		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
@@ -179,11 +180,11 @@ public class ViewStep1 {
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 1, 1);
 		grid.add(addButtonsToTable(tbRole, roleList, "Role"), 1, 2);
-		Text description = new Text("Description");
+		Text description = new Text("Step 1");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 2, 0);
-		Text step1 = new Text("• SDF-Step 1: Identify the kind and role objects explicitly presented in the\n"
-				+ "system description.");
+		Text step1 = new Text(
+				"Identify the kind and role objects explicitly presented in the\n" + "system description.");
 		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step1.setWrappingWidth(400);
 		grid.add(step1, 2, 1);
@@ -235,6 +236,10 @@ public class ViewStep1 {
 
 	public ViewStep8 getAv8() {
 		return this.av8;
+	}
+
+	public ViewStep9 getAv9() {
+		return this.av9;
 	}
 
 	public GridPane getGridPane() {

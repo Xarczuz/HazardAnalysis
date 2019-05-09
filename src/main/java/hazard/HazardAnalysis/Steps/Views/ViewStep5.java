@@ -1,5 +1,7 @@
 package hazard.HazardAnalysis.Steps.Views;
 
+import java.awt.Frame;
+
 import hazard.HazardAnalysis.PossibleVictimGraph;
 import hazard.HazardAnalysis.SystemGraph;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
@@ -57,6 +59,7 @@ public class ViewStep5 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
+		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
 		Text category = new Text("Possible Mishap Vicitms double click for graph");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
@@ -67,9 +70,10 @@ public class ViewStep5 implements ViewInterface {
 			public void handle(MouseEvent event) {
 				SystemGraph frame = new SystemGraph();
 				frame.setResizable(true);
-				frame.setSize(1200, 800);
+				frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 				frame.setVisible(true);
-			}};
+			}
+		};
 		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
 		final TableView<PossibleVictim> tbPossibleVictim = new TableView<PossibleVictim>();
 		tbPossibleVictim.setMinWidth(800);
@@ -93,12 +97,12 @@ public class ViewStep5 implements ViewInterface {
 			public void handle(MouseEvent event) {
 				if (event.getClickCount() == 2) {
 					int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
-					if(index>=0) {
+					if (index >= 0) {
 						PossibleVictim pv = tbPossibleVictim.getItems().get(index);
 						PossibleVictimGraph frame = new PossibleVictimGraph(pv);
 						frame.setResizable(true);
 						frame.setSize(300, 300);
-						frame.setVisible(true);						
+						frame.setVisible(true);
 					}
 				}
 			}
@@ -130,11 +134,11 @@ public class ViewStep5 implements ViewInterface {
 		gridBtn1.add(btnAdd, 0, 0);
 		gridBtn1.add(btnRemove, 1, 0);
 		grid.add(gridBtn1, 0, 2);
-		Text description = new Text("Description");
+		Text description = new Text("Step 5");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
 		Text step5 = new Text(
-				"• Step 5: Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
+				"Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
 						+ "continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness,\r\n"
 						+ "explosion, etc.");
 		step5.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));

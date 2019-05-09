@@ -69,6 +69,7 @@ public class ViewStep3 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
+		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
 		Text category = new Text("Roles");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
@@ -131,10 +132,10 @@ public class ViewStep3 implements ViewInterface {
 		gridRelators.add(gridTextAndBtn2, 0, 2);
 		gridRelators.add(tbRelatorToRole, 0, 3);
 		grid.add(gridRelators, 1, 1);
-		Text description = new Text("Description");
+		Text description = new Text("Step 3");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 2, 0);
-		Text step1 = new Text("• SDF-Step 3: For each role object obtained in SDF-Step 1 and SDFStep 2,\r\n"
+		Text step1 = new Text("For each role object obtained in Step 1 and Step 2,\r\n"
 				+ "identify the relator that connects this role, and specify all the other roles\r\n"
 				+ "connected by the identified relator, considering the system description and\r\n"
 				+ "the analysts’ expertise.");

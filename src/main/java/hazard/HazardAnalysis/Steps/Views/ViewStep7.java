@@ -71,6 +71,7 @@ public class ViewStep7 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
+		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
 		Text category1 = new Text("Hazards");
 		category1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category1, 0, 0);
@@ -123,11 +124,11 @@ public class ViewStep7 implements ViewInterface {
 		tbCause.getColumns().addAll(cause);
 		tbCause.setItems(causeList);
 		grid.add(tbCause, 0, 4);
-		Text description = new Text("Description");
+		Text description = new Text("Step 7");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 3, 0);
 		Text step7 = new Text(
-				"• Step 7: For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.");
+				"For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.");
 		step7.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step7.setWrappingWidth(300);
 		grid.add(step7, 3, 1);

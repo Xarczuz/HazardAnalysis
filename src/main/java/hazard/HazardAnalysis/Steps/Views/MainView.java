@@ -35,7 +35,7 @@ public class MainView {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15, 12, 15, 12));
 		hbox.setSpacing(10);
-		hbox.setStyle("-fx-background-color: #336699;");
+		hbox.setStyle("-fx-background-color: linear-gradient(to right,#00BFFF, yellow);-fx-border-width: 0 0 5 0; -fx-border-color: black black black black;");
 		Button btnNew = new Button("New");
 		addNewEvent(btnNew);
 		btnNew.setPrefSize(100, 20);
@@ -85,7 +85,6 @@ public class MainView {
 					CreateDataBase.setDatabase(file.getPath());
 					CreateDataBase.createNewDatabase();
 					CreateDataBase.createNewTable();
-//					DataBaseConnection.populateWithTestData();
 					allView = new ViewStep1(pStage, border);
 					border.setLeft(addVBox());
 					border.setCenter(allView.getGridPane());
@@ -121,12 +120,13 @@ public class MainView {
 		vbox.setMinWidth(150);
 		vbox.setPadding(new Insets(10));
 		vbox.setSpacing(8);
+		vbox.setStyle("-fx-background-color: linear-gradient(#00BFFF,red);");
 		Text title = new Text("Step");
 		title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 		vbox.getChildren().add(title);
 		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"), new Hyperlink("Step 2"),
 				new Hyperlink("Step 3"), new Hyperlink("Step 4"), new Hyperlink("Step 5"), new Hyperlink("Step 6"),
-				new Hyperlink("Step 7"), new Hyperlink("Step 8") };
+				new Hyperlink("Step 7"), new Hyperlink("Step 8"), new Hyperlink("Step 9") };
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -190,9 +190,17 @@ public class MainView {
 			}
 		};
 		options[7].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				border.setCenter(allView.getAv9().getGridPane());
+			}
+		};
+		options[8].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		for (int i = 0; i < options.length; i++) {
 			VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
 			vbox.getChildren().add(options[i]);
+			options[i].setStyle("-fx-text-fill: white;");
 		}
 		return vbox;
 	}

@@ -67,6 +67,7 @@ public class ViewStep2 implements ViewInterface {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10, 10, 0, 10));
+		grid.setStyle("-fx-border-width: 0 5 5 5; -fx-border-color: black black black black;");
 		Text category = new Text("Kind");
 		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(category, 0, 0);
@@ -127,10 +128,10 @@ public class ViewStep2 implements ViewInterface {
 		gridRoles.add(gridTextAndBtn, 0, 2);
 		gridRoles.add(tbRoleToPlay, 0, 3);
 		grid.add(gridRoles, 1, 1);
-		Text description = new Text("Description");
+		Text description = new Text("Step 2");
 		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(description, 2, 0);
-		Text step1 = new Text("• SDF-Step 2: For each kind object obtained in SDF-Step 1, identify all the\r\n"
+		Text step1 = new Text("For each kind object obtained in Step 1, identify all the\r\n"
 				+ "roles it can play, considering the system description.");
 		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
 		step1.setWrappingWidth(400);

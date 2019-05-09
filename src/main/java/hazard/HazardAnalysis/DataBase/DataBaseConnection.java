@@ -332,9 +332,20 @@ public class DataBaseConnection {
 		DataBaseConnection.database = database;
 	}
 
+	public static ResultSet sql(String sql) {
+		try {
+			Connection conn = connect();
+			Statement stmt = conn.createStatement();
+			return stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <E> void sql(String sql, String table, ObservableList<E> list) {
-		try  {
+		try {
 			Connection conn = connect();
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
