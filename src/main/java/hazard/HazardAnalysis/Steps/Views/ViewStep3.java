@@ -15,21 +15,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class ViewStep3 implements ViewInterface {
-	private GridPane prevGp, thisGp, nextGp;
-	private BorderPane mainView;
+	private GridPane thisGp;
 	ObservableList<Role> roleList = FXCollections.observableArrayList();
 
-	public ViewStep3(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep3() {
 		this.thisGp = addGridPane();
-		this.prevGp = prevGp;
-		this.mainView = mainView;
 	}
 
 	private void addClickEventToRoleTable(TableView<Role> tbRole, ObservableList<Relator> relatorList,
@@ -50,25 +44,13 @@ public class ViewStep3 implements ViewInterface {
 		tbRole.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Button addEventToGoToPrevStep(Button btnBack) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnBack.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnBack;
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Roles");
-		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
 		final TableView<Role> tbRole = new TableView<Role>();
 		tbRole.setMinWidth(350);
@@ -82,7 +64,7 @@ public class ViewStep3 implements ViewInterface {
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 0, 1);
 		Text category2 = new Text("Relators ");
-		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category2.getStyleClass().add("heading");
 		final TableView<Relator> tbRelator = new TableView<Relator>();
 		tbRelator.setMinWidth(350);
 		tbRelator.setMaxHeight(200);
@@ -106,7 +88,7 @@ public class ViewStep3 implements ViewInterface {
 		gridRelators.add(gridTextAndBtn1, 0, 0);
 		gridRelators.add(tbRelator, 0, 1);
 		Text category3 = new Text("Relator that the role have ");
-		category3.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category3.getStyleClass().add("heading");
 		final TableView<Relator> tbRelatorToRole = new TableView<Relator>();
 		tbRelatorToRole.setMinWidth(350);
 		tbRelatorToRole.setMaxHeight(200);
@@ -129,22 +111,6 @@ public class ViewStep3 implements ViewInterface {
 		gridRelators.add(gridTextAndBtn2, 0, 2);
 		gridRelators.add(tbRelatorToRole, 0, 3);
 		grid.add(gridRelators, 1, 1);
-		Text description = new Text("Step 3");
-		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(description, 2, 0);
-		Text step1 = new Text("For each role object obtained in Step 1 and Step 2,\r\n"
-				+ "identify the relator that connects this role, and specify all the other roles\r\n"
-				+ "connected by the identified relator, considering the system description and\r\n"
-				+ "the analysts’ expertise.");
-		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step1.setWrappingWidth(400);
-		grid.add(step1, 2, 1);
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 2, 2);
 		addClickEventToRoleTable(tbRole, relatorList, relatorToRoleList);
 		return grid;
 	}
@@ -166,17 +132,6 @@ public class ViewStep3 implements ViewInterface {
 			}
 		};
 		btnAddLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getNextGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
 	}
 
 	private void addRelatorEventToBtn(Button btnAddLink1, String s, ObservableList<Relator> list) {
@@ -219,22 +174,8 @@ public class ViewStep3 implements ViewInterface {
 
 	@Override
 	public GridPane getGridPane() {
+		updateTbRole();
 		return this.thisGp;
-	}
-
-	@Override
-	public BorderPane getMainView() {
-		return this.mainView;
-	}
-
-	@Override
-	public GridPane getNextGridPane() {
-		return this.nextGp;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
 	}
 
 	private void removeRelatorEventToBtn(Button btnRemoveLink1, String s, TableView<Relator> tb) {
@@ -253,12 +194,18 @@ public class ViewStep3 implements ViewInterface {
 		btnRemoveLink1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	@Override
-	public void setNextGp(GridPane nextGp) {
-		this.nextGp = nextGp;
-	}
-
 	public void updateTbRole() {
 		DataBaseConnection.selectAll("role", roleList);
+	}
+
+	public String getStep() {
+		return "Step 3";
+	}
+
+	public String getStepDescription() {
+		return "For each role object obtained in Step 1 and Step 2,\r\n"
+				+ "identify the relator that connects this role, and specify all the other roles\r\n"
+				+ "connected by the identified relator, considering the system description and\r\n"
+				+ "the analysts’ expertise.";
 	}
 }

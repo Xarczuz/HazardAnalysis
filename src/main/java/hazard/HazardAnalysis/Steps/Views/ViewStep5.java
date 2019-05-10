@@ -21,35 +21,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class ViewStep5 implements ViewInterface {
-	private GridPane prevGp, thisGp, nextGp;
-	private BorderPane mainView;
-	private ViewStep1 av1;
+	private GridPane thisGp;
 	ObservableList<PossibleVictim> possibleVictimList = FXCollections.observableArrayList();
 	ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 
-	public ViewStep5(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep5() {
 		this.thisGp = addGridPane();
-		this.prevGp = prevGp;
-		this.mainView = mainView;
-		this.av1 = viewStep1;
-	}
-
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,22 +38,9 @@ public class ViewStep5 implements ViewInterface {
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Possible Mishap Vicitms double click for graph");
-		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
-		Button btnGraph = new Button("Press me");
-		grid.add(btnGraph, 1, 0);
-		EventHandler<MouseEvent> eh = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				SystemGraph frame = new SystemGraph();
-				frame.setResizable(true);
-				frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-				frame.setVisible(true);
-			}
-		};
-		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
 		final TableView<PossibleVictim> tbPossibleVictim = new TableView<PossibleVictim>();
 		tbPossibleVictim.setMinWidth(800);
 		tbPossibleVictim.setMaxHeight(200);
@@ -107,7 +75,7 @@ public class ViewStep5 implements ViewInterface {
 		};
 		tbPossibleVictim.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		Text category2 = new Text("Mishap Victims");
-		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category2.getStyleClass().add("heading");
 		grid.add(category2, 0, 3);
 		final TableView<Hazard> tbVictim = new TableView<Hazard>();
 		tbVictim.setMinWidth(800);
@@ -128,39 +96,28 @@ public class ViewStep5 implements ViewInterface {
 		addVictimEvent(btnAdd, tbPossibleVictim, hazardList);
 		Button btnRemove = new Button("-");
 		removeVictimEvent(btnRemove, tbVictim);
+		Button btnGraph = new Button("Generate System Diagram");
+		addGraphBtnEvent(btnGraph);
 		GridPane gridBtn1 = new GridPane();
 		gridBtn1.add(btnAdd, 0, 0);
 		gridBtn1.add(btnRemove, 1, 0);
+		gridBtn1.add(btnGraph, 2, 0);
 		grid.add(gridBtn1, 0, 2);
-		Text description = new Text("Step 5");
-		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(description, 3, 0);
-		Text step5 = new Text(
-				"Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
-						+ "continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness,\r\n"
-						+ "explosion, etc.");
-		step5.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step5.setWrappingWidth(300);
-		grid.add(step5, 3, 1);
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 3, 2);
 		return grid;
 	}
 
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+	private void addGraphBtnEvent(Button btnGraph) {
+		EventHandler<MouseEvent> eh = new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(MouseEvent e) {
-				av1.getAv6().updateHazardList();
-				getMainView().setCenter(getNextGridPane());
+			public void handle(MouseEvent event) {
+				SystemGraph frame = new SystemGraph();
+				frame.setResizable(true);
+				frame.setSize(500, 250);
+				frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+				frame.setVisible(true);
 			}
 		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
+		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
 	}
 
 	private void addVictimEvent(Button btnAdd, TableView<PossibleVictim> tbPossibleVictim,
@@ -212,22 +169,9 @@ public class ViewStep5 implements ViewInterface {
 
 	@Override
 	public GridPane getGridPane() {
+		updateHazardList();
+		updatePossibleVictimList();
 		return this.thisGp;
-	}
-
-	@Override
-	public BorderPane getMainView() {
-		return this.mainView;
-	}
-
-	@Override
-	public GridPane getNextGridPane() {
-		return this.nextGp;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
 	}
 
 	private void removeVictimEvent(Button btnRemove, TableView<Hazard> tbVictim) {
@@ -246,11 +190,6 @@ public class ViewStep5 implements ViewInterface {
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	@Override
-	public void setNextGp(GridPane nextGp) {
-		this.nextGp = nextGp;
-	}
-
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
@@ -261,5 +200,17 @@ public class ViewStep5 implements ViewInterface {
 				+ "INNER JOIN relatortorole e2 ON e1.relatorid = e2.relatorid \r\n"
 				+ "   AND (e1.roleid <> e2.roleid AND e1.role <> e2.role) where roletoplay.kindid = kind.id and roletoplay.roleid = e1.roleid and  r2.kindid = k2.id and r2.roleid = e2.roleid;",
 				"possiblevictim", possibleVictimList);
+	}
+
+	@Override
+	public String getStep() {
+		return "Step 5";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
+				+ "continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness,\r\n"
+				+ "explosion, etc.";
 	}
 }

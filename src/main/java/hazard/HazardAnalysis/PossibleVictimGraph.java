@@ -25,7 +25,6 @@ public class PossibleVictimGraph extends JFrame {
 		style.put(mxConstants.STYLE_ROUNDED, true);
 		style.put(mxConstants.STYLE_SHADOW, true);
 		style.put(mxConstants.STYLE_AUTOSIZE, 1);
-		style.put(mxConstants.STYLE_GRADIENTCOLOR, "yellow");
 		style.put(mxConstants.STYLE_FONTSIZE, 14);
 		style = graph.getStylesheet().getDefaultEdgeStyle();
 		style.put(mxConstants.STYLE_STROKECOLOR, "black");
@@ -33,9 +32,9 @@ public class PossibleVictimGraph extends JFrame {
 		try {
 			graph.setAutoSizeCells(true);
 			Object v1 = graph.insertVertex(parent, null, pv.getKind(), 20, 20, 100, 40, "fillColor=#69D4D0;");
-			Object v2 = graph.insertVertex(parent, null, pv.getRole(), 240, 150, 100, 40, "fillColor=grey;");
+			Object v2 = graph.insertVertex(parent, null, pv.getRole(), 240, 150, 100, 40, "fillColor=#C4C4C4;");
 			Object v3 = graph.insertVertex(parent, null, pv.getRelator(), 240, 150, 100, 40, "fillColor=white;");
-			Object v4 = graph.insertVertex(parent, null, pv.getRole2(), 240, 150, 100, 40, "fillColor=grey;");
+			Object v4 = graph.insertVertex(parent, null, pv.getRole2(), 240, 150, 100, 40, "fillColor=#C4C4C4;");
 			Object v5 = graph.insertVertex(parent, null, pv.getKind2(), 240, 150, 100, 40, "fillColor=#69D4D0;");
 			graph.insertEdge(parent, null, "", v1, v2);
 			graph.insertEdge(parent, null, "", v2, v3);

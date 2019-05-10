@@ -1,55 +1,44 @@
 package hazard.HazardAnalysis.Steps.Views;
 
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import hazard.HazardClasses.Cause;
+import hazard.HazardClasses.Hazard;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 
 public class ViewStep8 implements ViewInterface {
-	private GridPane prevGp, thisGp, nextGp;
-	private BorderPane mainView;
+	private GridPane thisGp;
 
-	public ViewStep8(ViewStep1 viewStep1, BorderPane border, GridPane prevGp) {
+	public ViewStep8() {
 		this.thisGp = addGridPane();
-		this.prevGp = prevGp;
-		this.mainView = border;
 	}
 
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 3, 2);
+		final TableView<Hazard> tbHazard = new TableView<Hazard>();
+		tbHazard.setMinWidth(800);
+		tbHazard.setMaxHeight(200);
+		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
+		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
+		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
+		hazard.setMinWidth(400);
+		hazardDescription.setMinWidth(350);
+		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
+		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
+		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
+		tbHazard.getColumns().addAll(id, hazard, hazardDescription);
+		final TableView<Cause> tbCause = new TableView<Cause>();
+		tbCause.setMinWidth(800);
+		tbCause.setMaxHeight(200);
+		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
+		cause.setMinWidth(400);
+		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
+		tbCause.getColumns().addAll(cause);
 		return grid;
-	}
-
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getNextGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
 	}
 
 	@Override
@@ -58,22 +47,13 @@ public class ViewStep8 implements ViewInterface {
 	}
 
 	@Override
-	public BorderPane getMainView() {
-		return this.mainView;
+	public String getStep() {
+		return "Step 8";
 	}
 
 	@Override
-	public GridPane getNextGridPane() {
-		return this.nextGp;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
-	}
-
-	@Override
-	public void setNextGp(GridPane nextGp) {
-		this.nextGp = nextGp;
+	public String getStepDescription() {
+		// TODO Auto-generated method stub
+		return "Step 8";
 	}
 }

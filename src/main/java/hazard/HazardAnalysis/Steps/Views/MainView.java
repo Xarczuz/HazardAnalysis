@@ -6,37 +6,37 @@ import hazard.HazardAnalysis.DataBase.CreateDataBase;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MainView {
-	BorderPane border = new BorderPane();
-	ViewStep1 allView;
+	private BorderPane border = new BorderPane();
+	private ViewStep1 av1;
+	private ViewStep2 av2;
+	private ViewStep3 av3;
+	private ViewStep4 av4;
+	private ViewStep5 av5;
+	private ViewStep6 av6;
+	private ViewStep7 av7;
+	private ViewStep8 av8;
+	private ViewStep9 av9;
 	private Stage pStage;
+	private int currentStep;
+	private Text step, description;
 
 	public HBox addHBox() {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15, 12, 15, 12));
 		hbox.setSpacing(10);
-		hbox.setStyle(
-				"-fx-background-color: linear-gradient(to right,#00BFFF, yellow);-fx-border-width: 0 0 5 0; -fx-border-color: black black black black;");
+		hbox.setStyle("-fx-border-width: 0 0 5 0; -fx-border-color: black black black black;");
 		Button btnNew = new Button("New");
 		addNewEvent(btnNew);
 		btnNew.setPrefSize(100, 20);
@@ -52,17 +52,18 @@ public class MainView {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
-//				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
-//				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
 				fileChooser.setTitle("Load database");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
 				File file = fileChooser.showOpenDialog(pStage);
 				if (file != null) {
 					DataBaseConnection.setDatabase(file.getPath());
 					CreateDataBase.setDatabase(file.getPath());
-					allView = new ViewStep1(pStage, border);
+					av1 = new ViewStep1();
+					currentStep = 1;
+					loadCenterViews();
 					border.setLeft(addVBox());
-					border.setCenter(allView.getGridPane());
+					border.setRight(addRightVBox());
+					border.setCenter(av1.getGridPane());
 				}
 			}
 		};
@@ -75,8 +76,6 @@ public class MainView {
 			@Override
 			public void handle(MouseEvent e) {
 				FileChooser fileChooser = new FileChooser();
-//				File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
-//				fileChooser.setInitialDirectory(new File(jarDir.getAbsolutePath().replace("%20", " ")));
 				fileChooser.setTitle("New database");
 				fileChooser.setInitialFileName(".db");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DB", "*.db"));
@@ -86,9 +85,12 @@ public class MainView {
 					CreateDataBase.setDatabase(file.getPath());
 					CreateDataBase.createNewDatabase();
 					CreateDataBase.createNewTable();
-					allView = new ViewStep1(pStage, border);
+					av1 = new ViewStep1();
+					currentStep = 1;
+					loadCenterViews();
 					border.setLeft(addVBox());
-					border.setCenter(allView.getGridPane());
+					border.setRight(addRightVBox());
+					border.setCenter(av1.getGridPane());
 				}
 			}
 		};
@@ -96,24 +98,56 @@ public class MainView {
 		return btnNew;
 	}
 
-	public void addStackPane(HBox hb) {
-		StackPane stack = new StackPane();
-		Rectangle helpIcon = new Rectangle(30.0, 25.0);
-		helpIcon.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-				new Stop[] { new Stop(0, Color.web("#4977A3")), new Stop(0.5, Color.web("#B0C6DA")),
-						new Stop(1, Color.web("#9CB6CF")), }));
-		helpIcon.setStroke(Color.web("#D0E6FA"));
-		helpIcon.setArcHeight(3.5);
-		helpIcon.setArcWidth(3.5);
-		Text helpText = new Text("?");
-		helpText.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
-		helpText.setFill(Color.WHITE);
-		helpText.setStroke(Color.web("#7080A0"));
-		stack.getChildren().addAll(helpIcon, helpText);
-		stack.setAlignment(Pos.CENTER_RIGHT); // Right-justify nodes in stack
-		StackPane.setMargin(helpText, new Insets(0, 10, 0, 0)); // Center "?"
-		hb.getChildren().add(stack); // Add to HBox from Example 1-2
-		HBox.setHgrow(stack, Priority.ALWAYS); // Give stack any extra space
+	public ViewStep1 getAv1() {
+		return av1;
+	}
+
+	public ViewStep2 getAv2() {
+		av2.updateTbKind();
+		return av2;
+	}
+
+	public ViewStep3 getAv3() {
+		av3.updateTbRole();
+		return av3;
+	}
+
+	public ViewStep4 getAv4() {
+		av4.updateTbRole();
+		return av4;
+	}
+
+	public ViewStep5 getAv5() {
+		av5.updatePossibleVictimList();
+		av5.updateHazardList();
+		return av5;
+	}
+
+	public ViewStep6 getAv6() {
+		return av6;
+	}
+
+	public ViewStep7 getAv7() {
+		return av7;
+	}
+
+	public ViewStep8 getAv8() {
+		return this.av8;
+	}
+
+	public ViewStep9 getAv9() {
+		return this.av9;
+	}
+
+	private void loadCenterViews() {
+		this.av2 = new ViewStep2();
+		this.av3 = new ViewStep3();
+		this.av4 = new ViewStep4();
+		this.av5 = new ViewStep5();
+		this.av6 = new ViewStep6();
+		this.av7 = new ViewStep7();
+		this.av8 = new ViewStep8();
+		this.av9 = new ViewStep9(this.pStage);
 	}
 
 	public VBox addVBox() {
@@ -121,9 +155,8 @@ public class MainView {
 		vbox.setMinWidth(150);
 		vbox.setPadding(new Insets(10));
 		vbox.setSpacing(8);
-		vbox.setStyle("-fx-background-color: linear-gradient(#00BFFF,red);");
-		Text title = new Text("Step");
-		title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		Text title = new Text("Navigation:");
+		title.getStyleClass().add("heading");
 		vbox.getChildren().add(title);
 		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"), new Hyperlink("Step 2"),
 				new Hyperlink("Step 3"), new Hyperlink("Step 4"), new Hyperlink("Step 5"), new Hyperlink("Step 6"),
@@ -131,70 +164,72 @@ public class MainView {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(allView.getGridPane());
+				currentStep = 1;
+				changeStepTexts();
 			}
 		};
 		options[0].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				allView.getAv2().updateTbKind();
-				border.setCenter(allView.getAv2().getGridPane());
+				currentStep = 2;
+				changeStepTexts();
 			}
 		};
 		options[1].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				allView.getAv3().updateTbRole();
-				border.setCenter(allView.getAv3().getGridPane());
+				currentStep = 3;
+				changeStepTexts();
 			}
 		};
 		options[2].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				allView.getAv4().updateTbRole();
-				border.setCenter(allView.getAv4().getGridPane());
+				currentStep = 4;
+				changeStepTexts();
 			}
 		};
 		options[3].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				allView.getAv5().updateHazardList();
-				allView.getAv5().updatePossibleVictimList();
-				border.setCenter(allView.getAv5().getGridPane());
+				currentStep = 5;
+				changeStepTexts();
 			}
 		};
 		options[4].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				allView.getAv6().updateHazardList();
-				border.setCenter(allView.getAv6().getGridPane());
+				currentStep = 6;
+				changeStepTexts();
 			}
 		};
 		options[5].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				allView.getAv7().updateHazardList();
-				border.setCenter(allView.getAv7().getGridPane());
+				currentStep = 7;
+				changeStepTexts();
 			}
 		};
 		options[6].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(allView.getAv8().getGridPane());
+				currentStep = 8;
+				changeStepTexts();
 			}
 		};
 		options[7].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				border.setCenter(allView.getAv9().getGridPane());
+				currentStep = 9;
+				changeStepTexts();
 			}
 		};
 		options[8].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -206,12 +241,119 @@ public class MainView {
 		return vbox;
 	}
 
+	public VBox addRightVBox() {
+		VBox vbox = new VBox();
+		vbox.setMinWidth(300);
+		vbox.setPadding(new Insets(10));
+		vbox.setSpacing(8);
+		step = new Text(av1.getStep());
+		step.getStyleClass().add("heading");
+		description = new Text(av1.getStepDescription());
+		description.getStyleClass().add("texts");
+		description.setWrappingWidth(300);
+		vbox.getChildren().addAll(step, description);
+		Button btnBack = new Button("Back");
+		Button btnNextStep = new Button("Next Step");
+		GridPane gridBtn = new GridPane();
+		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
+		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
+		vbox.getChildren().add(gridBtn);
+		return vbox;
+	}
+
+	private Button addNextStepEvent(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (currentStep != 9)
+					currentStep++;
+				changeStepTexts();
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
+	}
+
+	private void changeStepTexts() {
+		switch (currentStep) {
+		case 1:
+			border.setCenter(getAv1().getGridPane());
+			step.setText(getAv1().getStep());
+			description.setText(getAv1().getStepDescription());
+			currentStep = 1;
+			break;
+		case 2:
+			border.setCenter(getAv2().getGridPane());
+			step.setText(getAv2().getStep());
+			description.setText(getAv2().getStepDescription());
+			currentStep = 2;
+			break;
+		case 3:
+			border.setCenter(getAv3().getGridPane());
+			step.setText(getAv3().getStep());
+			description.setText(getAv3().getStepDescription());
+			currentStep = 3;
+			break;
+		case 4:
+			border.setCenter(getAv4().getGridPane());
+			step.setText(getAv4().getStep());
+			description.setText(getAv4().getStepDescription());
+			currentStep = 4;
+			break;
+		case 5:
+			border.setCenter(getAv5().getGridPane());
+			step.setText(getAv5().getStep());
+			description.setText(getAv5().getStepDescription());
+			currentStep = 5;
+			break;
+		case 6:
+			border.setCenter(getAv6().getGridPane());
+			step.setText(getAv6().getStep());
+			description.setText(getAv6().getStepDescription());
+			currentStep = 6;
+			break;
+		case 7:
+			border.setCenter(getAv7().getGridPane());
+			step.setText(getAv7().getStep());
+			description.setText(getAv7().getStepDescription());
+			currentStep = 7;
+			break;
+		case 8:
+			border.setCenter(getAv8().getGridPane());
+			step.setText(getAv8().getStep());
+			description.setText(getAv8().getStepDescription());
+			currentStep = 8;
+			break;
+		case 9:
+			border.setCenter(getAv9().getGridPane());
+			step.setText(getAv9().getStep());
+			description.setText(getAv9().getStepDescription());
+			currentStep = 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	private Button addEventToGoToPrevStep(Button btnNextStep) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (currentStep != 1)
+					currentStep--;
+				changeStepTexts();
+			}
+		};
+		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		return btnNextStep;
+	}
+
 	public BorderPane view(Stage primaryStage) {
 		this.pStage = primaryStage;
-		border.setStyle("-fx-background-color: #F0F8FF;");
+		border.getStyleClass().add("borderpane");
+		border.getStylesheets().add("resources/css.css");
 		HBox hbox = addHBox();
 		border.setTop(hbox);
-		addStackPane(hbox); // Add stack to HBox in top region
 		return border;
 	}
 }

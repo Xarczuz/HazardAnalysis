@@ -11,21 +11,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class ViewStep2 implements ViewInterface {
-	private GridPane prevGp, thisGp, nextGp;
-	private BorderPane mainView;
+	private GridPane thisGp;
 	ObservableList<Kind> kindList = FXCollections.observableArrayList();
 
-	public ViewStep2(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep2() {
 		this.thisGp = addGridPane();
-		this.prevGp = prevGp;
-		this.mainView = mainView;
 	}
 
 	private void addClickEventToKindTable(TableView<Kind> tb, ObservableList<Role> roleList,
@@ -48,25 +42,13 @@ public class ViewStep2 implements ViewInterface {
 		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Button addEventToGoToPrevStep(Button btnPrevStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnPrevStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnPrevStep;
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Kind");
-		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
 		final TableView<Kind> tbKind = new TableView<Kind>();
 		tbKind.setMaxWidth(350);
@@ -81,12 +63,12 @@ public class ViewStep2 implements ViewInterface {
 		runtime.setCellValueFactory(new PropertyValueFactory<Kind, Boolean>("runtime"));
 		shutdown.setCellValueFactory(new PropertyValueFactory<Kind, Boolean>("shutdown"));
 		kind.setMinWidth(100);
-		tbKind.getColumns().addAll(id, kind, start, runtime, shutdown);
+		tbKind.getColumns().addAll(id, kind);// , start, runtime, shutdown);
 		DataBaseConnection.selectAll("kind", kindList);
 		tbKind.setItems(kindList);
 		grid.add(tbKind, 0, 1);
 		Text category2 = new Text("Roles");
-		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category2.getStyleClass().add("heading");
 		final TableView<Role> tbRole = new TableView<Role>();
 		tbRole.setMinWidth(350);
 		tbRole.setMaxHeight(200);
@@ -102,7 +84,7 @@ public class ViewStep2 implements ViewInterface {
 		gridRoles.add(category2, 0, 0);
 		gridRoles.add(tbRole, 0, 1);
 		Text category3 = new Text("Roles it can play    ");
-		category3.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category3.getStyleClass().add("heading");
 		final TableView<Role> tbRoleToPlay = new TableView<Role>();
 		tbRoleToPlay.setMinWidth(350);
 		tbRoleToPlay.setMaxHeight(200);
@@ -125,20 +107,6 @@ public class ViewStep2 implements ViewInterface {
 		gridRoles.add(gridTextAndBtn, 0, 2);
 		gridRoles.add(tbRoleToPlay, 0, 3);
 		grid.add(gridRoles, 1, 1);
-		Text description = new Text("Step 2");
-		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(description, 2, 0);
-		Text step1 = new Text("For each kind object obtained in Step 1, identify all the\r\n"
-				+ "roles it can play, considering the system description.");
-		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step1.setWrappingWidth(400);
-		grid.add(step1, 2, 1);
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 2, 2);
 		addClickEventToKindTable(tbKind, roleList, roleToPlayList);
 		return grid;
 	}
@@ -162,17 +130,6 @@ public class ViewStep2 implements ViewInterface {
 		btnAddLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getNextGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
 	private void addRemoveLinkEvent(Button btnRemoveLink, ObservableList<Role> roleList, TableView<Kind> tbKind,
 			TableView<Role> tbRoleToPlay) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -192,29 +149,19 @@ public class ViewStep2 implements ViewInterface {
 		btnRemoveLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
+	public String getStep() {
+		return "Step 2";
+	}
+
+	public String getStepDescription() {
+		return "For each kind object obtained in Step 1, identify all the\r\n"
+				+ "roles it can play, considering the system description.";
+	}
+
 	@Override
 	public GridPane getGridPane() {
+		updateTbKind();
 		return this.thisGp;
-	}
-
-	@Override
-	public BorderPane getMainView() {
-		return this.mainView;
-	}
-
-	@Override
-	public GridPane getNextGridPane() {
-		return this.nextGp;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
-	}
-
-	@Override
-	public void setNextGp(GridPane nextGp) {
-		this.nextGp = nextGp;
 	}
 
 	public void updateTbKind() {

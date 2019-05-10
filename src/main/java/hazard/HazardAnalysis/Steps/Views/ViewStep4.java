@@ -11,23 +11,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class ViewStep4 implements ViewInterface {
-	private GridPane prevGp, thisGp, nextGp;
-	private BorderPane mainView;
+	private GridPane thisGp;
 	ObservableList<Role> roleList = FXCollections.observableArrayList();
-	private ViewStep1 av1;
 
-	public ViewStep4(ViewStep1 viewStep1, BorderPane mainView, GridPane prevGp) {
+	public ViewStep4() {
 		this.thisGp = addGridPane();
-		this.av1 = viewStep1;
-		this.prevGp = prevGp;
-		this.mainView = mainView;
 	}
 
 	private void addClickEventToRoleTable(TableView<Role> tb, ObservableList<Kind> kindList,
@@ -50,23 +42,11 @@ public class ViewStep4 implements ViewInterface {
 		tb.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Roles");
 		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
@@ -121,21 +101,6 @@ public class ViewStep4 implements ViewInterface {
 		gridKinds.add(gridTextAndBtn, 0, 2);
 		gridKinds.add(tbKindToRole, 0, 3);
 		grid.add(gridKinds, 1, 1);
-		Text description = new Text("Step 4");
-		description.getStyleClass().add("heading");
-		grid.add(description, 2, 0);
-		Text step4 = new Text("For each role object obtained in Step 1, Step 2 and\r\n"
-				+ "Step 3, identify all the kind objects that can play the role, considering\r\n"
-				+ "the system description.");
-		step4.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step4.setWrappingWidth(400);
-		grid.add(step4, 2, 1);
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 2, 2);
 		addClickEventToRoleTable(tbRole, kindList, kindToRoleList);
 		return grid;
 	}
@@ -159,19 +124,6 @@ public class ViewStep4 implements ViewInterface {
 		btnAddLink.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				av1.getAv5().updatePossibleVictimList();
-				av1.getAv5().updateHazardList();
-				getMainView().setCenter(getNextGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
 	private void addRemoveLinkEvent(Button btnRemoveLink, ObservableList<Kind> kindList, TableView<Role> tbRole,
 			TableView<Kind> tbKindToRole) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -193,30 +145,23 @@ public class ViewStep4 implements ViewInterface {
 
 	@Override
 	public GridPane getGridPane() {
+		updateTbRole();
 		return this.thisGp;
-	}
-
-	@Override
-	public BorderPane getMainView() {
-		return this.mainView;
-	}
-
-	@Override
-	public GridPane getNextGridPane() {
-		return this.nextGp;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
-	}
-
-	@Override
-	public void setNextGp(GridPane nextGp) {
-		this.nextGp = nextGp;
 	}
 
 	public void updateTbRole() {
 		DataBaseConnection.selectAll("role", roleList);
+	}
+
+	@Override
+	public String getStep() {
+		return "Step 4";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "For each role object obtained in Step 1, Step 2 and\r\n"
+				+ "Step 3, identify all the kind objects that can play the role, considering\r\n"
+				+ "the system description.";
 	}
 }

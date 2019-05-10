@@ -20,23 +20,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class ViewStep7 implements ViewInterface {
-	private GridPane prevGp, thisGp, nextGp;
-	private BorderPane mainView;
+	private GridPane thisGp;
 	private ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
 	private ObservableList<Cause> causeList = FXCollections.observableArrayList();
 
-	public ViewStep7(ViewStep1 viewStep1, BorderPane border, GridPane prevGp) {
+	public ViewStep7() {
 		this.thisGp = addGridPane();
-		this.prevGp = prevGp;
-		this.mainView = border;
 	}
 
 	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
@@ -53,25 +47,13 @@ public class ViewStep7 implements ViewInterface {
 		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Button addEventToGoToPrevStep(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getPrevGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
 		Text category1 = new Text("Hazards");
-		category1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category1.getStyleClass().add("heading");
 		grid.add(category1, 0, 0);
 		final TableView<Hazard> tbHazard = new TableView<Hazard>();
 		tbHazard.setMinWidth(800);
@@ -94,9 +76,9 @@ public class ViewStep7 implements ViewInterface {
 						if (!hazardList.isEmpty() && !empty) {
 							if (!item.getRisk().isEmpty()) {
 								if (!empty && item.getRisk().contentEquals("true")) {
-									setStyle("-fx-background-color: #7FFF00;");
+									setStyle("-fx-background-color: #006400;");
 								} else if (!empty && item.getRisk().contentEquals("false")) {
-									setStyle("-fx-background-color: red;");
+									setStyle("-fx-background-color: #8B0000;");
 								}
 							}
 						}
@@ -111,7 +93,7 @@ public class ViewStep7 implements ViewInterface {
 		tbHazard.setItems(hazardList);
 		grid.add(tbHazard, 0, 1);
 		Text category2 = new Text("Pre-initiating events that might lead to the hazard");
-		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category2.getStyleClass().add("heading");
 		grid.add(category2, 0, 3);
 		final TableView<Cause> tbCause = new TableView<Cause>();
 		tbCause.setMinWidth(800);
@@ -122,37 +104,12 @@ public class ViewStep7 implements ViewInterface {
 		tbCause.getColumns().addAll(cause);
 		tbCause.setItems(causeList);
 		grid.add(tbCause, 0, 4);
-		Text description = new Text("Step 7");
-		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(description, 3, 0);
-		Text step7 = new Text(
-				"For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.");
-		step7.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step7.setWrappingWidth(300);
-		grid.add(step7, 3, 1);
 		Button btnAdd = new Button("Add Severity And Probability");
 		addSeverityAndProbabilityEvent(btnAdd, tbHazard);
 		GridPane gridBtn1 = new GridPane();
 		gridBtn1.add(btnAdd, 0, 0);
 		grid.add(gridBtn1, 0, 2);
-		Button btnBack = new Button("Back");
-		Button btnNextStep = new Button("Next Step");
-		GridPane gridBtn = new GridPane();
-		gridBtn.add(addEventToGoToPrevStep(btnBack), 0, 0);
-		gridBtn.add(addNextStepEvent(btnNextStep), 2, 0);
-		grid.add(gridBtn, 3, 2);
 		return grid;
-	}
-
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(getNextGridPane());
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
 	}
 
 	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Hazard> tbHazard) {
@@ -222,22 +179,8 @@ public class ViewStep7 implements ViewInterface {
 
 	@Override
 	public GridPane getGridPane() {
+		updateHazardList();
 		return this.thisGp;
-	}
-
-	@Override
-	public BorderPane getMainView() {
-		return this.mainView;
-	}
-
-	@Override
-	public GridPane getNextGridPane() {
-		return this.nextGp;
-	}
-
-	@Override
-	public GridPane getPrevGridPane() {
-		return this.prevGp;
 	}
 
 	private Double returnRiskValue(String s) {
@@ -250,12 +193,17 @@ public class ViewStep7 implements ViewInterface {
 		return 0D;
 	}
 
-	@Override
-	public void setNextGp(GridPane nextGp) {
-		this.nextGp = nextGp;
-	}
-
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+	}
+
+	@Override
+	public String getStep() {
+		return "Step 7";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.";
 	}
 }

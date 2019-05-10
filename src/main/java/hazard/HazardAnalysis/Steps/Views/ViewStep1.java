@@ -17,45 +17,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
-public class ViewStep1 {
+public class ViewStep1 implements ViewInterface {
 	private GridPane thisGp;
-	private BorderPane border;
-	private ViewStep2 av2;
-	private ViewStep3 av3;
-	private ViewStep4 av4;
-	private ViewStep5 av5;
-	private ViewStep6 av6;
-	private ViewStep7 av7;
-	private ViewStep8 av8;
-	private ViewStep9 av9;
-	private Stage pStage;
 
-	public ViewStep1(Stage pStage, BorderPane border) {
-		this.pStage = pStage;
+	public ViewStep1() {
 		this.thisGp = addGridPane();
-		this.border = border;
-		this.av2 = new ViewStep2(this, border, getGridPane());
-		this.av3 = new ViewStep3(this, border, getAv2().getGridPane());
-		this.av4 = new ViewStep4(this, border, getAv3().getGridPane());
-		this.av5 = new ViewStep5(this, border, getAv4().getGridPane());
-		this.av6 = new ViewStep6(this, border, getAv5().getGridPane());
-		this.av7 = new ViewStep7(this, border, getAv6().getGridPane());
-		this.av8 = new ViewStep8(this, border, getAv7().getGridPane());
-		this.av9 = new ViewStep9(this, border, getAv8().getGridPane());
-		this.av2.setNextGp(this.av3.getGridPane());
-		this.av3.setNextGp(this.av4.getGridPane());
-		this.av4.setNextGp(this.av5.getGridPane());
-		this.av5.setNextGp(this.av6.getGridPane());
-		this.av6.setNextGp(this.av7.getGridPane());
-		this.av7.setNextGp(this.av8.getGridPane());
-		this.av8.setNextGp(this.av9.getGridPane());
 	}
 
 	private <E> GridPane addButtonsToTable(final TableView<E> tb, ObservableList<E> list, String s) {
@@ -78,9 +47,9 @@ public class ViewStep1 {
 				gp.setPadding(new Insets(5, 5, 5, 5));
 				t.setPadding(new Insets(5, 5, 5, 5));
 				gp.add(t, 0, 0);
-				gp.add(st, 0, 1);
-				gp.add(rt, 0, 2);
-				gp.add(sd, 0, 3);
+//				gp.add(st, 0, 1);
+//				gp.add(rt, 0, 2);
+//				gp.add(sd, 0, 3);
 				dialog.getDialogPane().setContent(gp);
 				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
 					@Override
@@ -90,9 +59,9 @@ public class ViewStep1 {
 									rt.isSelected(), sd.isSelected());
 							list.clear();
 							DataBaseConnection.selectAll(s.toLowerCase(), list);
-							getAv2().updateTbKind();
-							getAv3().updateTbRole();
-							getAv4().updateTbRole();
+//							getAv2().updateTbKind();
+//							getAv3().updateTbRole();
+//							getAv4().updateTbRole();
 						}
 					}
 				};
@@ -124,10 +93,10 @@ public class ViewStep1 {
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
+		grid.setGridLinesVisible(true);
 		grid.getStyleClass().add("gridpane");
-		grid.getStylesheets().add("resources/center.css");
 		Text category = new Text("Kind");
-		category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
 		final TableView<Kind> tbKind = new TableView<Kind>();
 		tbKind.setMaxWidth(350);
@@ -146,14 +115,14 @@ public class ViewStep1 {
 		kShutdown.setStyle("-fx-alignment: CENTER;");
 		id.setMaxWidth(30);
 		kind.setMinWidth(100);
-		tbKind.getColumns().addAll(id, kind, kStart, kRuntime, kShutdown);
+		tbKind.getColumns().addAll(id, kind);// , kStart, kRuntime, kShutdown);
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
 		tbKind.setItems(kindList);
 		grid.add(tbKind, 0, 1);
 		grid.add(addButtonsToTable(tbKind, kindList, "Kind"), 0, 2);
 		Text category2 = new Text("Role");
-		category2.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		category2.getStyleClass().add("heading");
 		grid.add(category2, 1, 0);
 		final TableView<Role> tbRole = new TableView<Role>();
 		tbRole.setMaxWidth(350);
@@ -172,83 +141,25 @@ public class ViewStep1 {
 		rShutdown.setStyle("-fx-alignment: CENTER;");
 		id2.setMaxWidth(30);
 		role.setMinWidth(100);
-		tbRole.getColumns().addAll(id2, role, rStart, rRuntime, rShutdown);
+		tbRole.getColumns().addAll(id2, role);// , rStart, rRuntime, rShutdown);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("role", roleList);
 		tbRole.setItems(roleList);
 		grid.add(tbRole, 1, 1);
 		grid.add(addButtonsToTable(tbRole, roleList, "Role"), 1, 2);
-		Text description = new Text("Step 1");
-		description.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		grid.add(description, 2, 0);
-		Text step1 = new Text(
-				"Identify the kind and role objects explicitly presented in the\n" + "system description.");
-		step1.setFont(Font.font("Arial", FontWeight.MEDIUM, 18));
-		step1.setWrappingWidth(400);
-		grid.add(step1, 2, 1);
-		Button btnNextStep = new Button("Next Step");
-		grid.add(addNextStepEvent(btnNextStep), 2, 3);
 		return grid;
 	}
 
-	private Button addNextStepEvent(Button btnNextStep) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				getMainView().setCenter(av2.getGridPane());
-				av2.updateTbKind();
-			}
-		};
-		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		return btnNextStep;
+	public String getStep() {
+		return "Step 1";
 	}
 
-	public ViewStep2 getAv2() {
-		av2.updateTbKind();
-		return av2;
+	public String getStepDescription() {
+		return "Identify the kind and role objects explicitly presented in the system description";
 	}
 
-	public ViewStep3 getAv3() {
-		av3.updateTbRole();
-		return av3;
-	}
-
-	public ViewStep4 getAv4() {
-		av4.updateTbRole();
-		return av4;
-	}
-
-	public ViewStep5 getAv5() {
-		av5.updatePossibleVictimList();
-		av5.updateHazardList();
-		return av5;
-	}
-
-	public ViewStep6 getAv6() {
-		return av6;
-	}
-
-	public ViewStep7 getAv7() {
-		return av7;
-	}
-
-	public ViewStep8 getAv8() {
-		return this.av8;
-	}
-
-	public ViewStep9 getAv9() {
-		return this.av9;
-	}
-
+	@Override
 	public GridPane getGridPane() {
 		return this.thisGp;
-	}
-
-	public BorderPane getMainView() {
-		return this.border;
-	}
-
-	public Stage getpStage() {
-		return pStage;
 	}
 }

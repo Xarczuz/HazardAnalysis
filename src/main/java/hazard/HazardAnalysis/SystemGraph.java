@@ -33,7 +33,7 @@ public class SystemGraph extends JFrame {
 		style.put(mxConstants.STYLE_SHADOW, true);
 		style.put(mxConstants.STYLE_AUTOSIZE, 1);
 		style.put(mxConstants.STYLE_FONTSIZE, 14);
-		style.put(mxConstants.STYLE_GRADIENTCOLOR, "yellow");
+//		style.put(mxConstants.STYLE_GRADIENTCOLOR, "yellow");
 		style = graph.getStylesheet().getDefaultEdgeStyle();
 		style.put(mxConstants.STYLE_STROKECOLOR, "black");
 		graph.getModel().beginUpdate();

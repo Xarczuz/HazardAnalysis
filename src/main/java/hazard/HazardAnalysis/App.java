@@ -27,13 +27,12 @@ public class App extends Application {
 		primaryStage.setY(primaryScreenBounds.getMinY());
 		primaryStage.setWidth(primaryScreenBounds.getWidth());
 		primaryStage.setHeight(primaryScreenBounds.getHeight() - 5);
-		primaryStage.setTitle("Hazard");
+		primaryStage.setTitle("AN ONTOLOGICAL APPROACH TO SAFETY ANALYSIS OF SAFETY-CRITICAL SYSTEMS");
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
 		border = av.view(primaryStage);
 		Scene scene = new Scene(border);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Hazard");
 		primaryStage.show();
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
