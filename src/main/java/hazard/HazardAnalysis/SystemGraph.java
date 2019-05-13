@@ -1,15 +1,21 @@
 package hazard.HazardAnalysis;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
@@ -21,7 +27,7 @@ public class SystemGraph extends JFrame {
 	 */
 	private static final long serialVersionUID = 8307392183311600543L;
 
-	public SystemGraph() {
+	public SystemGraph() throws IOException {
 		super("System Diagram");
 		JScrollPane scrPane = new JScrollPane();
 		this.add(scrPane);
@@ -33,7 +39,6 @@ public class SystemGraph extends JFrame {
 		style.put(mxConstants.STYLE_SHADOW, true);
 		style.put(mxConstants.STYLE_AUTOSIZE, 1);
 		style.put(mxConstants.STYLE_FONTSIZE, 14);
-//		style.put(mxConstants.STYLE_GRADIENTCOLOR, "yellow");
 		style = graph.getStylesheet().getDefaultEdgeStyle();
 		style.put(mxConstants.STYLE_STROKECOLOR, "black");
 		graph.getModel().beginUpdate();
@@ -75,9 +80,13 @@ public class SystemGraph extends JFrame {
 			graph.getModel().endUpdate();
 		}
 		mxHierarchicalLayout graphComponent = new mxHierarchicalLayout(graph);
+		graphComponent.setInterRankCellSpacing(50);
+		graphComponent.setIntraCellSpacing(20);
 		graphComponent.setFineTuning(true);
 		graphComponent.execute(parent);
 		mxGraphComponent graphComponents = new mxGraphComponent(graphComponent.getGraph());
 		getContentPane().add(graphComponents);
+		BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE, true, null);
+		ImageIO.write(image, "PNG", new File("graph.png"));
 	}
 }

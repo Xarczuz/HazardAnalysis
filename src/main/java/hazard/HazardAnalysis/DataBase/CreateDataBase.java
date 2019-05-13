@@ -38,6 +38,7 @@ public class CreateDataBase {
 		String sql5 = "CREATE TABLE IF NOT EXISTS relatortorole (id integer PRIMARY KEY, relator text NOT NULL, relatorid integer NOT NULL, role TEXT NOT NULL, roleid INTEGER NOT NULL);";
 		String sql6 = "CREATE TABLE IF NOT EXISTS hazard (id INTEGER PRIMARY KEY, hazard TEXT NOT NULL, harm TEXT NOT NULL, severity REAL, probability REAL, riskevaluation REAL, risk BIT);";
 		String sql7 = "CREATE TABLE IF NOT EXISTS cause (id INTEGER PRIMARY KEY, cause TEXT NOT NULL, hazardid INTEGER NOT NULL);";
+		String sql8 = "CREATE TABLE IF NOT EXISTS mitigation (id INTEGER PRIMARY KEY, mitigation TEXT NOT NULL, hazardid INTEGER NOT NULL);";
 		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
 			// create a new table
 			stmt.execute(sql1);
@@ -47,6 +48,7 @@ public class CreateDataBase {
 			stmt.execute(sql5);
 			stmt.execute(sql6);
 			stmt.execute(sql7);
+			stmt.execute(sql8);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

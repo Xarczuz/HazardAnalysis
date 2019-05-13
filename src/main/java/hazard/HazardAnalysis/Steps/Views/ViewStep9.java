@@ -2,10 +2,8 @@ package hazard.HazardAnalysis.Steps.Views;
 
 import java.io.File;
 
-import hazard.HazardAnalysis.DataBase.DataBaseConnection;
+import hazard.HazardAnalysis.DataBase.ExportDataToExcel;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
@@ -32,19 +30,8 @@ public class ViewStep9 implements ViewInterface {
 				fileChooser.setInitialFileName(".xlsx");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
 				File file = fileChooser.showSaveDialog(pStage);
-				Alert a = new Alert(AlertType.INFORMATION);
-				if (file != null) {
-					DataBaseConnection.exportData(file);
-					a.setTitle("Export Done");
-					a.setContentText("Export Done");
-					a.showAndWait();
-					p1.setProgress(1);
-				} else {
-					a.setTitle("Export Failed");
-					a.setContentText("Export Failed");
-					a.show();
-					p1.setProgress(0);
-				}
+				Thread t = new ExportDataToExcel(file,p1);
+				t.start();
 			}
 		};
 		btnExport.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -75,6 +62,6 @@ public class ViewStep9 implements ViewInterface {
 
 	@Override
 	public String getStepDescription() {
-		return "You can export you project to excel.";
+		return "You can export your project to excel.";
 	}
 }

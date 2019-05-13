@@ -1,6 +1,7 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import java.awt.Frame;
+import java.io.IOException;
 
 import hazard.HazardAnalysis.PossibleVictimGraph;
 import hazard.HazardAnalysis.SystemGraph;
@@ -48,7 +49,7 @@ public class ViewStep5 implements ViewInterface {
 		TableColumn<PossibleVictim, String> role = new TableColumn<PossibleVictim, String>("Hazard Element");
 		TableColumn<PossibleVictim, String> relator = new TableColumn<PossibleVictim, String>("Exposure");
 		TableColumn<PossibleVictim, String> role2 = new TableColumn<PossibleVictim, String>("Possible Vicitm");
-		TableColumn<PossibleVictim, String> kind2 = new TableColumn<PossibleVictim, String>("Environment Object");
+		TableColumn<PossibleVictim, String> kind2 = new TableColumn<PossibleVictim, String>("Possible Vicitm");
 		kind.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind"));
 		role.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role"));
 		relator.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("relator"));
@@ -110,11 +111,16 @@ public class ViewStep5 implements ViewInterface {
 		EventHandler<MouseEvent> eh = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				SystemGraph frame = new SystemGraph();
-				frame.setResizable(true);
-				frame.setSize(500, 250);
-				frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-				frame.setVisible(true);
+				SystemGraph frame;
+				try {
+					frame = new SystemGraph();
+					frame.setResizable(true);
+					frame.setSize(500, 250);
+					frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+					frame.setVisible(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
@@ -128,33 +134,42 @@ public class ViewStep5 implements ViewInterface {
 				if (tbPossibleVictim.getSelectionModel().getSelectedIndex() < 0) {
 					return;
 				}
+				int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
+				PossibleVictim pv = tbPossibleVictim.getItems().get(index);
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Mishap Victim");
-				dialog.setHeaderText(
-						"Enter a new title for the possible harm that can happen \nto the mishap victim and a more detailed description of it.");
+				dialog.setHeaderText("Enter a new title for the possible harm that can happen to " + pv.getKind2() + ":"
+						+ pv.getRole2() + " due to " + pv.getKind() + ":" + pv.getRole());
+				dialog.getDialogPane().setMaxWidth(600);
+				Text hModel = new Text(pv.getRelator() + "(" + pv.getRole() + "<Hazard Element>:" + pv.getKind()
+						+ "<Eviorment Object>)" + "(" + pv.getRole2() + "<Harm>:" + pv.getKind2() + "<Mishap Victim>)");
+				hModel.setWrappingWidth(600);
 				TextField t = new TextField();
 				TextArea ta = new TextArea();
+				t.textProperty().addListener((observable, oldValue, newValue) -> {
+					hModel.setText(pv.getRelator() + "(" + pv.getRole() + "<Hazard Element>:" + pv.getKind()
+							+ "<Eviorment Object>)" + "(" + pv.getRole2() + "<" + newValue + ">:" + pv.getKind2()
+							+ "<Mishap Victim>)");
+				});
 				t.setPromptText("Title of the possible harm.");
 				ta.setPromptText("Descrption of the possible harm.");
 				GridPane gp = new GridPane();
 				gp.setPadding(new Insets(15, 15, 15, 15));
 				t.setPadding(new Insets(10, 5, 5, 5));
 				ta.setPadding(new Insets(10, 5, 5, 5));
-				gp.add(t, 0, 0);
-				gp.add(ta, 0, 1);
+				gp.add(hModel, 0, 0);
+				gp.add(t, 0, 1);
+				gp.add(ta, 0, 2);
 				dialog.getDialogPane().setContent(gp);
 				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
 					@Override
 					public void handle(DialogEvent event) {
-						int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
 						if (dialog.getResult() != null && index > -1 && !t.getText().isEmpty()
 								&& !ta.getText().isEmpty()) {
-							PossibleVictim pv = tbPossibleVictim.getItems().get(index);
 							String hazard = pv.getRelator() + "(" + pv.getRole() + ":" + pv.getKind() + ")" + "("
 									+ pv.getRole2() + "<" + t.getText() + ">:" + pv.getKind2() + ")";
 							String harm = ta.getText();
-							DataBaseConnection
-									.insert("INSERT INTO hazard (hazard,harm) VALUES('" + hazard + "','" + harm + "')");
+							DataBaseConnection.insertHazard(hazard, harm);
 							DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 						}
 					}

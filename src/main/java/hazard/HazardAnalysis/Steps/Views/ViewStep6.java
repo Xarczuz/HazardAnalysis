@@ -1,16 +1,17 @@
 package hazard.HazardAnalysis.Steps.Views;
 
-import java.util.Optional;
-
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardClasses.Cause;
 import hazard.HazardClasses.Hazard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -30,18 +31,33 @@ public class ViewStep6 implements ViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				int index = tbHazard.getSelectionModel().getSelectedIndex();
+				if (index < 0)
+					return;
+				Hazard h = tbHazard.getItems().get(index);
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Cause");
-				dialog.setHeaderText("Enter a new cause");
-				dialog.setContentText("Cause:");
-				int index = tbHazard.getSelectionModel().getSelectedIndex();
-				Optional<String> result = dialog.showAndWait();
-				if (result.isPresent() && index > -1) {
-					Hazard h = tbHazard.getItems().get(index);
-					DataBaseConnection.insertCause(result.get(), h.getId());
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";", "cause",
-							list);
-				}
+				dialog.setHeaderText("Enter a new cause to the Hazard:\n"+h.getHazard()+"\n"+h.getHazardDescription());
+				dialog.getDialogPane().setMaxWidth(600);	
+				TextArea ta = new TextArea();
+				ta.setPromptText("Descrption of the cause.");
+				GridPane gp = new GridPane();
+				gp.setPadding(new Insets(15, 15, 15, 15));
+				ta.setPadding(new Insets(10, 5, 5, 5));
+				gp.add(ta, 0, 2);
+				dialog.getDialogPane().setContent(gp);
+				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+					@Override
+					public void handle(DialogEvent event) {
+						if (dialog.getResult() != null && index > -1 && !ta.getText().isEmpty()) {
+							DataBaseConnection.insertCause(ta.getText(), h.getId());
+							DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";",
+									"cause", list);
+						}
+					}
+				};
+				dialog.setOnCloseRequest(eventHandler);
+				dialog.show();
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -92,7 +108,7 @@ public class ViewStep6 implements ViewInterface {
 		tbCause.setMinWidth(800);
 		tbCause.setMaxHeight(200);
 		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
-		cause.setMinWidth(400);
+		cause.setMinWidth(800);
 		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
 		tbCause.getColumns().addAll(cause);
 		tbCause.setItems(causeList);

@@ -93,13 +93,12 @@ public class ViewStep1 implements ViewInterface {
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
-		grid.setGridLinesVisible(true);
 		grid.getStyleClass().add("gridpane");
 		Text category = new Text("Kind");
 		category.getStyleClass().add("heading");
 		grid.add(category, 0, 0);
 		final TableView<Kind> tbKind = new TableView<Kind>();
-		tbKind.setMaxWidth(350);
+		tbKind.setMinWidth(350);
 		TableColumn<Kind, Integer> id = new TableColumn<Kind, Integer>("ID");
 		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
 		TableColumn<Kind, CheckBox> kStart = new TableColumn<Kind, CheckBox>("Start");
@@ -113,8 +112,7 @@ public class ViewStep1 implements ViewInterface {
 		kRuntime.setStyle("-fx-alignment: CENTER;");
 		kShutdown.setCellValueFactory(new PropertyValueFactory<Kind, CheckBox>("cbshutdown"));
 		kShutdown.setStyle("-fx-alignment: CENTER;");
-		id.setMaxWidth(30);
-		kind.setMinWidth(100);
+		kind.setMinWidth(300);
 		tbKind.getColumns().addAll(id, kind);// , kStart, kRuntime, kShutdown);
 		ObservableList<Kind> kindList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("kind", kindList);
@@ -125,7 +123,7 @@ public class ViewStep1 implements ViewInterface {
 		category2.getStyleClass().add("heading");
 		grid.add(category2, 1, 0);
 		final TableView<Role> tbRole = new TableView<Role>();
-		tbRole.setMaxWidth(350);
+		tbRole.setMinWidth(350);
 		TableColumn<Role, Integer> id2 = new TableColumn<Role, Integer>("ID");
 		TableColumn<Role, String> role = new TableColumn<Role, String>("Role");
 		TableColumn<Role, CheckBox> rStart = new TableColumn<Role, CheckBox>("Start");
@@ -139,8 +137,7 @@ public class ViewStep1 implements ViewInterface {
 		rRuntime.setStyle("-fx-alignment: CENTER;");
 		rShutdown.setCellValueFactory(new PropertyValueFactory<Role, CheckBox>("cbshutdown"));
 		rShutdown.setStyle("-fx-alignment: CENTER;");
-		id2.setMaxWidth(30);
-		role.setMinWidth(100);
+		role.setMinWidth(300);
 		tbRole.getColumns().addAll(id2, role);// , rStart, rRuntime, rShutdown);
 		ObservableList<Role> roleList = FXCollections.observableArrayList();
 		DataBaseConnection.selectAll("role", roleList);

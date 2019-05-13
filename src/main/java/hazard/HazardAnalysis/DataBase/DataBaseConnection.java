@@ -218,6 +218,7 @@ public class DataBaseConnection {
 				riskValueCell.setCellValue(risk);
 				riskValueCell.setCellStyle(styleRisk);
 				rowIndex++;
+				//TODO MITIGATION
 			}
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
@@ -238,6 +239,19 @@ public class DataBaseConnection {
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void insertHazard(String hazard, String harm) {
+		try {
+			String sql = "INSERT INTO hazard (hazard,harm) VALUES(?,?)";
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, hazard);
+			pstmt.setString(2, harm);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());

@@ -25,8 +25,8 @@ public class App extends Application {
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		primaryStage.setX(primaryScreenBounds.getMinX());
 		primaryStage.setY(primaryScreenBounds.getMinY());
-		primaryStage.setWidth(primaryScreenBounds.getWidth());
-		primaryStage.setHeight(primaryScreenBounds.getHeight() - 5);
+		primaryStage.setWidth(1366);
+		primaryStage.setHeight(765);
 		primaryStage.setTitle("AN ONTOLOGICAL APPROACH TO SAFETY ANALYSIS OF SAFETY-CRITICAL SYSTEMS");
 		BorderPane border = new BorderPane();
 		MainView av = new MainView();
