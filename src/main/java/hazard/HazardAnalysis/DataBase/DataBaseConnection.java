@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -88,6 +89,7 @@ public class DataBaseConnection {
 			ResultSet rs = stmt.executeQuery(sql);
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("Hazards");
+		
 			int rowIndex = 0;
 			int index = 1;
 			while (rs.next()) {
@@ -222,6 +224,12 @@ public class DataBaseConnection {
 			}
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
+			PrintSetup ps = sheet.getPrintSetup();
+			ps.setFitWidth( (short) 1);
+			ps.setFitHeight( (short) 1);
+			sheet.setAutobreaks(true);
+			sheet.setFitToPage(true);
+			 
 			String fileLocation = file.getPath();
 			FileOutputStream outputStream = new FileOutputStream(fileLocation);
 			workbook.write(outputStream);
