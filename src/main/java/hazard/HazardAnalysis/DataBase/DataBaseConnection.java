@@ -24,6 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import hazard.HazardClasses.Cause;
 import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.Mitigation;
 import hazard.HazardClasses.PossibleVictim;
 import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
@@ -89,7 +90,6 @@ public class DataBaseConnection {
 			ResultSet rs = stmt.executeQuery(sql);
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("Hazards");
-		
 			int rowIndex = 0;
 			int index = 1;
 			while (rs.next()) {
@@ -219,17 +219,40 @@ public class DataBaseConnection {
 				}
 				riskValueCell.setCellValue(risk);
 				riskValueCell.setCellStyle(styleRisk);
+				style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+				Row headerMitigation = sheet.createRow(rowIndex);
 				rowIndex++;
-				//TODO MITIGATION
+				Cell headerCellMitigation = headerMitigation.createCell(0);
+				headerCellMitigation.setCellValue("Rq.");
+				headerCellMitigation.setCellStyle(headerStyle);
+				headerCellMitigation = headerMitigation.createCell(1);
+				headerCellMitigation.setCellValue("Mitigation for H" + (index - 1));
+				headerCellMitigation.setCellStyle(headerStyle);
+				Statement stmt4 = conn.createStatement();
+				String sql4 = "select *  from hazard,mitigation where mitigation.hazardid=" + rs.getInt("id")
+						+ " AND hazard.id=" + rs.getInt("id") + ";";
+				ResultSet rs4 = stmt4.executeQuery(sql4);
+				i = 1;
+				while (rs4.next()) {
+					Row mitigation = sheet.createRow(rowIndex);
+					rowIndex++;
+					Cell cellMitigation = mitigation.createCell(0);
+					cellMitigation.setCellValue("Mitigation " + i);
+					i++;
+					cellMitigation.setCellStyle(style);
+					cellMitigation = mitigation.createCell(1);
+					cellMitigation.setCellValue(rs4.getString("mitigation"));
+					cellMitigation.setCellStyle(style);
+				}
+				rowIndex++;
 			}
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
 			PrintSetup ps = sheet.getPrintSetup();
-			ps.setFitWidth( (short) 1);
-			ps.setFitHeight( (short) 1);
+			ps.setFitWidth((short) 1);
+			ps.setFitHeight((short) 1);
 			sheet.setAutobreaks(true);
 			sheet.setFitToPage(true);
-			 
 			String fileLocation = file.getPath();
 			FileOutputStream outputStream = new FileOutputStream(fileLocation);
 			workbook.write(outputStream);
@@ -253,6 +276,19 @@ public class DataBaseConnection {
 		}
 	}
 
+	public static void insertCause(String cause, int hazardID) {
+		String sql = "INSERT INTO " + "cause" + "(cause,hazardid) VALUES(?,?)";
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cause);
+			pstmt.setInt(2, hazardID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	public static void insertHazard(String hazard, String harm) {
 		try {
 			String sql = "INSERT INTO hazard (hazard,harm) VALUES(?,?)";
@@ -266,12 +302,12 @@ public class DataBaseConnection {
 		}
 	}
 
-	public static void insertCause(String cause, int hazardID) {
-		String sql = "INSERT INTO " + "cause" + "(cause,hazardid) VALUES(?,?)";
+	public static void insertMitigation(String mitigation, int hazardID) {
+		String sql = "INSERT INTO " + "mitigation" + "(mitigation,hazardid) VALUES(?,?)";
 		try {
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, cause);
+			pstmt.setString(1, mitigation);
 			pstmt.setInt(2, hazardID);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -399,6 +435,8 @@ public class DataBaseConnection {
 					list.add((E) hz);
 				} else if (table.contentEquals("cause")) {
 					list.add((E) new Cause(rs.getInt("id"), rs.getString("cause"), rs.getInt("hazardid")));
+				} else if (table.contentEquals("mitigation")) {
+					list.add((E) new Mitigation(rs.getInt("id"), rs.getString("mitigation"), rs.getInt("hazardid")));
 				}
 			}
 		} catch (SQLException e) {

@@ -37,8 +37,9 @@ public class ViewStep6 implements ViewInterface {
 				Hazard h = tbHazard.getItems().get(index);
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Cause");
-				dialog.setHeaderText("Enter a new cause to the Hazard:\n"+h.getHazard()+"\n"+h.getHazardDescription());
-				dialog.getDialogPane().setMaxWidth(600);	
+				dialog.setHeaderText(
+						"Enter a new cause to the Hazard:\n" + h.getHazard() + "\n" + h.getHazardDescription());
+				dialog.getDialogPane().setMaxWidth(600);
 				TextArea ta = new TextArea();
 				ta.setPromptText("Descrption of the cause.");
 				GridPane gp = new GridPane();
@@ -130,6 +131,18 @@ public class ViewStep6 implements ViewInterface {
 		return this.thisGp;
 	}
 
+	@Override
+	public String getStep() {
+		return "Step 6";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "Explore all the possible pre-initiating events that can bring about the specific\r\n"
+				+ "hazardous situation by going through the hazard element, harmtruthmakers,\r\n"
+				+ "and exposures, respectively.";
+	}
+
 	private void removeCauseEvent(Button btnRemove, TableView<Cause> tbCause, ObservableList<Cause> list) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -147,17 +160,5 @@ public class ViewStep6 implements ViewInterface {
 
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-	}
-
-	@Override
-	public String getStep() {
-		return "Step 6";
-	}
-
-	@Override
-	public String getStepDescription() {
-		return "Explore all the possible pre-initiating events that can bring about the specific\r\n"
-				+ "hazardous situation by going through the hazard element, harmtruthmakers,\r\n"
-				+ "and exposures, respectively.";
 	}
 }

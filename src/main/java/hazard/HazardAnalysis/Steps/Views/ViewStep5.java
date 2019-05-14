@@ -2,6 +2,7 @@ package hazard.HazardAnalysis.Steps.Views;
 
 import java.awt.Frame;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import hazard.HazardAnalysis.PossibleVictimGraph;
 import hazard.HazardAnalysis.SystemGraph;
@@ -34,6 +35,25 @@ public class ViewStep5 implements ViewInterface {
 		this.thisGp = addGridPane();
 	}
 
+	private void addGraphBtnEvent(Button btnGraph) {
+		EventHandler<MouseEvent> eh = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				SystemGraph frame;
+				try {
+					frame = new SystemGraph();
+					frame.setResizable(true);
+					frame.setSize(500, 250);
+					frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+					frame.setVisible(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
@@ -55,7 +75,7 @@ public class ViewStep5 implements ViewInterface {
 		relator.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("relator"));
 		role2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("role2"));
 		kind2.setCellValueFactory(new PropertyValueFactory<PossibleVictim, String>("kind2"));
-		tbPossibleVictim.getColumns().addAll(kind, role, relator, kind2, role2);
+		tbPossibleVictim.getColumns().addAll(kind2, role2, relator, kind, role);
 		updatePossibleVictimList();
 		tbPossibleVictim.setItems(possibleVictimList);
 		grid.add(tbPossibleVictim, 0, 1);
@@ -66,10 +86,15 @@ public class ViewStep5 implements ViewInterface {
 					int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
 					if (index >= 0) {
 						PossibleVictim pv = tbPossibleVictim.getItems().get(index);
-						PossibleVictimGraph frame = new PossibleVictimGraph(pv);
-						frame.setResizable(true);
-						frame.setSize(300, 300);
-						frame.setVisible(true);
+						PossibleVictimGraph frame;
+						try {
+							frame = new PossibleVictimGraph(pv);
+							frame.setResizable(true);
+							frame.setSize(800, 400);
+							frame.setVisible(true);
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -105,25 +130,6 @@ public class ViewStep5 implements ViewInterface {
 		gridBtn1.add(btnGraph, 2, 0);
 		grid.add(gridBtn1, 0, 2);
 		return grid;
-	}
-
-	private void addGraphBtnEvent(Button btnGraph) {
-		EventHandler<MouseEvent> eh = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				SystemGraph frame;
-				try {
-					frame = new SystemGraph();
-					frame.setResizable(true);
-					frame.setSize(500, 250);
-					frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-					frame.setVisible(true);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		btnGraph.addEventHandler(MouseEvent.MOUSE_CLICKED, eh);
 	}
 
 	private void addVictimEvent(Button btnAdd, TableView<PossibleVictim> tbPossibleVictim,
@@ -189,6 +195,18 @@ public class ViewStep5 implements ViewInterface {
 		return this.thisGp;
 	}
 
+	@Override
+	public String getStep() {
+		return "Step 5";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
+				+ "continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness,\r\n"
+				+ "explosion, etc.";
+	}
+
 	private void removeVictimEvent(Button btnRemove, TableView<Hazard> tbVictim) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -215,17 +233,5 @@ public class ViewStep5 implements ViewInterface {
 				+ "INNER JOIN relatortorole e2 ON e1.relatorid = e2.relatorid \r\n"
 				+ "   AND (e1.roleid <> e2.roleid AND e1.role <> e2.role) where roletoplay.kindid = kind.id and roletoplay.roleid = e1.roleid and  r2.kindid = k2.id and r2.roleid = e2.roleid;",
 				"possiblevictim", possibleVictimList);
-	}
-
-	@Override
-	public String getStep() {
-		return "Step 5";
-	}
-
-	@Override
-	public String getStepDescription() {
-		return "Since the occurrence of a mishap event must have more than one mishap victim to participate in the event, this step identifies all the possible mishap victims. Furthermore, the analysts\n"
-				+ "continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness,\r\n"
-				+ "explosion, etc.";
 	}
 }

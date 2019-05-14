@@ -30,7 +30,7 @@ public class ViewStep9 implements ViewInterface {
 				fileChooser.setInitialFileName(".xlsx");
 				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
 				File file = fileChooser.showSaveDialog(pStage);
-				Thread t = new ExportDataToExcel(file,p1);
+				Thread t = new ExportDataToExcel(file, p1);
 				t.start();
 			}
 		};

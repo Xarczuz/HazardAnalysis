@@ -31,7 +31,7 @@ public class SystemGraph extends JFrame {
 		super("System Diagram");
 		JScrollPane scrPane = new JScrollPane();
 		this.add(scrPane);
-		scrPane.getHorizontalScrollBar().setUnitIncrement(50);
+		scrPane.getHorizontalScrollBar().setUnitIncrement(150);
 		mxGraph graph = new mxGraph();
 		Object parent = graph.getDefaultParent();
 		Map<String, Object> style = graph.getStylesheet().getDefaultVertexStyle();
@@ -45,21 +45,27 @@ public class SystemGraph extends JFrame {
 		HashMap<String, Object> diagram = new HashMap<String, Object>();
 		try {
 			ResultSet rs = DataBaseConnection.sql("SELECT * FROM relator;");
+			int y = 100;
 			while (rs.next()) {
 				String s = rs.getString("relator");
-				Object o = graph.insertVertex(parent, null, s, 100, 100, 120, 40, "fillColor=white;");
+				y += 100;
+				Object o = graph.insertVertex(parent, null, s, 500, y, 120, 40, "fillColor=white;");
 				diagram.put(s, o);
 			}
+			y = 100;
 			rs = DataBaseConnection.sql("SELECT * FROM role;");
 			while (rs.next()) {
 				String s = rs.getString("role");
-				Object o = graph.insertVertex(parent, null, s, 100, 100, 120, 40, "fillColor=#C4C4C4;");
+				y += 100;
+				Object o = graph.insertVertex(parent, null, s, 300, y, 120, 40, "fillColor=#C4C4C4;");
 				diagram.put(s, o);
 			}
 			rs = DataBaseConnection.sql("SELECT * FROM kind;");
+			y = 100;
 			while (rs.next()) {
 				String s = rs.getString("kind");
-				Object o = graph.insertVertex(parent, null, s, 100, 100, 120, 40, "fillColor=#69D4D0;");
+				y += 100;
+				Object o = graph.insertVertex(parent, null, s, 100, y, 120, 40, "fillColor=#69D4D0;");
 				diagram.put(s, o);
 			}
 			rs = DataBaseConnection.sql("SELECT * FROM roletoplay;");
@@ -83,6 +89,7 @@ public class SystemGraph extends JFrame {
 		graphComponent.setInterRankCellSpacing(50);
 		graphComponent.setIntraCellSpacing(20);
 		graphComponent.setFineTuning(true);
+		graphComponent.setMoveParent(true);
 		graphComponent.execute(parent);
 		mxGraphComponent graphComponents = new mxGraphComponent(graphComponent.getGraph());
 		getContentPane().add(graphComponents);

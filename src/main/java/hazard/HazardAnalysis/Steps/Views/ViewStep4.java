@@ -152,10 +152,6 @@ public class ViewStep4 implements ViewInterface {
 		return this.thisGp;
 	}
 
-	public void updateTbRole() {
-		DataBaseConnection.selectAll("role", roleList);
-	}
-
 	@Override
 	public String getStep() {
 		return "Step 4";
@@ -166,5 +162,9 @@ public class ViewStep4 implements ViewInterface {
 		return "For each role object obtained in Step 1, Step 2 and\r\n"
 				+ "Step 3, identify all the kind objects that can play the role, considering\r\n"
 				+ "the system description.";
+	}
+
+	public void updateTbRole() {
+		DataBaseConnection.selectAll("role", roleList);
 	}
 }

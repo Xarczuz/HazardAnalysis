@@ -1,5 +1,7 @@
 package hazard.HazardAnalysis;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -9,6 +11,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
+import hazard.HazardAnalysis.DataBase.DataBaseConnection;
 import hazard.HazardClasses.PossibleVictim;
 
 public class PossibleVictimGraph extends JFrame {
@@ -17,7 +20,7 @@ public class PossibleVictimGraph extends JFrame {
 	 */
 	private static final long serialVersionUID = -965262014458195774L;
 
-	public PossibleVictimGraph(PossibleVictim pv) {
+	public PossibleVictimGraph(PossibleVictim pv) throws SQLException {
 		super("Possible Victim");
 		mxGraph graph = new mxGraph();
 		Object parent = graph.getDefaultParent();
@@ -30,16 +33,24 @@ public class PossibleVictimGraph extends JFrame {
 		style.put(mxConstants.STYLE_STROKECOLOR, "black");
 		graph.getModel().beginUpdate();
 		try {
-			graph.setAutoSizeCells(true);
-			Object v1 = graph.insertVertex(parent, null, pv.getKind(), 20, 20, 100, 40, "fillColor=#69D4D0;");
-			Object v2 = graph.insertVertex(parent, null, pv.getRole(), 240, 150, 100, 40, "fillColor=#C4C4C4;");
-			Object v3 = graph.insertVertex(parent, null, pv.getRelator(), 240, 150, 100, 40, "fillColor=white;");
-			Object v4 = graph.insertVertex(parent, null, pv.getRole2(), 240, 150, 100, 40, "fillColor=#C4C4C4;");
-			Object v5 = graph.insertVertex(parent, null, pv.getKind2(), 240, 150, 100, 40, "fillColor=#69D4D0;");
-			graph.insertEdge(parent, null, "", v1, v2);
-			graph.insertEdge(parent, null, "", v2, v3);
-			graph.insertEdge(parent, null, "", v5, v4);
-			graph.insertEdge(parent, null, "", v4, v3);
+			ResultSet rs = DataBaseConnection.sql(
+					"Select relatortorole.relator, roletoplay.role,roletoplay.kind from relatortorole,roletoplay where relatortorole.relatorid =(Select relator.id from relator where relator.relator='"
+							+ pv.getRelator() + "') and roletoplay.roleid = relatortorole.roleid;");
+			Object r = null;
+			int index = 0;
+			while (rs.next()) {
+				String role = rs.getString("role");
+				String kin = rs.getString("kind");
+				if (index == 0) {
+					String rel = rs.getString("relator");
+					r = graph.insertVertex(parent, null, rel, 100, 100, 120, 40, "fillColor=white;");
+					index++;
+				}
+				Object rr = graph.insertVertex(parent, null, role, 100, 100, 120, 40, "fillColor=#C4C4C4;");
+				Object k = graph.insertVertex(parent, null, kin, 100, 100, 120, 40, "fillColor=#69D4D0;");
+				graph.insertEdge(parent, null, "", k, rr);
+				graph.insertEdge(parent, null, "", rr, r);
+			}
 		} finally {
 			graph.getModel().endUpdate();
 		}

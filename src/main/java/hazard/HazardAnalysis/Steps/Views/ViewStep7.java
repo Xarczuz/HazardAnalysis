@@ -183,6 +183,16 @@ public class ViewStep7 implements ViewInterface {
 		return this.thisGp;
 	}
 
+	@Override
+	public String getStep() {
+		return "Step 7";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.";
+	}
+
 	private Double returnRiskValue(String s) {
 		if (s.toLowerCase().contains("high"))
 			return .75D;
@@ -195,15 +205,5 @@ public class ViewStep7 implements ViewInterface {
 
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-	}
-
-	@Override
-	public String getStep() {
-		return "Step 7";
-	}
-
-	@Override
-	public String getStepDescription() {
-		return "For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.";
 	}
 }

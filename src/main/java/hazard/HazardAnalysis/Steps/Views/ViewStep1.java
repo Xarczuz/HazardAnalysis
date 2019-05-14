@@ -147,16 +147,16 @@ public class ViewStep1 implements ViewInterface {
 		return grid;
 	}
 
+	@Override
+	public GridPane getGridPane() {
+		return this.thisGp;
+	}
+
 	public String getStep() {
 		return "Step 1";
 	}
 
 	public String getStepDescription() {
 		return "Identify the kind and role objects explicitly presented in the system description";
-	}
-
-	@Override
-	public GridPane getGridPane() {
-		return this.thisGp;
 	}
 }
