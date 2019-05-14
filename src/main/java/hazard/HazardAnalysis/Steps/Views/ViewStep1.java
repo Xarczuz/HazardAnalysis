@@ -49,7 +49,7 @@ public class ViewStep1 implements ViewInterface {
 				gp.add(t, 0, 0);
 //				gp.add(st, 0, 1);
 //				gp.add(rt, 0, 2);
-//				gp.add(sd, 0, 3);
+//				gp.add(sd, 0, 3);//
 				dialog.getDialogPane().setContent(gp);
 				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
 					@Override
