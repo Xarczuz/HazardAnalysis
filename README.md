@@ -9,5 +9,7 @@ http://mdh.diva-portal.org/smash/get/diva2:1163903/FULLTEXT03.pdf
 
 Säkerhetskritiska system (SCS) är sådana system som kan leda till stora 
 förluster när de är inblandade i farliga situationer.
+
+![alt text](https://github.com/Xarczuz/HazardAnalysis/blob/master/Pic/Screenshot%20from%202019-05-14%2013-09-56.png "pic")
 # Author
 Xarczuz
