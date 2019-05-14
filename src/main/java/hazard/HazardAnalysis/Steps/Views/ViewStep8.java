@@ -150,6 +150,7 @@ public class ViewStep8 implements ViewInterface {
 
 	@Override
 	public GridPane getGridPane() {
+		updateHazardList();
 		return this.thisGp;
 	}
 
