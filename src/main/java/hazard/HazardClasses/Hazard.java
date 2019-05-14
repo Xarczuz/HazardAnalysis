@@ -3,13 +3,13 @@ package hazard.HazardClasses;
 public class Hazard extends Play {
 	String hazard;
 	String hazardDescription;
-	String risk;
+
 
 	public Hazard(int id, String hazard, String hazardDescription) {
 		super(id);
 		this.hazard = hazard;
 		this.hazardDescription = hazardDescription;
-		this.risk = "";
+	
 	}
 
 	public String getHazard() {
@@ -20,9 +20,7 @@ public class Hazard extends Play {
 		return hazardDescription;
 	}
 
-	public String getRisk() {
-		return risk;
-	}
+
 
 	public void setHazard(String hazard) {
 		this.hazard = hazard;
@@ -32,7 +30,5 @@ public class Hazard extends Play {
 		this.hazardDescription = hazardDescription;
 	}
 
-	public void setRisk(String risk) {
-		this.risk = risk;
-	}
+	
 }

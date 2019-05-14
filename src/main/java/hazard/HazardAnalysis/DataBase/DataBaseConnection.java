@@ -158,6 +158,18 @@ public class DataBaseConnection {
 				headerCellCause = headerCause.createCell(1);
 				headerCellCause.setCellValue("Pre-Initiating event for H" + (index - 1));
 				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(2);
+				headerCellCause.setCellValue("Probability");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(3);
+				headerCellCause.setCellValue("Severity");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(4);
+				headerCellCause.setCellValue("RPN");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(5);
+				headerCellCause.setCellValue("Risk");
+				headerCellCause.setCellStyle(headerStyle);
 				Statement stmt2 = conn.createStatement();
 				String sql2 = "select *  from hazard,cause where cause.hazardid=" + rs.getInt("id") + " AND hazard.id="
 						+ rs.getInt("id") + ";";
@@ -173,53 +185,28 @@ public class DataBaseConnection {
 					cellCauses = causes.createCell(1);
 					cellCauses.setCellValue(rs2.getString("cause"));
 					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(2);
+					cellCauses.setCellValue(rs2.getString("probability"));
+					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(3);
+					cellCauses.setCellValue(rs2.getString("severity"));
+					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(4);
+					cellCauses.setCellValue(rs2.getString("riskevaluation"));
+					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(5);
+					String risk = "Denied";
+					CellStyle styleRisk = workbook.createCellStyle();
+					styleRisk.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					if (rs2.getBoolean("risk")) {
+						risk = "Accept";
+						styleRisk.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+					} else {
+						styleRisk.setFillForegroundColor(IndexedColors.RED.getIndex());
+					}
+					cellCauses.setCellValue(risk);
+					cellCauses.setCellStyle(styleRisk);
 				}
-				Statement stmt3 = conn.createStatement();
-				String sql3 = "select *  from hazard where hazard.id=" + rs.getInt("id") + ";";
-				ResultSet rs3 = stmt3.executeQuery(sql3);
-				Row severityAndProbability = sheet.createRow(rowIndex);
-				rowIndex++;
-				Cell headerCellSAP = severityAndProbability.createCell(0);
-				headerCellSAP.setCellValue("Severity");
-				headerCellSAP.setCellStyle(headerStyle);
-				headerCellSAP = severityAndProbability.createCell(1);
-				headerCellSAP.setCellValue("Probability");
-				headerCellSAP.setCellStyle(headerStyle);
-				Row sapRow = sheet.createRow(rowIndex);
-				rowIndex++;
-				Cell sapCell = sapRow.createCell(0);
-				sapCell.setCellValue(rs3.getString("severity"));
-				sapCell.setCellStyle(style);
-				sapCell = sapRow.createCell(1);
-				sapCell.setCellValue(rs3.getString("probability"));
-				sapCell.setCellStyle(style);
-				Row riskRow = sheet.createRow(rowIndex);
-				rowIndex++;
-				Cell headerCellRisk = riskRow.createCell(0);
-				headerCellRisk.setCellValue("Risk Evaluation");
-				headerCellRisk.setCellStyle(headerStyle);
-				headerCellRisk = riskRow.createCell(1);
-				headerCellRisk.setCellValue("Risk");
-				headerCellRisk.setCellStyle(headerStyle);
-				Row riskValueRow = sheet.createRow(rowIndex);
-				rowIndex++;
-				Cell riskValueCell = riskValueRow.createCell(0);
-				riskValueCell.setCellValue(rs3.getString("riskevaluation"));
-				riskValueCell.setCellStyle(style);
-				riskValueCell = riskValueRow.createCell(1);
-				CellStyle styleRisk = workbook.createCellStyle();
-				styleRisk.setWrapText(false);
-				styleRisk.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-				String risk = "Denied";
-				if (rs3.getBoolean("risk")) {
-					risk = "Accept";
-					styleRisk.setFillForegroundColor(IndexedColors.GREEN.getIndex());
-				} else {
-					styleRisk.setFillForegroundColor(IndexedColors.RED.getIndex());
-				}
-				riskValueCell.setCellValue(risk);
-				riskValueCell.setCellStyle(styleRisk);
-				style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
 				Row headerMitigation = sheet.createRow(rowIndex);
 				rowIndex++;
 				Cell headerCellMitigation = headerMitigation.createCell(0);
@@ -342,24 +329,6 @@ public class DataBaseConnection {
 		}
 	}
 
-	public static void populateWithTestData() {
-		insertRoloeOrKind("role", "Being supported", true, false, true);
-		insertRoloeOrKind("role", "Being lifted", true, false, true);
-		insertRoloeOrKind("role", "Balance supporter", true, false, true);
-		insertRoloeOrKind("role", "Object lifter", true, false, true);
-		insertRoloeOrKind("role", "Electric consumer", true, false, true);
-		insertRoloeOrKind("role", "Electricity source", true, false, true);
-		insertRoloeOrKind("kind", "Patient", true, false, true);
-		insertRoloeOrKind("kind", "Robot Handle", true, false, true);
-		insertRoloeOrKind("kind", "Robot", true, false, true);
-		insertRoloeOrKind("kind", "Battery", true, false, true);
-		insertRelator("relator", "Balance support");
-		insertRelator("relator", "Liftup");
-		insertRelator("relator", "Electric consumption");
-		insert("INSERT INTO roletoplay (role,roleid,kind,kindid) VALUES('Being supported',0,'Patient',0)");
-		insert("INSERT INTO roletoplay (role,roleid,kind,kindid) VALUES('Being lifted',1,'Patient',0)");
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <E> void selectAll(String table, ObservableList<E> list) {
 		String sql = "SELECT * FROM " + table;
@@ -428,13 +397,14 @@ public class DataBaseConnection {
 							rs.getString(5)));
 				} else if (table.contentEquals("hazard")) {
 					Hazard hz = new Hazard(rs.getInt("id"), rs.getString("hazard"), rs.getString("harm"));
-					Double d = rs.getDouble("riskevaluation");
-					if (d != 0) {
-						hz.setRisk(String.valueOf(rs.getBoolean("risk")));
-					}
 					list.add((E) hz);
 				} else if (table.contentEquals("cause")) {
-					list.add((E) new Cause(rs.getInt("id"), rs.getString("cause"), rs.getInt("hazardid")));
+					Cause c = new Cause(rs.getInt("id"), rs.getString("cause"), rs.getInt("hazardid"));
+					Double d = rs.getDouble("riskevaluation");
+					if (d != 0) {
+						c.setRisk(String.valueOf(rs.getBoolean("risk")));
+					}
+					list.add((E) c);
 				} else if (table.contentEquals("mitigation")) {
 					list.add((E) new Mitigation(rs.getInt("id"), rs.getString("mitigation"), rs.getInt("hazardid")));
 				}

@@ -3,11 +3,21 @@ package hazard.HazardClasses;
 public class Cause extends Play {
 	private String cause;
 	private int hazardID;
+	String risk;
 
 	public Cause(int id, String cause, int hazardID) {
 		super(id);
 		this.cause = cause;
 		this.hazardID = hazardID;
+		this.risk = "";
+	}
+
+	public String getRisk() {
+		return risk;
+	}
+
+	public void setRisk(String risk) {
+		this.risk = risk;
 	}
 
 	public String getCause() {

@@ -37,11 +37,7 @@ public class ViewStep7 implements ViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
-				if (index > -1) {
-					int id = tbHazard.getItems().get(index).getId();
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-				}
+				updateCauseList(tbHazard,list);
 			}
 		};
 		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -66,27 +62,7 @@ public class ViewStep7 implements ViewInterface {
 		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
 		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
 		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
-		tbHazard.setRowFactory(new Callback<TableView<Hazard>, TableRow<Hazard>>() {
-			@Override
-			public TableRow<Hazard> call(TableView<Hazard> param) {
-				final TableRow<Hazard> row = new TableRow<Hazard>() {
-					@Override
-					protected void updateItem(Hazard item, boolean empty) {
-						super.updateItem(item, empty);
-						if (!hazardList.isEmpty() && !empty) {
-							if (!item.getRisk().isEmpty()) {
-								if (!empty && item.getRisk().contentEquals("true")) {
-									setStyle("-fx-background-color: #006400;");
-								} else if (!empty && item.getRisk().contentEquals("false")) {
-									setStyle("-fx-background-color: #8B0000;");
-								}
-							}
-						}
-					}
-				};
-				return row;
-			}
-		});
+		
 		tbHazard.getColumns().addAll(id, hazard, hazardDescription);
 		addClickEventToTbHazard(tbHazard, causeList);
 		updateHazardList();
@@ -103,27 +79,48 @@ public class ViewStep7 implements ViewInterface {
 		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
 		tbCause.getColumns().addAll(cause);
 		tbCause.setItems(causeList);
+		tbCause.setRowFactory(new Callback<TableView<Cause>, TableRow<Cause>>() {
+			@Override
+			public TableRow<Cause> call(TableView<Cause> param) {
+				final TableRow<Cause> row = new TableRow<Cause>() {
+					@Override
+					protected void updateItem(Cause item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!hazardList.isEmpty() && !empty) {
+							if (!item.getRisk().isEmpty()) {
+								if (!empty && item.getRisk().contentEquals("true")) {
+									setStyle("-fx-background-color: #006400;");
+								} else if (!empty && item.getRisk().contentEquals("false")) {
+									setStyle("-fx-background-color: #8B0000;");
+								}
+							}
+						}
+					}
+				};
+				return row;
+			}
+		});
 		grid.add(tbCause, 0, 4);
 		Button btnAdd = new Button("Add Severity And Probability");
-		addSeverityAndProbabilityEvent(btnAdd, tbHazard);
+		addSeverityAndProbabilityEvent(btnAdd, tbCause,tbHazard);
 		GridPane gridBtn1 = new GridPane();
 		gridBtn1.add(btnAdd, 0, 0);
 		grid.add(gridBtn1, 0, 2);
 		return grid;
 	}
 
-	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Hazard> tbHazard) {
+	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				int index = tbHazard.getSelectionModel().getSelectedIndex();
+				int index = tbCause.getSelectionModel().getSelectedIndex();
 				if (index < 0) {
 					return;
 				}
-				int id = tbHazard.getItems().get(index).getId();
+				int id = tbCause.getItems().get(index).getId();
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Severity And Probability");
-				dialog.setHeaderText("Enter the Severity of the Hazard And the Probability of it happening.");
+				dialog.setHeaderText("Enter the Severity of the Cause And the Probability of it happening.");
 				ObservableList<String> options = FXCollections.observableArrayList("High-75%", "Medium-50%", "Low-25%");
 				final ComboBox<String> comboBox = new ComboBox<String>(options);
 				ObservableList<String> options2 = FXCollections.observableArrayList("High-75%", "Medium-50%",
@@ -166,12 +163,12 @@ public class ViewStep7 implements ViewInterface {
 				});
 				Optional<String> op = dialog.showAndWait();
 				if (op.isPresent() && !riskEvaluationNr.getText().contentEquals("")) {
-					DataBaseConnection.sqlUpdate("UPDATE hazard SET severity=" + returnRiskValue(comboBox.getValue())
+					DataBaseConnection.sqlUpdate("UPDATE cause SET severity=" + returnRiskValue(comboBox.getValue())
 							+ ", probability=" + returnRiskValue(comboBox2.getValue()) + ", riskevaluation="
 							+ (returnRiskValue(comboBox2.getValue()) * returnRiskValue(comboBox.getValue())) + ", risk="
-							+ ch.isSelected() + " where hazard.id=" + id + ";");
+							+ ch.isSelected() + " where cause.id=" + id + ";");
 				}
-				updateHazardList();
+				updateCauseList(tbHazard, causeList);
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -205,5 +202,12 @@ public class ViewStep7 implements ViewInterface {
 
 	public void updateHazardList() {
 		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+	}
+	public void updateCauseList(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
+		int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
+		if (index > -1) {
+			int id = tbHazard.getItems().get(index).getId();
+			DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
+		}
 	}
 }
