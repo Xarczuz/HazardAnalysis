@@ -1,133 +1,96 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardClasses.Cause;
-import hazard.HazardClasses.Hazard;
+import hazard.HazardClasses.HazardElement;
+import hazard.HazardClasses.Kind;
+import hazard.HazardClasses.MishapVictim;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 public class ViewStep6 implements ViewInterface {
 	private GridPane thisGp;
-	private ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
-	private ObservableList<Cause> causeList = FXCollections.observableArrayList();
+	private ObservableList<MishapVictim> victimList = FXCollections.observableArrayList();
+	private ObservableList<HazardElement> hazardElementList = FXCollections.observableArrayList();
 
 	public ViewStep6() {
 		this.thisGp = addGridPane();
-	}
-
-	private void addCauseEvent(Button btnAdd, TableView<Hazard> tbHazard, ObservableList<Cause> list) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int index = tbHazard.getSelectionModel().getSelectedIndex();
-				if (index < 0)
-					return;
-				Hazard h = tbHazard.getItems().get(index);
-				TextInputDialog dialog = new TextInputDialog("");
-				dialog.setTitle("Add Cause");
-				dialog.setHeaderText(
-						"Enter a new cause to the Hazard:\n" + h.getHazard() + "\n" + h.getHazardDescription());
-				dialog.getDialogPane().setMaxWidth(600);
-				TextArea ta = new TextArea();
-				ta.setPromptText("Descrption of the cause.");
-				GridPane gp = new GridPane();
-				gp.setPadding(new Insets(15, 15, 15, 15));
-				ta.setPadding(new Insets(10, 5, 5, 5));
-				gp.add(ta, 0, 2);
-				dialog.getDialogPane().setContent(gp);
-				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
-					@Override
-					public void handle(DialogEvent event) {
-						if (dialog.getResult() != null && index > -1 && !ta.getText().isEmpty()) {
-							DataBaseConnection.insertCause(ta.getText(), h.getId());
-							DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";",
-									"cause", list);
-						}
-					}
-				};
-				dialog.setOnCloseRequest(eventHandler);
-				dialog.show();
-			}
-		};
-		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
-				if (index > -1) {
-					int id = tbHazard.getItems().get(index).getId();
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-				}
-			}
-		};
-		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
+		GridPane grid2 = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		Text category1 = new Text("Hazards");
-		category1.getStyleClass().add("heading");
-		grid.add(category1, 0, 0);
-		final TableView<Hazard> tbHazard = new TableView<Hazard>();
-		tbHazard.setMinWidth(800);
-		tbHazard.setMaxHeight(200);
-		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
-		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
-		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
-		hazard.setMinWidth(400);
-		hazardDescription.setMinWidth(350);
-		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
-		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
-		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
-		tbHazard.getColumns().addAll(id, hazard, hazardDescription);
-		addClickEventToTbHazard(tbHazard, causeList);
-		updateHazardList();
-		tbHazard.setItems(hazardList);
-		grid.add(tbHazard, 0, 1);
-		Text category2 = new Text("Pre-initiating events that might lead to the hazard");
+		Text category = new Text("Mishap Victims");
+		category.getStyleClass().add("heading");
+		grid2.add(category, 0, 0);
+		final TableView<MishapVictim> tbVictim = new TableView<MishapVictim>();
+		tbVictim.setMinWidth(400);
+		tbVictim.setMaxWidth(400);
+		tbVictim.setMaxHeight(200);
+		TableColumn<MishapVictim, Integer> id = new TableColumn<MishapVictim, Integer>("ID");
+		TableColumn<MishapVictim, String> kind2 = new TableColumn<MishapVictim, String>("Environment Object");
+		TableColumn<MishapVictim, String> role2 = new TableColumn<MishapVictim, String>("Possible Victim");
+		TableColumn<MishapVictim, String> relator2 = new TableColumn<MishapVictim, String>("Exposure");
+		id.setCellValueFactory(new PropertyValueFactory<MishapVictim, Integer>("id"));
+		kind2.setCellValueFactory(new PropertyValueFactory<MishapVictim, String>("kind"));
+		role2.setCellValueFactory(new PropertyValueFactory<MishapVictim, String>("role"));
+		relator2.setCellValueFactory(new PropertyValueFactory<MishapVictim, String>("relator"));
+		kind2.setMinWidth(120);
+		role2.setMinWidth(120);
+		relator2.setMinWidth(120);
+		tbVictim.getColumns().addAll(id, role2, kind2, relator2);
+		tbVictim.setItems(victimList);
+		grid2.add(tbVictim, 0, 1);
+		Text category2 = new Text("Hazard Elements");
 		category2.getStyleClass().add("heading");
-		grid.add(category2, 0, 3);
-		final TableView<Cause> tbCause = new TableView<Cause>();
-		tbCause.setMinWidth(800);
-		tbCause.setMaxHeight(200);
-		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
-		cause.setMinWidth(800);
-		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
-		tbCause.getColumns().addAll(cause);
-		tbCause.setItems(causeList);
-		grid.add(tbCause, 0, 4);
-		Button btnAdd = new Button("Add Event");
-		addCauseEvent(btnAdd, tbHazard, causeList);
-		Button btnRemove = new Button("Remove Event");
-		removeCauseEvent(btnRemove, tbCause, causeList);
-		GridPane gridBtn1 = new GridPane();
-		gridBtn1.add(btnAdd, 0, 0);
-		gridBtn1.add(btnRemove, 1, 0);
-		grid.add(gridBtn1, 0, 2);
+		final TableView<Kind> tbKind = new TableView<Kind>();
+		tbKind.setMinWidth(400);
+		tbKind.setMaxWidth(400);
+		tbKind.setMaxHeight(200);
+		TableColumn<Kind, Integer> id2 = new TableColumn<Kind, Integer>("ID");
+		TableColumn<Kind, String> kind = new TableColumn<Kind, String>("Kind");
+		id2.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
+		kind.setCellValueFactory(new PropertyValueFactory<Kind, String>("kind"));
+		kind.setMinWidth(300);
+		tbKind.getColumns().addAll(id2, kind);
+		ObservableList<Kind> kindList = FXCollections.observableArrayList();
+		tbKind.setItems(kindList);
+		grid2.add(category2, 1, 0);
+		grid2.add(tbKind, 1, 1);
+		Text category3 = new Text("Hazards");
+		category3.getStyleClass().add("heading");
+		final TableView<Kind> tbKindToRole = new TableView<Kind>();
+		tbKindToRole.setMinWidth(800);
+		tbKindToRole.setMaxWidth(800);
+		tbKindToRole.setMaxHeight(200);
+		TableColumn<Kind, Integer> id3 = new TableColumn<Kind, Integer>("ID");
+		id3.setCellValueFactory(new PropertyValueFactory<Kind, Integer>("id"));
+		ObservableList<Kind> kindToRoleList = FXCollections.observableArrayList();
+		tbKindToRole.setItems(kindToRoleList);
+		Button btnAddLink = new Button("+");
+		Button btnRemoveLink = new Button("-");
+		GridPane gridTextAndBtn = new GridPane();
+		gridTextAndBtn.add(category3, 0, 0);
+		gridTextAndBtn.add(btnAddLink, 2, 0);
+		gridTextAndBtn.add(btnRemoveLink, 3, 0);
+		grid2.setHgap(10);
+		grid.add(grid2, 0, 0);
+		grid.add(gridTextAndBtn, 0, 1);
+		grid.add(tbKindToRole, 0, 2);
 		return grid;
 	}
 
 	@Override
 	public GridPane getGridPane() {
-		updateHazardList();
+		updateVictimList();
 		return this.thisGp;
 	}
 
@@ -138,27 +101,11 @@ public class ViewStep6 implements ViewInterface {
 
 	@Override
 	public String getStepDescription() {
-		return "Explore all the possible pre-initiating events that can bring about the specific\r\n"
-				+ "hazardous situation by going through the hazard element, harmtruthmakers,\r\n"
-				+ "and exposures, respectively.";
+		return "Continue with brainstorming possible harms that can threaten the victims, including but not limited to, physical damages, chemical injuries, fatal illness, "
+				+ "explosion, etc.";
 	}
 
-	private void removeCauseEvent(Button btnRemove, TableView<Cause> tbCause, ObservableList<Cause> list) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int index = tbCause.getSelectionModel().getSelectedIndex();
-				if (index > -1) {
-					int id = tbCause.getItems().get(index).getId();
-					DataBaseConnection.delete("cause", id);
-					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
-				}
-			}
-		};
-		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+	public void updateVictimList() {
+		DataBaseConnection.sql("Select * from mishapvictim", "mishapvictim", victimList);
 	}
 }

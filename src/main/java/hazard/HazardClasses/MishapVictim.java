@@ -1,10 +1,11 @@
 package hazard.HazardClasses;
 
-public class PossibleVictim {
+public class MishapVictim extends Play {
 	private String kind, role, relator;
 	private int roleID, kindID, relatorID;
 
-	public PossibleVictim(int roleID, String role, int kindID, String kind, int relatorID, String relator) {
+	public MishapVictim(int id, int roleID, String role, int kindID, String kind, int relatorID, String relator) {
+		super(id);
 		this.kind = kind;
 		this.role = role;
 		this.relator = relator;

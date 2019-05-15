@@ -28,6 +28,7 @@ public class MainView {
 	private ViewStep7 av7;
 	private ViewStep8 av8;
 	private ViewStep9 av9;
+	private ViewStep10 av10;
 	private Stage pStage;
 	private int currentStep;
 	private Text step, description;
@@ -38,7 +39,7 @@ public class MainView {
 			public void handle(MouseEvent e) {
 				if (currentStep != 1)
 					currentStep--;
-				changeStepTexts();
+				changeStepTexts(currentStep);
 			}
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -116,9 +117,9 @@ public class MainView {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (currentStep != 9)
+				if (currentStep != 10)
 					currentStep++;
-				changeStepTexts();
+				changeStepTexts(currentStep);
 			}
 		};
 		btnNextStep.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -155,79 +156,77 @@ public class MainView {
 		vbox.getChildren().add(title);
 		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"), new Hyperlink("Step 2"),
 				new Hyperlink("Step 3"), new Hyperlink("Step 4"), new Hyperlink("Step 5"), new Hyperlink("Step 6"),
-				new Hyperlink("Step 7"), new Hyperlink("Step 8"), new Hyperlink("Step 9") };
+				new Hyperlink("Step 7"), new Hyperlink("Step 8"), new Hyperlink("Step 9"), new Hyperlink("Step 10") };
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 1;
-				changeStepTexts();
+				changeStepTexts(1);
 			}
 		};
 		options[0].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 2;
-				changeStepTexts();
+				changeStepTexts(2);
 			}
 		};
 		options[1].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 3;
-				changeStepTexts();
+				changeStepTexts(3);
 			}
 		};
 		options[2].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 4;
-				changeStepTexts();
+				changeStepTexts(4);
 			}
 		};
 		options[3].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 5;
-				changeStepTexts();
+				changeStepTexts(5);
 			}
 		};
 		options[4].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 6;
-				changeStepTexts();
+				changeStepTexts(6);
 			}
 		};
 		options[5].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 7;
-				changeStepTexts();
+				changeStepTexts(7);
 			}
 		};
 		options[6].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 8;
-				changeStepTexts();
+				changeStepTexts(8);
 			}
 		};
 		options[7].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				currentStep = 9;
-				changeStepTexts();
+				changeStepTexts(9);
 			}
 		};
 		options[8].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				changeStepTexts(10);
+			}
+		};
+		options[9].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		for (int i = 0; i < options.length; i++) {
 			VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
 			vbox.getChildren().add(options[i]);
@@ -236,7 +235,8 @@ public class MainView {
 		return vbox;
 	}
 
-	private void changeStepTexts() {
+	private void changeStepTexts(int currentStep) {
+		this.currentStep = currentStep;
 		switch (currentStep) {
 		case 1:
 			border.setCenter(getAv1().getGridPane());
@@ -292,6 +292,12 @@ public class MainView {
 			description.setText(getAv9().getStepDescription());
 			currentStep = 9;
 			break;
+		case 10:
+			border.setCenter(getAv10().getGridPane());
+			step.setText(getAv10().getStep());
+			description.setText(getAv10().getStepDescription());
+			currentStep = 10;
+			break;
 		default:
 			break;
 		}
@@ -302,23 +308,18 @@ public class MainView {
 	}
 
 	public ViewStep2 getAv2() {
-		av2.updateTbKind();
 		return av2;
 	}
 
 	public ViewStep3 getAv3() {
-		av3.updateTbRole();
 		return av3;
 	}
 
 	public ViewStep4 getAv4() {
-		av4.updateTbRole();
 		return av4;
 	}
 
 	public ViewStep5 getAv5() {
-		av5.updatePossibleVictimList();
-		av5.updateHazardList();
 		return av5;
 	}
 
@@ -338,6 +339,10 @@ public class MainView {
 		return this.av9;
 	}
 
+	public ViewStep10 getAv10() {
+		return this.av10;
+	}
+
 	private void loadCenterViews() {
 		this.av2 = new ViewStep2();
 		this.av3 = new ViewStep3();
@@ -346,7 +351,8 @@ public class MainView {
 		this.av6 = new ViewStep6();
 		this.av7 = new ViewStep7();
 		this.av8 = new ViewStep8();
-		this.av9 = new ViewStep9(this.pStage);
+		this.av9 = new ViewStep9();
+		this.av10 = new ViewStep10(this.pStage);
 	}
 
 	public BorderPane view(Stage primaryStage) {

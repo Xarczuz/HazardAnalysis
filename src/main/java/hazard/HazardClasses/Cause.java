@@ -3,13 +3,23 @@ package hazard.HazardClasses;
 public class Cause extends Play {
 	private String cause;
 	private int hazardID;
-	String risk;
+	private String risk;
+	private String mitigation;
 
 	public Cause(int id, String cause, int hazardID) {
 		super(id);
 		this.cause = cause;
 		this.hazardID = hazardID;
 		this.risk = "";
+		this.mitigation = "";
+	}
+
+	public String getMitigation() {
+		return mitigation;
+	}
+
+	public void setMitigation(String mitigation) {
+		this.mitigation = mitigation;
 	}
 
 	public String getRisk() {
