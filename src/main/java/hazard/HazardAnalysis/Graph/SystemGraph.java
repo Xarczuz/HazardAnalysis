@@ -1,4 +1,4 @@
-package hazard.HazardAnalysis;
+package hazard.HazardAnalysis.Graph;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

@@ -4,9 +4,9 @@ import java.awt.Frame;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import hazard.HazardAnalysis.PossibleVictimGraph;
-import hazard.HazardAnalysis.SystemGraph;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
+import hazard.HazardAnalysis.Graph.PossibleVictimGraph;
+import hazard.HazardAnalysis.Graph.SystemGraph;
 import hazard.HazardClasses.MishapVictim;
 import hazard.HazardClasses.Play;
 import hazard.HazardClasses.PossibleVictim;

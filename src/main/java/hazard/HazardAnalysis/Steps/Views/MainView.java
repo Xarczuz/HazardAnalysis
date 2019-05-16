@@ -71,8 +71,6 @@ public class MainView {
 				File file = fileChooser.showOpenDialog(pStage);
 				if (file != null) {
 					DataBaseConnection.setDatabase(file.getPath());
-					CreateDataBase.setDatabase(file.getPath());
-					CreateDataBase.createNewTable();
 					av1 = new ViewStep1();
 					currentStep = 1;
 					loadCenterViews();

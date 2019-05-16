@@ -59,9 +59,6 @@ public class ViewStep1 implements ViewInterface {
 									rt.isSelected(), sd.isSelected());
 							list.clear();
 							DataBaseConnection.selectAll(s.toLowerCase(), list);
-//							getAv2().updateTbKind();
-//							getAv3().updateTbRole();
-//							getAv4().updateTbRole();
 						}
 					}
 				};

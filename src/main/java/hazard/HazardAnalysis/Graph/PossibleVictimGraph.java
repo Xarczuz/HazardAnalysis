@@ -1,4 +1,4 @@
-package hazard.HazardAnalysis;
+package hazard.HazardAnalysis.Graph;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
