@@ -74,9 +74,15 @@ public class ViewStep8 implements ViewInterface {
 		tbCause.setMinWidth(800);
 		tbCause.setMaxHeight(200);
 		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Pre-initiating event for hazard");
+		TableColumn<Cause, Double> severity = new TableColumn<Cause, Double>("Severity");
+		TableColumn<Cause, Double> probabilty = new TableColumn<Cause, Double>("Probability");
+		TableColumn<Cause, Double> risk = new TableColumn<Cause, Double>("Risk Evaluation");
 		cause.setMinWidth(400);
 		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
-		tbCause.getColumns().addAll(cause);
+		severity.setCellValueFactory(new PropertyValueFactory<Cause, Double>("severity"));
+		probabilty.setCellValueFactory(new PropertyValueFactory<Cause, Double>("probability"));
+		risk.setCellValueFactory(new PropertyValueFactory<Cause, Double>("riskevaluation"));
+		tbCause.getColumns().addAll(cause, severity, probabilty, risk);
 		tbCause.setItems(causeList);
 		tbCause.setRowFactory(new Callback<TableView<Cause>, TableRow<Cause>>() {
 			@Override
@@ -131,6 +137,7 @@ public class ViewStep8 implements ViewInterface {
 
 	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@SuppressWarnings("rawtypes")
 			@Override
 			public void handle(MouseEvent e) {
 				int index = tbCause.getSelectionModel().getSelectedIndex();
@@ -141,10 +148,11 @@ public class ViewStep8 implements ViewInterface {
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Severity And Probability");
 				dialog.setHeaderText("Enter the Severity of the Cause And the Probability of it happening.");
-				ObservableList<String> options = FXCollections.observableArrayList("High-75%", "Medium-50%", "Low-25%");
+				ObservableList<String> options = FXCollections.observableArrayList("Very-High-100%", "High-80%",
+						"Medium-60%", "Low-40%", "Very-Low-20%");
 				final ComboBox<String> comboBox = new ComboBox<String>(options);
-				ObservableList<String> options2 = FXCollections.observableArrayList("High-75%", "Medium-50%",
-						"Low-25%");
+				ObservableList<String> options2 = FXCollections.observableArrayList("Very-High-100%", "High-80%",
+						"Medium-60%", "Low-40%", "Very-Low-20%");
 				final ComboBox<String> comboBox2 = new ComboBox<String>(options2);
 				Text severity = new Text("Severity");
 				Text probability = new Text("Probability");
@@ -160,9 +168,7 @@ public class ViewStep8 implements ViewInterface {
 				CheckBox ch = new CheckBox("Accept Risk");
 				ch.setPadding(new Insets(15, 15, 15, 15));
 				gp.add(ch, 5, 1);
-				dialog.getDialogPane().setContent(gp);
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
-					@SuppressWarnings("rawtypes")
 					@Override
 					public void changed(ObservableValue ov, String t, String t1) {
 						if (comboBox2.getValue() != null) {
@@ -172,7 +178,6 @@ public class ViewStep8 implements ViewInterface {
 					}
 				});
 				comboBox2.valueProperty().addListener(new ChangeListener<String>() {
-					@SuppressWarnings("rawtypes")
 					@Override
 					public void changed(ObservableValue ov, String t, String t1) {
 						if (comboBox.getValue() != null) {
@@ -181,6 +186,7 @@ public class ViewStep8 implements ViewInterface {
 						}
 					}
 				});
+				dialog.getDialogPane().setContent(gp);
 				Optional<String> op = dialog.showAndWait();
 				if (op.isPresent() && !riskEvaluationNr.getText().contentEquals("")) {
 					DataBaseConnection.sqlUpdate("UPDATE cause SET severity=" + returnRiskValue(comboBox.getValue())
@@ -192,6 +198,20 @@ public class ViewStep8 implements ViewInterface {
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private Double returnRiskValue(String s) {
+		if (s.toLowerCase().contentEquals("Very-High-100%"))
+			return 1D;
+		if (s.toLowerCase().contentEquals("High-80%"))
+			return .8D;
+		if (s.toLowerCase().contentEquals("Medium-60%"))
+			return .60D;
+		if (s.toLowerCase().contentEquals("Low-40%"))
+			return .4D;
+		if (s.toLowerCase().contentEquals("Very-Low-20%"))
+			return .2D;
+		return 0D;
 	}
 
 	@Override
@@ -208,16 +228,6 @@ public class ViewStep8 implements ViewInterface {
 	@Override
 	public String getStepDescription() {
 		return "For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.";
-	}
-
-	private Double returnRiskValue(String s) {
-		if (s.toLowerCase().contains("high"))
-			return .75D;
-		if (s.toLowerCase().contains("medium"))
-			return .50D;
-		if (s.toLowerCase().contains("low"))
-			return .25D;
-		return 0D;
 	}
 
 	public void updateHazardList() {

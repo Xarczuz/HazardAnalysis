@@ -5,13 +5,40 @@ public class Cause extends Play {
 	private int hazardID;
 	private String risk;
 	private String mitigation;
-
+private double severity,probability,riskevaluation;
 	public Cause(int id, String cause, int hazardID) {
 		super(id);
 		this.cause = cause;
 		this.hazardID = hazardID;
 		this.risk = "";
 		this.mitigation = "";
+		this.severity=0;
+		this.probability=0;
+		this.riskevaluation=0;
+	}
+
+	public double getRiskevaluation() {
+		return riskevaluation;
+	}
+
+	public void setRiskevaluation(double riskevaluation) {
+		this.riskevaluation = riskevaluation;
+	}
+
+	public double getSeverity() {
+		return severity;
+	}
+
+	public void setSeverity(double severity) {
+		this.severity = severity;
+	}
+
+	public double getProbability() {
+		return probability;
+	}
+
+	public void setProbability(double probability) {
+		this.probability = probability;
 	}
 
 	public String getMitigation() {

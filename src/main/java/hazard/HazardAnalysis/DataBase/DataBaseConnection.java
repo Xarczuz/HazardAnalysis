@@ -420,6 +420,9 @@ public class DataBaseConnection {
 				} else if (table.contentEquals("cause")) {
 					Cause c = new Cause(rs.getInt("id"), rs.getString("cause"), rs.getInt("hazardid"));
 					Double d = rs.getDouble("riskevaluation");
+					c.setSeverity(rs.getDouble("severity"));
+					c.setProbability(rs.getDouble("probability"));
+					c.setRiskevaluation(d);
 					if (d != 0) {
 						c.setRisk(String.valueOf(rs.getBoolean("risk")));
 					}

@@ -30,10 +30,10 @@ public class CreateDataBase {
 	public static void createNewTable() {
 		// SQLite connection string
 		String url = "jdbc:sqlite:" + database;
-		String sql1 = "CREATE TABLE IF NOT EXISTS kind (id integer PRIMARY KEY, kind text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL);";
-		String sql2 = "CREATE TABLE IF NOT EXISTS role (id integer PRIMARY KEY, role text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL);";
+		String sql1 = "CREATE TABLE IF NOT EXISTS kind (id integer PRIMARY KEY, kind text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL,unique(kind));";
+		String sql2 = "CREATE TABLE IF NOT EXISTS role (id integer PRIMARY KEY, role text NOT NULL, start bit NOT NULL, runtime bit NOT NULL, shutdown bit NOT NULL,unique(role));";
 		String sql3 = "CREATE TABLE IF NOT EXISTS roletoplay (id integer PRIMARY KEY,kind text NOT NULL, kindid integer NOT NULL, role text NOT NULL, roleid integer NOT NULL);";
-		String sql4 = "CREATE TABLE IF NOT EXISTS relator (id integer PRIMARY KEY,relator text NOT NULL);";
+		String sql4 = "CREATE TABLE IF NOT EXISTS relator (id integer PRIMARY KEY,relator text NOT NULL,unique(relator));";
 		String sql5 = "CREATE TABLE IF NOT EXISTS relatortorole (id integer PRIMARY KEY, relator text NOT NULL, relatorid integer NOT NULL, role TEXT NOT NULL, roleid INTEGER NOT NULL);";
 		String sql6 = "CREATE TABLE IF NOT EXISTS hazard (id INTEGER PRIMARY KEY, hazard TEXT NOT NULL, harm TEXT NOT NULL);";
 		String sql7 = "CREATE TABLE IF NOT EXISTS cause (id INTEGER PRIMARY KEY, cause TEXT NOT NULL, mitigation TEXT, hazardid INTEGER NOT NULL, severity REAL, probability REAL, riskevaluation REAL, risk BIT);";

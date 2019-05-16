@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
-import hazard.HazardAnalysis.Graph.PossibleVictimGraph;
+import hazard.HazardAnalysis.Graph.RelatorGraph;
 import hazard.HazardAnalysis.Graph.SystemGraph;
 import hazard.HazardClasses.MishapVictim;
 import hazard.HazardClasses.Play;
@@ -80,9 +80,9 @@ public class ViewStep5 implements ViewInterface {
 					int index = tbPossibleVictim.getSelectionModel().getSelectedIndex();
 					if (index >= 0) {
 						PossibleVictim pv = tbPossibleVictim.getItems().get(index);
-						PossibleVictimGraph frame;
+						RelatorGraph frame;
 						try {
-							frame = new PossibleVictimGraph(pv);
+							frame = new RelatorGraph(pv.getRelator());
 							frame.setResizable(true);
 							frame.setSize(800, 400);
 							frame.setVisible(true);

@@ -1,6 +1,9 @@
 package hazard.HazardAnalysis.Steps.Views;
 
+import java.sql.SQLException;
+
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
+import hazard.HazardAnalysis.Graph.RelatorGraph;
 import hazard.HazardClasses.Hazard;
 import hazard.HazardClasses.HazardElement;
 import hazard.HazardClasses.MishapVictim;
@@ -109,6 +112,21 @@ public class ViewStep6 implements ViewInterface {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2) {
+					int index = tbVictim.getSelectionModel().getSelectedIndex();
+					if (index >= 0) {
+						MishapVictim mv = tbVictim.getItems().get(index);
+						RelatorGraph frame;
+						try {
+							frame = new RelatorGraph(mv.getRelator());
+							frame.setResizable(true);
+							frame.setSize(800, 400);
+							frame.setVisible(true);
+						} catch (SQLException err) {
+							err.printStackTrace();
+						}
+					}
+				}
 				int index = tbVictim.getSelectionModel().getSelectedIndex();
 				if (index > -1) {
 					MishapVictim mv = tbVictim.getItems().get(index);
