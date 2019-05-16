@@ -10,9 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -148,11 +146,10 @@ public class ViewStep8 implements ViewInterface {
 				TextInputDialog dialog = new TextInputDialog("");
 				dialog.setTitle("Add Severity And Probability");
 				dialog.setHeaderText("Enter the Severity of the Cause And the Probability of it happening.");
-				ObservableList<String> options = FXCollections.observableArrayList("Very-High-100%", "High-80%",
-						"Medium-60%", "Low-40%", "Very-Low-20%");
+				ObservableList<String> options = FXCollections.observableArrayList("High-75%", "Medium-50%", "Low-25%");
 				final ComboBox<String> comboBox = new ComboBox<String>(options);
-				ObservableList<String> options2 = FXCollections.observableArrayList("Very-High-100%", "High-80%",
-						"Medium-60%", "Low-40%", "Very-Low-20%");
+				ObservableList<String> options2 = FXCollections.observableArrayList("High-75%", "Medium-50%",
+						"Low-25%");
 				final ComboBox<String> comboBox2 = new ComboBox<String>(options2);
 				Text severity = new Text("Severity");
 				Text probability = new Text("Probability");
@@ -163,11 +160,9 @@ public class ViewStep8 implements ViewInterface {
 				gp.add(comboBox2, 1, 1);
 				Text riskEvaluation = new Text("Risk Evaluation:");
 				Text riskEvaluationNr = new Text();
+				riskEvaluationNr.prefWidth(15);
 				gp.add(riskEvaluation, 3, 1);
 				gp.add(riskEvaluationNr, 4, 1);
-				CheckBox ch = new CheckBox("Accept Risk");
-				ch.setPadding(new Insets(15, 15, 15, 15));
-				gp.add(ch, 5, 1);
 				comboBox.valueProperty().addListener(new ChangeListener<String>() {
 					@Override
 					public void changed(ObservableValue ov, String t, String t1) {
@@ -189,10 +184,14 @@ public class ViewStep8 implements ViewInterface {
 				dialog.getDialogPane().setContent(gp);
 				Optional<String> op = dialog.showAndWait();
 				if (op.isPresent() && !riskEvaluationNr.getText().contentEquals("")) {
+					double riskev = (returnRiskValue(comboBox2.getValue()) * returnRiskValue(comboBox.getValue()));
+					boolean risk = true;
+					if (riskev > 0.125D) {
+						risk = false;
+					}
 					DataBaseConnection.sqlUpdate("UPDATE cause SET severity=" + returnRiskValue(comboBox.getValue())
-							+ ", probability=" + returnRiskValue(comboBox2.getValue()) + ", riskevaluation="
-							+ (returnRiskValue(comboBox2.getValue()) * returnRiskValue(comboBox.getValue())) + ", risk="
-							+ ch.isSelected() + " where cause.id=" + id + ";");
+							+ ", probability=" + returnRiskValue(comboBox2.getValue()) + ", riskevaluation=" + riskev
+							+ ", risk=" + risk + " where cause.id=" + id + ";");
 				}
 				updateCauseList(tbHazard, causeList);
 			}
@@ -201,16 +200,12 @@ public class ViewStep8 implements ViewInterface {
 	}
 
 	private Double returnRiskValue(String s) {
-		if (s.toLowerCase().contentEquals("Very-High-100%"))
-			return 1D;
-		if (s.toLowerCase().contentEquals("High-80%"))
-			return .8D;
-		if (s.toLowerCase().contentEquals("Medium-60%"))
-			return .60D;
-		if (s.toLowerCase().contentEquals("Low-40%"))
-			return .4D;
-		if (s.toLowerCase().contentEquals("Very-Low-20%"))
-			return .2D;
+		if (s.contentEquals("High-75%"))
+			return .75D;
+		if (s.contentEquals("Medium-50%"))
+			return .50D;
+		if (s.contentEquals("Low-25%"))
+			return .25D;
 		return 0D;
 	}
 
