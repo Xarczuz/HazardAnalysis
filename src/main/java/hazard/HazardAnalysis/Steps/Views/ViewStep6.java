@@ -142,6 +142,7 @@ public class ViewStep6 implements ViewInterface {
 				TextArea ta = new TextArea();
 				description.setText(mv.getRelator() + "(" + mv.getRole() + ":" + mv.getKind() + ")" + "(" + he.getRole()
 						+ "<HarmTruthMaker>" + ":" + he.getKind() + ")");
+				description.setWrappingWidth(600);
 				t.setPromptText("HarmTruthMaker");
 				ta.setPromptText("Descrption of the Harm.");
 				GridPane gp = new GridPane();
