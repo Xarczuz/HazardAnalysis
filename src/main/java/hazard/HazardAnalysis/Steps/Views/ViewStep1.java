@@ -90,6 +90,7 @@ public class ViewStep1 implements ViewInterface {
 		return grid;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
@@ -152,10 +153,12 @@ public class ViewStep1 implements ViewInterface {
 		return this.thisGp;
 	}
 
+	@Override
 	public String getStep() {
 		return "Step 1";
 	}
 
+	@Override
 	public String getStepDescription() {
 		return "Identify the kind and role objects explicitly presented in the system description";
 	}

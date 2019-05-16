@@ -14,6 +14,7 @@ public class ExportDataToExcel extends Thread {
 		this.p1 = p1;
 	}
 
+	@Override
 	public void run() {
 		DataBaseConnection.exportData(file);
 		Platform.runLater(new Runnable() {

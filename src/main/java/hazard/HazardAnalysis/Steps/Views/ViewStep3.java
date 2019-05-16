@@ -183,10 +183,12 @@ public class ViewStep3 implements ViewInterface {
 		return this.thisGp;
 	}
 
+	@Override
 	public String getStep() {
 		return "Step 3";
 	}
 
+	@Override
 	public String getStepDescription() {
 		return "For each role object obtained in Step 1 and Step 2,\r\n"
 				+ "identify the relator that connects this role, and specify all the other roles\r\n"

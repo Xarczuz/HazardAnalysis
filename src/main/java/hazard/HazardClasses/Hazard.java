@@ -4,12 +4,10 @@ public class Hazard extends Play {
 	String hazard;
 	String hazardDescription;
 
-
 	public Hazard(int id, String hazard, String hazardDescription) {
 		super(id);
 		this.hazard = hazard;
 		this.hazardDescription = hazardDescription;
-	
 	}
 
 	public String getHazard() {
@@ -20,8 +18,6 @@ public class Hazard extends Play {
 		return hazardDescription;
 	}
 
-
-
 	public void setHazard(String hazard) {
 		this.hazard = hazard;
 	}
@@ -29,6 +25,4 @@ public class Hazard extends Play {
 	public void setHazardDescription(String hazardDescription) {
 		this.hazardDescription = hazardDescription;
 	}
-
-	
 }

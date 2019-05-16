@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import hazard.HazardClasses.Cause;
 import hazard.HazardClasses.Hazard;
+import hazard.HazardClasses.HazardElement;
 import hazard.HazardClasses.Kind;
 import hazard.HazardClasses.MishapVictim;
 import hazard.HazardClasses.PossibleVictim;
@@ -219,30 +220,6 @@ public class DataBaseConnection {
 					cellCauses.setCellValue(rs2.getString("mitigation"));
 					cellCauses.setCellStyle(style);
 				}
-//				Row headerMitigation = sheet.createRow(rowIndex);
-//				rowIndex++;
-//				Cell headerCellMitigation = headerMitigation.createCell(0);
-//				headerCellMitigation.setCellValue("Rq.");
-//				headerCellMitigation.setCellStyle(headerStyle);
-//				headerCellMitigation = headerMitigation.createCell(1);
-//				headerCellMitigation.setCellValue("Mitigation for H" + (index - 1));
-//				headerCellMitigation.setCellStyle(headerStyle);
-//				Statement stmt4 = conn.createStatement();
-//				String sql4 = "select *  from hazard,mitigation where mitigation.hazardid=" + rs.getInt("id")
-//						+ " AND hazard.id=" + rs.getInt("id") + ";";
-//				ResultSet rs4 = stmt4.executeQuery(sql4);
-//				i = 1;
-//				while (rs4.next()) {
-//					Row mitigation = sheet.createRow(rowIndex);
-//					rowIndex++;
-//					Cell cellMitigation = mitigation.createCell(0);
-//					cellMitigation.setCellValue("Mitigation " + i);
-//					i++;
-//					cellMitigation.setCellStyle(style);
-//					cellMitigation = mitigation.createCell(1);
-//					cellMitigation.setCellValue(rs4.getString("mitigation"));
-//					cellMitigation.setCellStyle(style);
-//				}
 				rowIndex++;
 			}
 			sheet.autoSizeColumn(0);
@@ -310,7 +287,7 @@ public class DataBaseConnection {
 	public static void insertMishapVictim(int roleID, String role, int kindID, String kind, int relatorID,
 			String relator) {
 		try {
-			String sql = "INSERT INTO mishapvictim (roleid,role,kindid,kind,relator,relatorid) VALUES(?,?,?,?,?,?)";
+			String sql = "INSERT INTO mishapvictim (roleid,role,kindid,kind,relatorid,relator) VALUES(?,?,?,?,?,?)";
 			Connection conn = connect();
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, roleID);
@@ -429,13 +406,14 @@ public class DataBaseConnection {
 				} else if (table.contentEquals("relatortorole")) {
 					list.add((E) new Relator(rs.getInt("relatorid"), rs.getString("relator")));
 				} else if (table.contentEquals("possiblevictim")) {
-					list.add((E) new PossibleVictim(rs.getInt("roleid"), rs.getString("role"),
-							rs.getInt("kindid"), rs.getString("kind"), rs.getInt("relatorid"),
-							rs.getString("relator")));
+					list.add((E) new PossibleVictim(rs.getInt("roleid"), rs.getString("role"), rs.getInt("kindid"),
+							rs.getString("kind"), rs.getInt("relatorid"), rs.getString("relator")));
 				} else if (table.contentEquals("mishapvictim")) {
 					list.add((E) new MishapVictim(rs.getInt("id"), rs.getInt("roleid"), rs.getString("role"),
 							rs.getInt("kindid"), rs.getString("kind"), rs.getInt("relatorid"),
 							rs.getString("relator")));
+				} else if (table.contentEquals("hazardelement")) {
+					list.add((E) new HazardElement(rs.getString("kind"), rs.getString("role")));
 				} else if (table.contentEquals("hazard")) {
 					Hazard hz = new Hazard(rs.getInt("id"), rs.getString("hazard"), rs.getString("harm"));
 					list.add((E) hz);

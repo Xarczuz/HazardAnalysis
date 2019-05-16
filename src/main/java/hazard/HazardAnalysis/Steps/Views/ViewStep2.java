@@ -158,10 +158,12 @@ public class ViewStep2 implements ViewInterface {
 		return this.thisGp;
 	}
 
+	@Override
 	public String getStep() {
 		return "Step 2";
 	}
 
+	@Override
 	public String getStepDescription() {
 		return "For each kind object obtained in Step 1, identify all the\r\n"
 				+ "roles it can play, considering the system description.";

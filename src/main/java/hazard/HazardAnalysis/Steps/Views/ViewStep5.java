@@ -111,7 +111,7 @@ public class ViewStep5 implements ViewInterface {
 		kind2.setMinWidth(200);
 		role2.setMinWidth(200);
 		relator2.setMinWidth(200);
-		tbVictim.getColumns().addAll(id,role2, kind2, relator2);
+		tbVictim.getColumns().addAll(id, role2, kind2, relator2);
 		tbVictim.setItems(victimList);
 		grid.add(tbVictim, 0, 4);
 		Button btnAdd = new Button("+");
