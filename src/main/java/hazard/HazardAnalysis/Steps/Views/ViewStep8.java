@@ -86,6 +86,18 @@ public class ViewStep8 implements ViewInterface {
 			@Override
 			public TableRow<Cause> call(TableView<Cause> param) {
 				final TableRow<Cause> row = new TableRow<Cause>() {
+					private void removeCssClass() {
+						if (getStyleClass().contains("true")) {
+							getStyleClass().remove("true");
+						}
+						if (getStyleClass().contains("false")) {
+							getStyleClass().remove("false");
+						}
+						if (getStyleClass().contains("table-row-cell")) {
+							getStyleClass().remove("table-row-cell");
+						}
+					}
+
 					@Override
 					protected void updateItem(Cause item, boolean empty) {
 						super.updateItem(item, empty);
@@ -106,18 +118,6 @@ public class ViewStep8 implements ViewInterface {
 						if (empty) {
 							removeCssClass();
 							getStyleClass().add("table-row-cell");
-						}
-					}
-
-					private void removeCssClass() {
-						if (getStyleClass().contains("true")) {
-							getStyleClass().remove("true");
-						}
-						if (getStyleClass().contains("false")) {
-							getStyleClass().remove("false");
-						}
-						if (getStyleClass().contains("table-row-cell")) {
-							getStyleClass().remove("table-row-cell");
 						}
 					}
 				};
@@ -199,16 +199,6 @@ public class ViewStep8 implements ViewInterface {
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	private Double returnRiskValue(String s) {
-		if (s.contentEquals("High-75%"))
-			return .75D;
-		if (s.contentEquals("Medium-50%"))
-			return .50D;
-		if (s.contentEquals("Low-25%"))
-			return .25D;
-		return 0D;
-	}
-
 	@Override
 	public GridPane getGridPane() {
 		updateHazardList();
@@ -225,8 +215,14 @@ public class ViewStep8 implements ViewInterface {
 		return "For each Hazard and it's Pre-initiating events determine a Severity and a Probability for the Hazard.";
 	}
 
-	public void updateHazardList() {
-		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+	private Double returnRiskValue(String s) {
+		if (s.contentEquals("High-75%"))
+			return .75D;
+		if (s.contentEquals("Medium-50%"))
+			return .50D;
+		if (s.contentEquals("Low-25%"))
+			return .25D;
+		return 0D;
 	}
 
 	public void updateCauseList(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
@@ -235,5 +231,9 @@ public class ViewStep8 implements ViewInterface {
 			int id = tbHazard.getItems().get(index).getId();
 			DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
 		}
+	}
+
+	public void updateHazardList() {
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
 }

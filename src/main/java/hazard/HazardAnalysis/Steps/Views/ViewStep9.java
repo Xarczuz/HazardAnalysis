@@ -80,6 +80,18 @@ public class ViewStep9 implements ViewInterface {
 			@Override
 			public TableRow<Cause> call(TableView<Cause> param) {
 				final TableRow<Cause> row = new TableRow<Cause>() {
+					private void removeCssClass() {
+						if (getStyleClass().contains("true")) {
+							getStyleClass().remove("true");
+						}
+						if (getStyleClass().contains("false")) {
+							getStyleClass().remove("false");
+						}
+						if (getStyleClass().contains("table-row-cell")) {
+							getStyleClass().remove("table-row-cell");
+						}
+					}
+
 					@Override
 					protected void updateItem(Cause item, boolean empty) {
 						super.updateItem(item, empty);
@@ -100,18 +112,6 @@ public class ViewStep9 implements ViewInterface {
 						if (empty) {
 							removeCssClass();
 							getStyleClass().add("table-row-cell");
-						}
-					}
-
-					private void removeCssClass() {
-						if (getStyleClass().contains("true")) {
-							getStyleClass().remove("true");
-						}
-						if (getStyleClass().contains("false")) {
-							getStyleClass().remove("false");
-						}
-						if (getStyleClass().contains("table-row-cell")) {
-							getStyleClass().remove("table-row-cell");
 						}
 					}
 				};
@@ -168,6 +168,8 @@ public class ViewStep9 implements ViewInterface {
 							DataBaseConnection.insertMitigationToCause(ta.getText(), c.getId());
 							DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";",
 									"cause", causeList);
+						} else if (dialog.getResult() != null && ta.getText().isEmpty()) {
+							event.consume();
 						}
 					}
 				};

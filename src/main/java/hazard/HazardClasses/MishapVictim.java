@@ -14,51 +14,51 @@ public class MishapVictim extends Play {
 		this.relatorID = relatorID;
 	}
 
-	public int getRoleID() {
-		return roleID;
-	}
-
-	public void setRoleID(int roleID) {
-		this.roleID = roleID;
+	public String getKind() {
+		return kind;
 	}
 
 	public int getKindID() {
 		return kindID;
 	}
 
-	public void setKindID(int kindID) {
-		this.kindID = kindID;
+	public String getRelator() {
+		return relator;
 	}
 
 	public int getRelatorID() {
 		return relatorID;
 	}
 
-	public void setRelatorID(int relatorID) {
-		this.relatorID = relatorID;
-	}
-
-	public String getKind() {
-		return kind;
-	}
-
-	public String getRelator() {
-		return relator;
-	}
-
 	public String getRole() {
 		return role;
+	}
+
+	public int getRoleID() {
+		return roleID;
 	}
 
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
 
+	public void setKindID(int kindID) {
+		this.kindID = kindID;
+	}
+
 	public void setRelator(String relator) {
 		this.relator = relator;
 	}
 
+	public void setRelatorID(int relatorID) {
+		this.relatorID = relatorID;
+	}
+
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public void setRoleID(int roleID) {
+		this.roleID = roleID;
 	}
 }

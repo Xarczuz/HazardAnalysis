@@ -54,6 +54,8 @@ public class ViewStep7 implements ViewInterface {
 							DataBaseConnection.insertCause(ta.getText(), h.getId());
 							DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";",
 									"cause", list);
+						} else if (dialog.getResult() != null && ta.getText().isEmpty()) {
+							event.consume();
 						}
 					}
 				};

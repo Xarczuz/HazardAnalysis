@@ -305,6 +305,10 @@ public class MainView {
 		return av1;
 	}
 
+	public ViewStep10 getAv10() {
+		return this.av10;
+	}
+
 	public ViewStep2 getAv2() {
 		return av2;
 	}
@@ -335,10 +339,6 @@ public class MainView {
 
 	public ViewStep9 getAv9() {
 		return this.av9;
-	}
-
-	public ViewStep10 getAv10() {
-		return this.av10;
 	}
 
 	private void loadCenterViews() {

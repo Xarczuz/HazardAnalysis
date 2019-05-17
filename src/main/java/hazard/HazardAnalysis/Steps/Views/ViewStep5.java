@@ -180,13 +180,13 @@ public class ViewStep5 implements ViewInterface {
 		btnRemove.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
-	public void updateVictimList() {
-		DataBaseConnection.sql("Select * from mishapvictim", "mishapvictim", victimList);
-	}
-
 	public void updatePossibleVictimList() {
 		DataBaseConnection.sql(
 				"select roletoplay.role,roletoplay.kind,relatortorole.relator,roletoplay.roleid,roletoplay.kindid,relatortorole.relatorid from roletoplay, relatortorole where relatortorole.roleid = roletoplay.roleid",
 				"possiblevictim", possibleVictimList);
+	}
+
+	public void updateVictimList() {
+		DataBaseConnection.sql("Select * from mishapvictim", "mishapvictim", victimList);
 	}
 }
