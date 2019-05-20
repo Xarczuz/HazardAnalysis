@@ -129,8 +129,9 @@ public class ViewStep9 implements ViewInterface {
 		g2.add(category2, 0, 1);
 		g2.add(tbCause, 0, 2);
 		grid.add(g2, 0, 2);
-		Button btnAdd = new Button("Add Mitigation");
+		Button btnAdd = new Button("Add/Edit Mitigation");
 		addMitigationEvent(btnAdd, tbCause, tbHazard);
+		addMitigationEventCauseTb(tbCause, tbHazard);
 		Button btnRemove = new Button("Remove Mitigation");
 		removeMitigationEvent(btnRemove, tbCause, tbHazard);
 		GridPane gridBtn1 = new GridPane();
@@ -140,42 +141,58 @@ public class ViewStep9 implements ViewInterface {
 		return grid;
 	}
 
+	private void addMitigationEventCauseTb(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if(e.getClickCount()==2)
+				mitigationDialog(tbCause, tbHazard);
+			}
+		};
+		tbCause.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	public void mitigationDialog(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		int index = tbCause.getSelectionModel().getSelectedIndex();
+		int indexH = tbHazard.getSelectionModel().getSelectedIndex();
+		if (index < 0 || indexH < 0)
+			return;
+		Cause c = tbCause.getItems().get(index);
+		Hazard h = tbHazard.getItems().get(indexH);
+		TextInputDialog dialog = new TextInputDialog("");
+		dialog.setTitle("Add Mitigation");
+		dialog.setHeaderText("Enter a new mitigation to the Cause:\n" + c.getCause());
+		dialog.getDialogPane().setMaxWidth(600);
+		TextArea ta = new TextArea();
+		ta.setPromptText("Descrption of the mitigation.");
+		ta.setText(c.getMitigation());
+		GridPane gp = new GridPane();
+		gp.setPadding(new Insets(15, 15, 15, 15));
+		ta.setPadding(new Insets(10, 5, 5, 5));
+		gp.add(ta, 0, 2);
+		dialog.getDialogPane().setContent(gp);
+		EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+			@Override
+			public void handle(DialogEvent event) {
+				if (dialog.getResult() != null && index > -1 && !ta.getText().isEmpty()) {
+					DataBaseConnection.insertMitigationToCause(ta.getText(), c.getId());
+					DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";", "cause",
+							causeList);
+				} else if (dialog.getResult() != null && ta.getText().isEmpty()) {
+					event.consume();
+				}
+			}
+		};
+		dialog.setOnCloseRequest(eventHandler);
+		dialog.show();
+		ta.requestFocus();
+	}
+
 	private void addMitigationEvent(Button btnAdd, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				int index = tbCause.getSelectionModel().getSelectedIndex();
-				int indexH = tbHazard.getSelectionModel().getSelectedIndex();
-				if (index < 0 || indexH < 0)
-					return;
-				Cause c = tbCause.getItems().get(index);
-				Hazard h = tbHazard.getItems().get(indexH);
-				TextInputDialog dialog = new TextInputDialog("");
-				dialog.setTitle("Add Mitigation");
-				dialog.setHeaderText("Enter a new mitigation to the Cause:\n" + c.getCause());
-				dialog.getDialogPane().setMaxWidth(600);
-				TextArea ta = new TextArea();
-				ta.setPromptText("Descrption of the mitigation.");
-				GridPane gp = new GridPane();
-				gp.setPadding(new Insets(15, 15, 15, 15));
-				ta.setPadding(new Insets(10, 5, 5, 5));
-				gp.add(ta, 0, 2);
-				dialog.getDialogPane().setContent(gp);
-				EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
-					@Override
-					public void handle(DialogEvent event) {
-						if (dialog.getResult() != null && index > -1 && !ta.getText().isEmpty()) {
-							DataBaseConnection.insertMitigationToCause(ta.getText(), c.getId());
-							DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + h.getId() + ";",
-									"cause", causeList);
-						} else if (dialog.getResult() != null && ta.getText().isEmpty()) {
-							event.consume();
-						}
-					}
-				};
-				dialog.setOnCloseRequest(eventHandler);
-				dialog.show();
-				ta.requestFocus();
+				mitigationDialog(tbCause, tbHazard);
 			}
 		};
 		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

@@ -119,13 +119,77 @@ public class ViewStep7 implements ViewInterface {
 		grid.add(tbCause, 0, 4);
 		Button btnAdd = new Button("Add Event");
 		addCauseEvent(btnAdd, tbHazard, causeList);
+		Button btnEdit = new Button("Edit Event");
+		editCauseEvent(btnEdit, tbCause, tbHazard);
+		editCauseEventCauseTable(tbCause, tbHazard);
 		Button btnRemove = new Button("Remove Event");
 		removeCauseEvent(btnRemove, tbCause, causeList);
 		GridPane gridBtn1 = new GridPane();
 		gridBtn1.add(btnAdd, 0, 0);
-		gridBtn1.add(btnRemove, 1, 0);
+		gridBtn1.add(btnEdit, 1, 0);
+		gridBtn1.add(btnRemove, 2, 0);
 		grid.add(gridBtn1, 0, 2);
 		return grid;
+	}
+
+	private void editCauseDialog(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		int index = tbCause.getSelectionModel().getSelectedIndex();
+		if (index > -1) {
+			Cause ca = tbCause.getItems().get(index);
+			TextInputDialog dialog = new TextInputDialog("");
+			dialog.setTitle("Edit Cause");
+			dialog.setHeaderText("Edit cause");
+			dialog.getDialogPane().setMaxWidth(600);
+			TextArea ta = new TextArea();
+			ta.setPromptText("Descrption of the cause.");
+			ta.setText(ca.getCause());
+			GridPane gp = new GridPane();
+			gp.setPadding(new Insets(15, 15, 15, 15));
+			ta.setPadding(new Insets(10, 5, 5, 5));
+			gp.add(ta, 0, 2);
+			dialog.getDialogPane().setContent(gp);
+			EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+				@Override
+				public void handle(DialogEvent event) {
+					if (dialog.getResult() != null && index > -1 && !ta.getText().isEmpty()) {
+						DataBaseConnection.sqlUpdateCause(ta.getText(), ca.getId());
+						int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
+						if (index > -1) {
+							int id = tbHazard.getItems().get(index).getId();
+							DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause",
+									causeList);
+						}
+					} else if (dialog.getResult() != null && ta.getText().isEmpty()) {
+						event.consume();
+					}
+				}
+			};
+			dialog.setOnCloseRequest(eventHandler);
+			dialog.show();
+			ta.requestFocus();
+		}
+	}
+
+	private void editCauseEventCauseTable(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					editCauseDialog(tbCause, tbHazard);
+				}
+			}
+		};
+		tbCause.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private void editCauseEvent(Button btnEdit, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				editCauseDialog(tbCause, tbHazard);
+			}
+		};
+		btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	@Override

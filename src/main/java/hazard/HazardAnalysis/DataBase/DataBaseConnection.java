@@ -251,9 +251,9 @@ public class DataBaseConnection {
 			sheet.autoSizeColumn(7);
 			// Sheet 2 causes sorted by risk evaluation number
 			causeAndMitList.sort((c1, c2) -> {
-				if (c1.getRpn() < c2.getRpn())
+				if (c1.getRpn() > c2.getRpn())
 					return -1;
-				else if (c1.getRpn() > c2.getRpn())
+				else if (c1.getRpn() < c2.getRpn())
 					return 1;
 				else
 					return 0;
@@ -565,6 +565,19 @@ public class DataBaseConnection {
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage() + "??");
+		}
+	}
+
+	public static void sqlUpdateCause(String cause, int id) {
+		String sql = "UPDATE cause SET cause=? WHERE cause.id=?";
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cause);
+			pstmt.setInt(2, id);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 }
