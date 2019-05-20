@@ -250,7 +250,14 @@ public class DataBaseConnection {
 			sheet.autoSizeColumn(6);
 			sheet.autoSizeColumn(7);
 			// Sheet 2 causes sorted by risk evaluation number
-			causeAndMitList.sort((c1, c2) -> c1.getRpn() > c2.getRpn() ? -1 : 1);
+			causeAndMitList.sort((c1, c2) -> {
+				if (c1.getRpn() < c2.getRpn())
+					return -1;
+				else if (c1.getRpn() > c2.getRpn())
+					return 1;
+				else
+					return 0;
+			});
 			rowIndex = 0;
 			index = 1;
 			Sheet sheetCauses = workbook.createSheet("Causes");
