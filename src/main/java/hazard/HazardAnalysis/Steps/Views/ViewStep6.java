@@ -94,19 +94,91 @@ public class ViewStep6 implements ViewInterface {
 		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
 		tbHazard.getColumns().addAll(id2, hazard, hazardDescription);
 		tbHazard.setItems(hazardList);
-		Button btnAddLink = new Button("+");
-		addHazardEvent(btnAddLink, tbVictim, tbHazardElement);
-		Button btnRemoveLink = new Button("-");
-		removeHazardEvent(btnRemoveLink, tbHazard);
+		Button btnAdd = new Button("Add Hazard");
+		addHazardEvent(btnAdd, tbVictim, tbHazardElement);
+		Button btnEdit = new Button("Edit Hazard");
+		editHazardEvent(btnEdit, tbHazard);
+		editHazardEventHazardTb(tbHazard);
+		Button btnRemove = new Button("Remove Hazard");
+		removeHazardEvent(btnRemove, tbHazard);
 		GridPane gridTextAndBtn = new GridPane();
-		gridTextAndBtn.add(category3, 0, 0);
-		gridTextAndBtn.add(btnAddLink, 2, 0);
-		gridTextAndBtn.add(btnRemoveLink, 3, 0);
+		gridTextAndBtn.add(btnAdd, 0, 0);
+		gridTextAndBtn.add(btnEdit, 1, 0);
+		gridTextAndBtn.add(btnRemove, 2, 0);
+		gridTextAndBtn.add(category3, 0, 1);
 		grid2.setHgap(10);
 		grid.add(grid2, 0, 0);
 		grid.add(gridTextAndBtn, 0, 1);
 		grid.add(tbHazard, 0, 2);
 		return grid;
+	}
+
+	private void editHazardEventHazardTb(TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (e.getClickCount() == 2)
+					editHazardDialog(tbHazard);
+			}
+		};
+		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private void editHazardDialog(TableView<Hazard> tbHazard) {
+		int index = tbHazard.getSelectionModel().getSelectedIndex();
+		if (index < 0)
+			return;
+		Hazard h = tbHazard.getItems().get(index);
+		TextInputDialog dialog = new TextInputDialog("");
+		dialog.setTitle("Add Hazard");
+		dialog.setHeaderText("");
+		dialog.getDialogPane().setMaxWidth(600);
+		Text description = new Text();
+		TextField t = new TextField();
+		TextArea ta = new TextArea();
+		description.setText(h.getHazard());
+		description.setWrappingWidth(600);
+		t.setPromptText("HarmTruthMaker");
+		t.setTooltip(new Tooltip("The Short Description of the Harm"));
+		t.setText(h.getHazard());
+		ta.setPromptText("Descrption of the Harm.");
+		ta.setTooltip(new Tooltip("The Detailed Description of the Harm"));
+		ta.setText(h.getHazardDescription());
+		GridPane gp = new GridPane();
+		gp.setPadding(new Insets(15, 15, 15, 15));
+		t.setPadding(new Insets(10, 5, 5, 5));
+		ta.setPadding(new Insets(10, 5, 5, 5));
+		gp.add(description, 0, 0);
+		gp.add(t, 0, 1);
+		gp.add(ta, 0, 2);
+		gp.setVgap(10);
+		dialog.getDialogPane().setContent(gp);
+		EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+			@Override
+			public void handle(DialogEvent event) {
+				if (dialog.getResult() != null && index > -1 && !t.getText().isEmpty() && !ta.getText().isEmpty()) {
+					String hazard = t.getText();
+					String harm = ta.getText();
+					DataBaseConnection.updateHazard(hazard, harm, h.getId());
+					DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+				} else if (dialog.getResult() != null && (t.getText().isEmpty() || ta.getText().isEmpty())) {
+					event.consume();
+				}
+			}
+		};
+		dialog.setOnCloseRequest(eventHandler);
+		dialog.show();
+		t.requestFocus();
+	}
+
+	private void editHazardEvent(Button btnEdit, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				editHazardDialog(tbHazard);
+			}
+		};
+		btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	private void addHazardEvent(Button btnAdd, TableView<MishapVictim> tbVictim,

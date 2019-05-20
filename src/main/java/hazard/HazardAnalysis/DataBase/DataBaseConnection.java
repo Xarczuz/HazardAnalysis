@@ -580,4 +580,18 @@ public class DataBaseConnection {
 			System.out.println(e.getMessage());
 		}
 	}
+
+	public static void updateHazard(String hazard, String harm, int id) {
+		String sql = "UPDATE hazard SET hazard=?,harm=? WHERE hazard.id=?";
+		try {
+			Connection conn = connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, hazard);
+			pstmt.setString(2, harm);
+			pstmt.setInt(3, id);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }
