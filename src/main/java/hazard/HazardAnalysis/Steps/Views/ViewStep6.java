@@ -139,10 +139,10 @@ public class ViewStep6 implements ViewInterface {
 		description.setText(h.getHazard());
 		description.setWrappingWidth(600);
 		t.setPromptText("HarmTruthMaker");
-		t.setTooltip(new Tooltip("The Short Description of the Harm"));
+		t.setTooltip(new Tooltip("The HarmTruthMaker"));
 		t.setText(h.getHazard());
-		ta.setPromptText("Descrption of the Harm.");
-		ta.setTooltip(new Tooltip("The Detailed Description of the Harm"));
+		ta.setPromptText("Descrption of the HarmTruthMaker.");
+		ta.setTooltip(new Tooltip("The Description of the HarmTruthMaker"));
 		ta.setText(h.getHazardDescription());
 		GridPane gp = new GridPane();
 		gp.setPadding(new Insets(15, 15, 15, 15));

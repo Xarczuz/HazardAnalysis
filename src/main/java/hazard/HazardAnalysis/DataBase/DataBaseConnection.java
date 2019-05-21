@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -31,7 +32,9 @@ import hazard.HazardClasses.MishapVictim;
 import hazard.HazardClasses.PossibleVictim;
 import hazard.HazardClasses.Relator;
 import hazard.HazardClasses.Role;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ProgressIndicator;
 
 public class DataBaseConnection {
 	private static String database;
@@ -85,7 +88,7 @@ public class DataBaseConnection {
 		}
 	}
 
-	public static void exportData(File file) {
+	public static void exportData(File file, ProgressIndicator p1) {
 		try {
 			Connection conn = connect();
 			Statement stmt = conn.createStatement();
@@ -98,10 +101,30 @@ public class DataBaseConnection {
 			int index = 1;
 			CellStyle headerStyle = workbook.createCellStyle();
 			CellStyle style = workbook.createCellStyle();
+			String sq = "SELECT count(*) from Hazard;";
+			Statement stmt3 = conn.createStatement();
+			ResultSet r = stmt3.executeQuery(sq);
+			double inc = (100D / (double) r.getInt(1)) / 100D;
+			double progress = 0;
 			while (rs.next()) {
+				progress += inc;
+				final double p = progress;
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						p1.setProgress(p);
+					}
+				});
 				Row header = sheet.createRow(rowIndex);
 				rowIndex++;
-				headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+				CellStyle headerStyle1 = workbook.createCellStyle();
+				headerStyle1.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+				headerStyle1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				headerStyle1.setBorderTop(BorderStyle.THIN);
+				headerStyle1.setBorderRight(BorderStyle.THIN);
+				headerStyle1.setBorderBottom(BorderStyle.THIN);
+				headerStyle1.setBorderLeft(BorderStyle.THIN);
+				headerStyle.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.getIndex());
 				headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 				headerStyle.setBorderTop(BorderStyle.THIN);
 				headerStyle.setBorderRight(BorderStyle.THIN);
@@ -111,13 +134,15 @@ public class DataBaseConnection {
 				font.setFontName("Liberation Sans");
 				font.setFontHeightInPoints((short) 16);
 				font.setBold(true);
+				font.setColor(HSSFColor.BLACK.index);
 				headerStyle.setFont(font);
+				headerStyle1.setFont(font);
 				Cell headerCell = header.createCell(0);
 				headerCell.setCellValue("No.");
-				headerCell.setCellStyle(headerStyle);
+				headerCell.setCellStyle(headerStyle1);
 				headerCell = header.createCell(1);
 				headerCell.setCellValue("HML-Style Hazard Description");
-				headerCell.setCellStyle(headerStyle);
+				headerCell.setCellStyle(headerStyle1);
 				style.setWrapText(false);
 				style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
 				style.setFillPattern(FillPatternType.SOLID_FOREGROUND);

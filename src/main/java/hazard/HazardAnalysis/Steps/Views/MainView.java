@@ -134,7 +134,16 @@ public class MainView {
 		description = new Text(av1.getStepDescription());
 		description.getStyleClass().add("texts");
 		description.setWrappingWidth(300);
-		vbox.getChildren().addAll(step, description);
+		
+		VBox tbox = new VBox();
+		tbox.setMinWidth(300);
+		tbox.setMaxWidth(300);
+		tbox.setMinHeight(500);
+		tbox.setMaxHeight(500);
+		tbox.setPadding(new Insets(10));
+		tbox.setSpacing(8);
+		tbox.getChildren().addAll(step, description);
+		vbox.getChildren().addAll(tbox);
 		Button btnBack = new Button("Back");
 		Button btnNextStep = new Button("Next Step");
 		GridPane gridBtn = new GridPane();

@@ -98,9 +98,12 @@ public class ViewStep4 implements ViewInterface {
 		Button btnRemoveLink = new Button("-");
 		addRemoveLinkEvent(btnRemoveLink, kindList, tbRole, tbKindToRole);
 		GridPane gridTextAndBtn = new GridPane();
-		gridTextAndBtn.add(category3, 0, 0);
-		gridTextAndBtn.add(btnAddLink, 2, 0);
-		gridTextAndBtn.add(btnRemoveLink, 3, 0);
+		GridPane gridBtn = new GridPane();
+		gridKinds.setVgap(4);
+		gridBtn.add(btnAddLink, 0, 0);
+		gridBtn.add(btnRemoveLink, 1, 0);
+		gridTextAndBtn.add(gridBtn, 0, 0);
+		gridTextAndBtn.add(category3, 0, 1);
 		gridKinds.add(gridTextAndBtn, 0, 2);
 		gridKinds.add(tbKindToRole, 0, 3);
 		grid.add(gridKinds, 1, 1);
