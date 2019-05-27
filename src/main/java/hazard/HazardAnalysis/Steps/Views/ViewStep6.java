@@ -113,74 +113,6 @@ public class ViewStep6 implements ViewInterface {
 		return grid;
 	}
 
-	private void editHazardEventHazardTb(TableView<Hazard> tbHazard) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				if (e.getClickCount() == 2)
-					editHazardDialog(tbHazard);
-			}
-		};
-		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	private void editHazardDialog(TableView<Hazard> tbHazard) {
-		int index = tbHazard.getSelectionModel().getSelectedIndex();
-		if (index < 0)
-			return;
-		Hazard h = tbHazard.getItems().get(index);
-		TextInputDialog dialog = new TextInputDialog("");
-		dialog.setTitle("Add Hazard");
-		dialog.setHeaderText("");
-		dialog.getDialogPane().setMaxWidth(600);
-		Text description = new Text();
-		TextField t = new TextField();
-		TextArea ta = new TextArea();
-		description.setText(h.getHazard());
-		description.setWrappingWidth(600);
-		t.setPromptText("HarmTruthMaker");
-		t.setTooltip(new Tooltip("The HarmTruthMaker"));
-		t.setText(h.getHazard());
-		ta.setPromptText("Descrption of the HarmTruthMaker.");
-		ta.setTooltip(new Tooltip("The Description of the HarmTruthMaker"));
-		ta.setText(h.getHazardDescription());
-		GridPane gp = new GridPane();
-		gp.setPadding(new Insets(15, 15, 15, 15));
-		t.setPadding(new Insets(10, 5, 5, 5));
-		ta.setPadding(new Insets(10, 5, 5, 5));
-		gp.add(description, 0, 0);
-		gp.add(t, 0, 1);
-		gp.add(ta, 0, 2);
-		gp.setVgap(10);
-		dialog.getDialogPane().setContent(gp);
-		EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
-			@Override
-			public void handle(DialogEvent event) {
-				if (dialog.getResult() != null && index > -1 && !t.getText().isEmpty() && !ta.getText().isEmpty()) {
-					String hazard = t.getText();
-					String harm = ta.getText();
-					DataBaseConnection.updateHazard(hazard, harm, h.getId());
-					DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
-				} else if (dialog.getResult() != null && (t.getText().isEmpty() || ta.getText().isEmpty())) {
-					event.consume();
-				}
-			}
-		};
-		dialog.setOnCloseRequest(eventHandler);
-		dialog.show();
-		t.requestFocus();
-	}
-
-	private void editHazardEvent(Button btnEdit, TableView<Hazard> tbHazard) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				editHazardDialog(tbHazard);
-			}
-		};
-		btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
 	private void addHazardEvent(Button btnAdd, TableView<MishapVictim> tbVictim,
 			TableView<HazardElement> tbHazardElement) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -272,6 +204,74 @@ public class ViewStep6 implements ViewInterface {
 			}
 		};
 		tbVictim.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private void editHazardDialog(TableView<Hazard> tbHazard) {
+		int index = tbHazard.getSelectionModel().getSelectedIndex();
+		if (index < 0)
+			return;
+		Hazard h = tbHazard.getItems().get(index);
+		TextInputDialog dialog = new TextInputDialog("");
+		dialog.setTitle("Add Hazard");
+		dialog.setHeaderText("");
+		dialog.getDialogPane().setMaxWidth(600);
+		Text description = new Text();
+		TextField t = new TextField();
+		TextArea ta = new TextArea();
+		description.setText(h.getHazard());
+		description.setWrappingWidth(600);
+		t.setPromptText("HarmTruthMaker");
+		t.setTooltip(new Tooltip("The HarmTruthMaker"));
+		t.setText(h.getHazard());
+		ta.setPromptText("Descrption of the HarmTruthMaker.");
+		ta.setTooltip(new Tooltip("The Description of the HarmTruthMaker"));
+		ta.setText(h.getHazardDescription());
+		GridPane gp = new GridPane();
+		gp.setPadding(new Insets(15, 15, 15, 15));
+		t.setPadding(new Insets(10, 5, 5, 5));
+		ta.setPadding(new Insets(10, 5, 5, 5));
+		gp.add(description, 0, 0);
+		gp.add(t, 0, 1);
+		gp.add(ta, 0, 2);
+		gp.setVgap(10);
+		dialog.getDialogPane().setContent(gp);
+		EventHandler<DialogEvent> eventHandler = new EventHandler<DialogEvent>() {
+			@Override
+			public void handle(DialogEvent event) {
+				if (dialog.getResult() != null && index > -1 && !t.getText().isEmpty() && !ta.getText().isEmpty()) {
+					String hazard = t.getText();
+					String harm = ta.getText();
+					DataBaseConnection.updateHazard(hazard, harm, h.getId());
+					DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
+				} else if (dialog.getResult() != null && (t.getText().isEmpty() || ta.getText().isEmpty())) {
+					event.consume();
+				}
+			}
+		};
+		dialog.setOnCloseRequest(eventHandler);
+		dialog.show();
+		t.requestFocus();
+	}
+
+	private void editHazardEvent(Button btnEdit, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				editHazardDialog(tbHazard);
+			}
+		};
+		btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	private void editHazardEventHazardTb(TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				if (e.getClickCount() == 2)
+					editHazardDialog(tbHazard);
+			}
+		};
+		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	@Override

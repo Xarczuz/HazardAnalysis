@@ -141,15 +141,41 @@ public class ViewStep9 implements ViewInterface {
 		return grid;
 	}
 
+	private void addMitigationEvent(Button btnAdd, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				mitigationDialog(tbCause, tbHazard);
+			}
+		};
+		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
 	private void addMitigationEventCauseTb(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if(e.getClickCount()==2)
-				mitigationDialog(tbCause, tbHazard);
+				if (e.getClickCount() == 2)
+					mitigationDialog(tbCause, tbHazard);
 			}
 		};
 		tbCause.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
+	@Override
+	public GridPane getGridPane() {
+		updateHazardList();
+		return this.thisGp;
+	}
+
+	@Override
+	public String getStep() {
+		return "Step 9";
+	}
+
+	@Override
+	public String getStepDescription() {
+		return "Find ways to prevent the hazard from happening by mitigating the causes that leads to the hazard.";
 	}
 
 	public void mitigationDialog(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
@@ -186,32 +212,6 @@ public class ViewStep9 implements ViewInterface {
 		dialog.setOnCloseRequest(eventHandler);
 		dialog.show();
 		ta.requestFocus();
-	}
-
-	private void addMitigationEvent(Button btnAdd, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				mitigationDialog(tbCause, tbHazard);
-			}
-		};
-		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	@Override
-	public GridPane getGridPane() {
-		updateHazardList();
-		return this.thisGp;
-	}
-
-	@Override
-	public String getStep() {
-		return "Step 9";
-	}
-
-	@Override
-	public String getStepDescription() {
-		return "Find ways to prevent the hazard from happening by mitigating the causes that leads to the hazard.";
 	}
 
 	private void removeMitigationEvent(Button btnRemove, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {

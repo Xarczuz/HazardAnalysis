@@ -1,6 +1,12 @@
 package hazard.HazardAnalysis.Steps.Views;
 
 import java.io.File;
+import java.io.IOException;
+
+import java.nio.file.Files;
+
+import java.nio.file.Paths;
+import java.time.LocalDate;
 
 import hazard.HazardAnalysis.DataBase.CreateDataBase;
 import hazard.HazardAnalysis.DataBase.DataBaseConnection;
@@ -16,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import static java.nio.file.StandardCopyOption.*;
 
 public class MainView {
 	private BorderPane border = new BorderPane();
@@ -29,6 +36,7 @@ public class MainView {
 	private ViewStep8 av8;
 	private ViewStep9 av9;
 	private ViewStep10 av10;
+	private ViewStep11 av11;
 	private Stage pStage;
 	private int currentStep;
 	private Text step, description;
@@ -71,6 +79,13 @@ public class MainView {
 				File file = fileChooser.showOpenDialog(pStage);
 				if (file != null) {
 					DataBaseConnection.setDatabase(file.getPath());
+					try {
+						Files.copy(Paths.get(file.getPath()),
+								Paths.get(file.getPath().replace(".db", "-" + LocalDate.now() + "-backup.db")),
+								REPLACE_EXISTING);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					av1 = new ViewStep1();
 					currentStep = 1;
 					loadCenterViews();
@@ -115,7 +130,7 @@ public class MainView {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				if (currentStep != 10)
+				if (currentStep != 11)
 					currentStep++;
 				changeStepTexts(currentStep);
 			}
@@ -134,7 +149,6 @@ public class MainView {
 		description = new Text(av1.getStepDescription());
 		description.getStyleClass().add("texts");
 		description.setWrappingWidth(300);
-		
 		VBox tbox = new VBox();
 		tbox.setMinWidth(300);
 		tbox.setMaxWidth(300);
@@ -161,9 +175,11 @@ public class MainView {
 		Text title = new Text("Navigation:");
 		title.getStyleClass().add("heading");
 		vbox.getChildren().add(title);
-		Hyperlink options[] = new Hyperlink[] { new Hyperlink("Step 1"), new Hyperlink("Step 2"),
-				new Hyperlink("Step 3"), new Hyperlink("Step 4"), new Hyperlink("Step 5"), new Hyperlink("Step 6"),
-				new Hyperlink("Step 7"), new Hyperlink("Step 8"), new Hyperlink("Step 9"), new Hyperlink("Step 10") };
+		Hyperlink options[] = new Hyperlink[] { new Hyperlink("SDF\nStep 1"), new Hyperlink("SDF\nStep 2"),
+				new Hyperlink("SDF\nStep 3"), new Hyperlink("SDF\nStep 4"), new Hyperlink("Mishap Victim\nStep 5"),
+				new Hyperlink("Hazard Population\nStep 6"), new Hyperlink("Cause Exploration\nStep 7"),
+				new Hyperlink("Risk Evalutaion\nStep 8"), new Hyperlink("Mitigation\nStep 9"),
+				new Hyperlink("Post Mitigation Evaluation\nStep 10"), new Hyperlink("Export\nStep 11") };
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -234,6 +250,13 @@ public class MainView {
 			}
 		};
 		options[9].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				changeStepTexts(11);
+			}
+		};
+		options[10].addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		for (int i = 0; i < options.length; i++) {
 			VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
 			vbox.getChildren().add(options[i]);
@@ -305,6 +328,12 @@ public class MainView {
 			description.setText(getAv10().getStepDescription());
 			currentStep = 10;
 			break;
+		case 11:
+			border.setCenter(getAv11().getGridPane());
+			step.setText(getAv11().getStep());
+			description.setText(getAv11().getStepDescription());
+			currentStep = 11;
+			break;
 		default:
 			break;
 		}
@@ -316,6 +345,10 @@ public class MainView {
 
 	public ViewStep10 getAv10() {
 		return this.av10;
+	}
+
+	public ViewStep11 getAv11() {
+		return this.av11;
 	}
 
 	public ViewStep2 getAv2() {
@@ -359,7 +392,8 @@ public class MainView {
 		this.av7 = new ViewStep7();
 		this.av8 = new ViewStep8();
 		this.av9 = new ViewStep9();
-		this.av10 = new ViewStep10(this.pStage);
+		this.av10 = new ViewStep10();
+		this.av11 = new ViewStep11(this.pStage);
 	}
 
 	public BorderPane view(Stage primaryStage) {

@@ -1,57 +1,228 @@
 package hazard.HazardAnalysis.Steps.Views;
 
-import java.io.File;
+import java.util.Optional;
 
-import hazard.HazardAnalysis.DataBase.ExportDataToExcel;
+import hazard.HazardAnalysis.DataBase.DataBaseConnection;
+import hazard.HazardClasses.Cause;
+import hazard.HazardClasses.Hazard;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 public class ViewStep10 implements ViewInterface {
 	private GridPane thisGp;
-	private Stage pStage;
+	private ObservableList<Hazard> hazardList = FXCollections.observableArrayList();
+	private ObservableList<Cause> causeList = FXCollections.observableArrayList();
 
-	public ViewStep10(Stage pStage) {
+	public ViewStep10() {
 		this.thisGp = addGridPane();
-		this.pStage = pStage;
 	}
 
-	private void addExportEvent(Button btnExport, ProgressIndicator p1) {
+	private void addClickEventToTbHazard(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				p1.setProgress(-1D);
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("New Excel");
-				fileChooser.setInitialFileName(".xlsx");
-				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
-				File file = fileChooser.showSaveDialog(pStage);
-				Thread t = new ExportDataToExcel(file, p1);
-				t.start();
+				updateCauseList(tbHazard, list);
 			}
 		};
-		btnExport.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		tbHazard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public GridPane addGridPane() {
 		GridPane grid = new GridPane();
 		grid.getStyleClass().add("gridpane");
-		ProgressIndicator p1 = new ProgressIndicator();
-		grid.add(p1, 0, 1);
-		p1.setProgress(0);
-		Button btnExport = new Button("Export to excel");
-		addExportEvent(btnExport, p1);
-		grid.add(btnExport, 0, 0);
+		Text category1 = new Text("Hazards");
+		category1.getStyleClass().add("heading");
+		grid.add(category1, 0, 0);
+		final TableView<Hazard> tbHazard = new TableView<Hazard>();
+		tbHazard.setMinWidth(800);
+		tbHazard.setMaxHeight(200);
+		TableColumn<Hazard, Integer> id = new TableColumn<Hazard, Integer>("ID");
+		TableColumn<Hazard, String> hazard = new TableColumn<Hazard, String>("Hazard");
+		TableColumn<Hazard, String> hazardDescription = new TableColumn<Hazard, String>("Hazard Description");
+		hazard.setMinWidth(400);
+		hazardDescription.setMinWidth(350);
+		id.setCellValueFactory(new PropertyValueFactory<Hazard, Integer>("id"));
+		hazard.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazard"));
+		hazardDescription.setCellValueFactory(new PropertyValueFactory<Hazard, String>("hazardDescription"));
+		tbHazard.getColumns().addAll(id, hazard, hazardDescription);
+		addClickEventToTbHazard(tbHazard, causeList);
+		updateHazardList();
+		tbHazard.setItems(hazardList);
+		grid.add(tbHazard, 0, 1);
+		Text category2 = new Text("Pre-initiating events that might lead to the hazard");
+		category2.getStyleClass().add("heading");
+		grid.add(category2, 0, 3);
+		final TableView<Cause> tbCause = new TableView<Cause>();
+		tbCause.setMinWidth(800);
+		tbCause.setMaxHeight(200);
+		TableColumn<Cause, String> cause = new TableColumn<Cause, String>("Cause");
+		TableColumn<Cause, Double> severity = new TableColumn<Cause, Double>("Severity");
+		TableColumn<Cause, Double> probabilty = new TableColumn<Cause, Double>("Probability");
+		TableColumn<Cause, Double> risk = new TableColumn<Cause, Double>("Risk Evaluation");
+		TableColumn<Cause, String> mitigation = new TableColumn<Cause, String>("MItigation");
+		TableColumn<Cause, Double> postSeverity = new TableColumn<Cause, Double>("Severity");
+		TableColumn<Cause, Double> postProbabilty = new TableColumn<Cause, Double>("Probability");
+		TableColumn<Cause, Double> postRisk = new TableColumn<Cause, Double>("Risk Evaluation");
+		cause.setCellValueFactory(new PropertyValueFactory<Cause, String>("cause"));
+		severity.setCellValueFactory(new PropertyValueFactory<Cause, Double>("severity"));
+		probabilty.setCellValueFactory(new PropertyValueFactory<Cause, Double>("probability"));
+		risk.setCellValueFactory(new PropertyValueFactory<Cause, Double>("riskevaluation"));
+		mitigation.setCellValueFactory(new PropertyValueFactory<Cause, String>("mitigation"));
+		postProbabilty.setCellValueFactory(new PropertyValueFactory<Cause, Double>("postSeverity"));
+		postSeverity.setCellValueFactory(new PropertyValueFactory<Cause, Double>("postProbability"));
+		postRisk.setCellValueFactory(new PropertyValueFactory<Cause, Double>("postRiskevaluation"));
+		tbCause.getColumns().addAll(cause, probabilty, severity, risk, mitigation, postProbabilty, postSeverity,
+				postRisk);
+		tbCause.setItems(causeList);
+		tbCause.setRowFactory(new Callback<TableView<Cause>, TableRow<Cause>>() {
+			@Override
+			public TableRow<Cause> call(TableView<Cause> param) {
+				final TableRow<Cause> row = new TableRow<Cause>() {
+					private void removeCssClass() {
+						if (getStyleClass().contains("true")) {
+							getStyleClass().remove("true");
+						}
+						if (getStyleClass().contains("false")) {
+							getStyleClass().remove("false");
+						}
+						if (getStyleClass().contains("table-row-cell")) {
+							getStyleClass().remove("table-row-cell");
+						}
+					}
+
+					@Override
+					protected void updateItem(Cause item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!hazardList.isEmpty() && !empty) {
+							if (item.getPostRisk().isEmpty()) {
+								if (!item.getRisk().isEmpty()) {
+									removeCssClass();
+									if (item.getRisk().contentEquals("true")) {
+										getStyleClass().add("true");
+									} else if (item.getRisk().contentEquals("false")) {
+										getStyleClass().add("false");
+									}
+								} else {
+									removeCssClass();
+									getStyleClass().add("table-row-cell");
+								}
+							} else {
+								if (!item.getPostRisk().isEmpty()) {
+									removeCssClass();
+									if (item.getPostRisk().contentEquals("true")) {
+										getStyleClass().add("true");
+									} else if (item.getPostRisk().contentEquals("false")) {
+										getStyleClass().add("false");
+									}
+								} else {
+									removeCssClass();
+									getStyleClass().add("table-row-cell");
+								}
+							}
+						}
+						if (empty) {
+							removeCssClass();
+							getStyleClass().add("table-row-cell");
+						}
+					}
+				};
+				return row;
+			}
+		});
+		grid.add(tbCause, 0, 4);
+		Button btnAdd = new Button("Add Severity And Probability");
+		addSeverityAndProbabilityEvent(btnAdd, tbCause, tbHazard);
+		GridPane gridBtn1 = new GridPane();
+		gridBtn1.add(btnAdd, 0, 0);
+		grid.add(gridBtn1, 0, 2);
 		return grid;
+	}
+
+	private void addSeverityAndProbabilityEvent(Button btnAdd, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@SuppressWarnings("rawtypes")
+			@Override
+			public void handle(MouseEvent e) {
+				int index = tbCause.getSelectionModel().getSelectedIndex();
+				if (index < 0) {
+					return;
+				}
+				int id = tbCause.getItems().get(index).getId();
+				TextInputDialog dialog = new TextInputDialog("");
+				dialog.setTitle("Add Severity And Probability");
+				dialog.setHeaderText("Enter the Severity of the Cause And the Probability of it happening.");
+				ObservableList<String> options = FXCollections.observableArrayList("High-75%", "Medium-50%", "Low-25%");
+				final ComboBox<String> comboBox = new ComboBox<String>(options);
+				ObservableList<String> options2 = FXCollections.observableArrayList("High-75%", "Medium-50%",
+						"Low-25%");
+				final ComboBox<String> comboBox2 = new ComboBox<String>(options2);
+				Text severity = new Text("Severity");
+				Text probability = new Text("Probability");
+				GridPane gp = new GridPane();
+				gp.add(severity, 0, 0);
+				gp.add(probability, 1, 0);
+				gp.add(comboBox, 0, 1);
+				gp.add(comboBox2, 1, 1);
+				Text riskEvaluation = new Text("Risk Evaluation:");
+				Text riskEvaluationNr = new Text();
+				riskEvaluationNr.prefWidth(15);
+				gp.add(riskEvaluation, 3, 1);
+				gp.add(riskEvaluationNr, 4, 1);
+				comboBox.valueProperty().addListener(new ChangeListener<String>() {
+					@Override
+					public void changed(ObservableValue ov, String t, String t1) {
+						if (comboBox2.getValue() != null) {
+							double d = returnRiskValue(comboBox2.getValue()) * returnRiskValue(t1);
+							riskEvaluationNr.setText(String.valueOf(d));
+						}
+					}
+				});
+				comboBox2.valueProperty().addListener(new ChangeListener<String>() {
+					@Override
+					public void changed(ObservableValue ov, String t, String t1) {
+						if (comboBox.getValue() != null) {
+							double d = returnRiskValue(comboBox.getValue()) * returnRiskValue(t1);
+							riskEvaluationNr.setText(String.valueOf(d));
+						}
+					}
+				});
+				dialog.getDialogPane().setContent(gp);
+				Optional<String> op = dialog.showAndWait();
+				if (op.isPresent() && !riskEvaluationNr.getText().contentEquals("")) {
+					double riskev = (returnRiskValue(comboBox2.getValue()) * returnRiskValue(comboBox.getValue()));
+					boolean risk = true;
+					if (riskev > 0.125D) {
+						risk = false;
+					}
+					DataBaseConnection.sqlUpdate("UPDATE cause SET postseverity=" + returnRiskValue(comboBox.getValue())
+							+ ", postprobability=" + returnRiskValue(comboBox2.getValue()) + ", postriskevaluation="
+							+ riskev + ", postrisk=" + risk + " where cause.id=" + id + ";");
+				}
+				updateCauseList(tbHazard, causeList);
+			}
+		};
+		btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	@Override
 	public GridPane getGridPane() {
+		updateHazardList();
 		return this.thisGp;
 	}
 
@@ -62,6 +233,28 @@ public class ViewStep10 implements ViewInterface {
 
 	@Override
 	public String getStepDescription() {
-		return "You can export your project to excel.";
+		return "Determine a new Severity and Probability for the Hazard after applying the mitigation.";
+	}
+
+	private Double returnRiskValue(String s) {
+		if (s.contentEquals("High-75%"))
+			return .75D;
+		if (s.contentEquals("Medium-50%"))
+			return .50D;
+		if (s.contentEquals("Low-25%"))
+			return .25D;
+		return 0D;
+	}
+
+	public void updateCauseList(TableView<Hazard> tbHazard, ObservableList<Cause> list) {
+		int index = tbHazard.getSelectionModel().selectedIndexProperty().get();
+		if (index > -1) {
+			int id = tbHazard.getItems().get(index).getId();
+			DataBaseConnection.sql("SELECT * FROM cause WHERE cause.hazardid=" + id + ";", "cause", list);
+		}
+	}
+
+	public void updateHazardList() {
+		DataBaseConnection.sql("SELECT * FROM hazard;", "hazard", hazardList);
 	}
 }

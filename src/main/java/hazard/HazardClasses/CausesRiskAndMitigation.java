@@ -2,8 +2,8 @@ package hazard.HazardClasses;
 
 public class CausesRiskAndMitigation {
 	private String nr, hml, cause, harm, rq, mitigation;
-	private double probability, severity, rpn;
-	private boolean risk;
+	private double probability, severity, rpn, postProbability, postSeverity, postRpn;
+	private boolean risk, postRisk;
 
 	public String getCause() {
 		return cause;
@@ -25,6 +25,18 @@ public class CausesRiskAndMitigation {
 		return nr;
 	}
 
+	public double getPostProbability() {
+		return postProbability;
+	}
+
+	public double getPostRpn() {
+		return postRpn;
+	}
+
+	public double getPostSeverity() {
+		return postSeverity;
+	}
+
 	public double getProbability() {
 		return probability;
 	}
@@ -39,6 +51,10 @@ public class CausesRiskAndMitigation {
 
 	public double getSeverity() {
 		return severity;
+	}
+
+	public boolean isPostRisk() {
+		return postRisk;
 	}
 
 	public boolean isRisk() {
@@ -63,6 +79,22 @@ public class CausesRiskAndMitigation {
 
 	public void setNr(String nr) {
 		this.nr = nr;
+	}
+
+	public void setPostProbability(double postProbability) {
+		this.postProbability = postProbability;
+	}
+
+	public void setPostRisk(boolean postRisk) {
+		this.postRisk = postRisk;
+	}
+
+	public void setPostRpn(double postRpn) {
+		this.postRpn = postRpn;
+	}
+
+	public void setPostSeverity(double postSeverity) {
+		this.postSeverity = postSeverity;
 	}
 
 	public void setProbability(double probability) {

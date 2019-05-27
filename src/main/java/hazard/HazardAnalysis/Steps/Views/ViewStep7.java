@@ -170,6 +170,16 @@ public class ViewStep7 implements ViewInterface {
 		}
 	}
 
+	private void editCauseEvent(Button btnEdit, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				editCauseDialog(tbCause, tbHazard);
+			}
+		};
+		btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+	}
+
 	private void editCauseEventCauseTable(TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -180,16 +190,6 @@ public class ViewStep7 implements ViewInterface {
 			}
 		};
 		tbCause.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	}
-
-	private void editCauseEvent(Button btnEdit, TableView<Cause> tbCause, TableView<Hazard> tbHazard) {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				editCauseDialog(tbCause, tbHazard);
-			}
-		};
-		btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
 
 	@Override

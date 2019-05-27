@@ -80,7 +80,7 @@ public class ViewStep8 implements ViewInterface {
 		severity.setCellValueFactory(new PropertyValueFactory<Cause, Double>("severity"));
 		probabilty.setCellValueFactory(new PropertyValueFactory<Cause, Double>("probability"));
 		risk.setCellValueFactory(new PropertyValueFactory<Cause, Double>("riskevaluation"));
-		tbCause.getColumns().addAll(cause, severity, probabilty, risk);
+		tbCause.getColumns().addAll(cause, probabilty, severity, risk);
 		tbCause.setItems(causeList);
 		tbCause.setRowFactory(new Callback<TableView<Cause>, TableRow<Cause>>() {
 			@Override

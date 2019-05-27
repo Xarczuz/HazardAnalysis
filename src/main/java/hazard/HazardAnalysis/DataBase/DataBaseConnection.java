@@ -205,6 +205,19 @@ public class DataBaseConnection {
 				headerCellCause = headerCause.createCell(7);
 				headerCellCause.setCellValue("Mitigation");
 				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(8);
+				headerCellCause.setCellValue("Probability");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(9);
+				headerCellCause.setCellValue("Severity");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(10);
+				headerCellCause.setCellValue("RPN");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(11);
+				headerCellCause.setCellValue("Risk");
+				headerCellCause.setCellStyle(headerStyle);
+				headerCellCause = headerCause.createCell(12);
 				Statement stmt2 = conn.createStatement();
 				String sql2 = "select *  from hazard,cause where cause.hazardid=" + rs.getInt("id") + " AND hazard.id="
 						+ rs.getInt("id") + ";";
@@ -222,6 +235,10 @@ public class DataBaseConnection {
 					crm.setRisk(rs2.getBoolean("risk"));
 					crm.setRq("M:" + i);
 					crm.setMitigation(rs2.getString("mitigation"));
+					crm.setPostProbability(rs2.getDouble("postprobability"));
+					crm.setPostSeverity(rs2.getDouble("postseverity"));
+					crm.setPostRpn(rs2.getDouble("postriskevaluation"));
+					crm.setPostRisk(rs2.getBoolean("postrisk"));
 					causeAndMitList.add(crm);
 					Row causes = sheet.createRow(rowIndex);
 					rowIndex++;
@@ -229,16 +246,16 @@ public class DataBaseConnection {
 					cellCauses.setCellValue("Cause " + i);
 					cellCauses.setCellStyle(style);
 					cellCauses = causes.createCell(1);
-					cellCauses.setCellValue(rs2.getString("cause").trim());
+					cellCauses.setCellValue(crm.getCause());
 					cellCauses.setCellStyle(style);
 					cellCauses = causes.createCell(2);
-					cellCauses.setCellValue(rs2.getDouble("probability"));
+					cellCauses.setCellValue(crm.getProbability());
 					cellCauses.setCellStyle(style);
 					cellCauses = causes.createCell(3);
-					cellCauses.setCellValue(rs2.getDouble("severity"));
+					cellCauses.setCellValue(crm.getSeverity());
 					cellCauses.setCellStyle(style);
 					cellCauses = causes.createCell(4);
-					cellCauses.setCellValue(rs2.getDouble("riskevaluation"));
+					cellCauses.setCellValue(crm.getRpn());
 					cellCauses.setCellStyle(style);
 					cellCauses = causes.createCell(5);
 					CellStyle styleRisk = workbook.createCellStyle();
@@ -248,7 +265,7 @@ public class DataBaseConnection {
 					styleRisk.setBorderBottom(BorderStyle.THIN);
 					styleRisk.setBorderLeft(BorderStyle.THIN);
 					String risk = "Denied";
-					if (rs2.getBoolean("risk")) {
+					if (crm.isRisk()) {
 						risk = "Accept";
 						styleRisk.setFillForegroundColor(IndexedColors.GREEN.getIndex());
 					} else {
@@ -261,8 +278,33 @@ public class DataBaseConnection {
 					i++;
 					cellCauses.setCellStyle(style);
 					cellCauses = causes.createCell(7);
-					cellCauses.setCellValue(rs2.getString("mitigation"));
+					cellCauses.setCellValue(crm.getMitigation());
 					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(8);
+					cellCauses.setCellValue(crm.getPostProbability());
+					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(9);
+					cellCauses.setCellValue(crm.getPostSeverity());
+					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(10);
+					cellCauses.setCellValue(crm.getPostRpn());
+					cellCauses.setCellStyle(style);
+					cellCauses = causes.createCell(11);
+					CellStyle stylePostRisk = workbook.createCellStyle();
+					stylePostRisk.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					stylePostRisk.setBorderTop(BorderStyle.THIN);
+					stylePostRisk.setBorderRight(BorderStyle.THIN);
+					stylePostRisk.setBorderBottom(BorderStyle.THIN);
+					stylePostRisk.setBorderLeft(BorderStyle.THIN);
+					risk = "Denied";
+					if (crm.isRisk() || crm.isPostRisk()) {
+						risk = "Accept";
+						stylePostRisk.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+					} else {
+						stylePostRisk.setFillForegroundColor(IndexedColors.RED.getIndex());
+					}
+					cellCauses.setCellValue(risk);
+					cellCauses.setCellStyle(stylePostRisk);
 				}
 				rowIndex++;
 			}
@@ -274,14 +316,27 @@ public class DataBaseConnection {
 			sheet.autoSizeColumn(5);
 			sheet.autoSizeColumn(6);
 			sheet.autoSizeColumn(7);
-			// Sheet 2 causes sorted by risk evaluation number
+			// Sheet 2 causes sorted by risk evaluation
 			causeAndMitList.sort((c1, c2) -> {
-				if (c1.getRpn() > c2.getRpn())
+				if (c1.getRpn() > c2.getRpn()) {
 					return -1;
-				else if (c1.getRpn() < c2.getRpn())
+				} else if (c1.getRpn() < c2.getRpn()) {
 					return 1;
-				else
+				} else {
 					return 0;
+				}
+			});
+			causeAndMitList.sort((c1, c2) -> {
+				if (c1.getRpn() == c2.getRpn()) {
+					if (c1.getProbability() > c2.getProbability()) {
+						return -1;
+					} else if (c1.getProbability() < c2.getProbability()) {
+						return 1;
+					}
+					return 0;
+				} else {
+					return 0;
+				}
 			});
 			rowIndex = 0;
 			index = 1;
@@ -317,6 +372,18 @@ public class DataBaseConnection {
 			headerCellCause.setCellStyle(headerStyle);
 			headerCellCause = headerCause.createCell(9);
 			headerCellCause.setCellValue("Mitigation");
+			headerCellCause.setCellStyle(headerStyle);
+			headerCellCause = headerCause.createCell(10);
+			headerCellCause.setCellValue("Probability");
+			headerCellCause.setCellStyle(headerStyle);
+			headerCellCause = headerCause.createCell(11);
+			headerCellCause.setCellValue("Severity");
+			headerCellCause.setCellStyle(headerStyle);
+			headerCellCause = headerCause.createCell(12);
+			headerCellCause.setCellValue("RPN");
+			headerCellCause.setCellStyle(headerStyle);
+			headerCellCause = headerCause.createCell(13);
+			headerCellCause.setCellValue("Risk");
 			headerCellCause.setCellStyle(headerStyle);
 			for (int j = 0; j < causeAndMitList.size(); j++) {
 				Row causes = sheetCauses.createRow(rowIndex);
@@ -364,6 +431,31 @@ public class DataBaseConnection {
 				cellCauses = causes.createCell(9);
 				cellCauses.setCellValue(causeAndMitList.get(j).getMitigation());
 				cellCauses.setCellStyle(style);
+				cellCauses = causes.createCell(10);
+				cellCauses.setCellValue(causeAndMitList.get(j).getPostProbability());
+				cellCauses.setCellStyle(style);
+				cellCauses = causes.createCell(11);
+				cellCauses.setCellValue(causeAndMitList.get(j).getPostSeverity());
+				cellCauses.setCellStyle(style);
+				cellCauses = causes.createCell(12);
+				cellCauses.setCellValue(causeAndMitList.get(j).getPostRpn());
+				cellCauses.setCellStyle(style);
+				cellCauses = causes.createCell(13);
+				CellStyle stylePostRisk = workbook.createCellStyle();
+				stylePostRisk.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				stylePostRisk.setBorderTop(BorderStyle.THIN);
+				stylePostRisk.setBorderRight(BorderStyle.THIN);
+				stylePostRisk.setBorderBottom(BorderStyle.THIN);
+				stylePostRisk.setBorderLeft(BorderStyle.THIN);
+				risk = "Denied";
+				if (causeAndMitList.get(j).isRisk() || causeAndMitList.get(j).isPostRisk()) {
+					risk = "Accept";
+					stylePostRisk.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+				} else {
+					stylePostRisk.setFillForegroundColor(IndexedColors.RED.getIndex());
+				}
+				cellCauses.setCellValue(risk);
+				cellCauses.setCellStyle(stylePostRisk);
 			}
 			sheetCauses.autoSizeColumn(0);
 			sheetCauses.autoSizeColumn(1);
@@ -375,6 +467,10 @@ public class DataBaseConnection {
 			sheetCauses.autoSizeColumn(7);
 			sheetCauses.autoSizeColumn(8);
 			sheetCauses.autoSizeColumn(9);
+			sheetCauses.autoSizeColumn(10);
+			sheetCauses.autoSizeColumn(11);
+			sheetCauses.autoSizeColumn(12);
+			sheetCauses.autoSizeColumn(13);
 			PrintSetup ps = sheet.getPrintSetup();
 			ps.setFitWidth((short) 1);
 			ps.setFitHeight((short) 1);
@@ -574,6 +670,13 @@ public class DataBaseConnection {
 					String m = rs.getString("mitigation");
 					if (m != null) {
 						c.setMitigation(m);
+					}
+					d = rs.getDouble("postriskevaluation");
+					c.setPostSeverity(rs.getDouble("postseverity"));
+					c.setPostProbability(rs.getDouble("postprobability"));
+					c.setPostRiskevaluation(d);
+					if (d != 0) {
+						c.setPostRisk(String.valueOf(rs.getBoolean("postrisk")));
 					}
 					list.add((E) c);
 				}

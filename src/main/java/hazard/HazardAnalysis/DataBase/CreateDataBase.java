@@ -36,7 +36,7 @@ public class CreateDataBase {
 		String sql4 = "CREATE TABLE IF NOT EXISTS relator (id integer PRIMARY KEY,relator text NOT NULL,unique(relator));";
 		String sql5 = "CREATE TABLE IF NOT EXISTS relatortorole (id integer PRIMARY KEY, relator text NOT NULL, relatorid integer NOT NULL, role TEXT NOT NULL, roleid INTEGER NOT NULL);";
 		String sql6 = "CREATE TABLE IF NOT EXISTS hazard (id INTEGER PRIMARY KEY, hazard TEXT NOT NULL, harm TEXT NOT NULL);";
-		String sql7 = "CREATE TABLE IF NOT EXISTS cause (id INTEGER PRIMARY KEY, cause TEXT NOT NULL, mitigation TEXT, hazardid INTEGER NOT NULL, severity REAL, probability REAL, riskevaluation REAL, risk BIT);";
+		String sql7 = "CREATE TABLE IF NOT EXISTS cause (id INTEGER PRIMARY KEY, cause TEXT NOT NULL, mitigation TEXT, hazardid INTEGER NOT NULL, severity REAL, probability REAL, riskevaluation REAL, risk BIT, postseverity REAL, postprobability REAL, postriskevaluation REAL, postrisk BIT);";
 		String sql8 = "CREATE TABLE IF NOT EXISTS mishapvictim (id INTEGER PRIMARY KEY, kind TEXT NOT NULL,role TEXT NOT NULL,relator TEXT NOT NULL, kindid INTEGER NOT NULL,roleid INTEGER NOT NULL,relatorid INTEGER NOT NULL);";
 		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
 			// create a new table

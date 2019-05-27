@@ -3,9 +3,9 @@ package hazard.HazardClasses;
 public class Cause extends Play {
 	private String cause;
 	private int hazardID;
-	private String risk;
+	private String risk, postRisk;
 	private String mitigation;
-	private double severity, probability, riskevaluation;
+	private double severity, probability, riskevaluation, postSeverity, postProbability, postRiskevaluation;;
 
 	public Cause(int id, String cause, int hazardID) {
 		super(id);
@@ -16,6 +16,10 @@ public class Cause extends Play {
 		this.severity = 0;
 		this.probability = 0;
 		this.riskevaluation = 0;
+		this.postRisk = "";
+		this.postSeverity = 0;
+		this.postProbability = 0;
+		this.postRiskevaluation = 0;
 	}
 
 	public String getCause() {
@@ -28,6 +32,22 @@ public class Cause extends Play {
 
 	public String getMitigation() {
 		return mitigation;
+	}
+
+	public double getPostProbability() {
+		return postProbability;
+	}
+
+	public String getPostRisk() {
+		return postRisk;
+	}
+
+	public double getPostRiskevaluation() {
+		return postRiskevaluation;
+	}
+
+	public double getPostSeverity() {
+		return postSeverity;
 	}
 
 	public double getProbability() {
@@ -56,6 +76,22 @@ public class Cause extends Play {
 
 	public void setMitigation(String mitigation) {
 		this.mitigation = mitigation;
+	}
+
+	public void setPostProbability(double postProbability) {
+		this.postProbability = postProbability;
+	}
+
+	public void setPostRisk(String postRisk) {
+		this.postRisk = postRisk;
+	}
+
+	public void setPostRiskevaluation(double postRiskevaluation) {
+		this.postRiskevaluation = postRiskevaluation;
+	}
+
+	public void setPostSeverity(double postSeverity) {
+		this.postSeverity = postSeverity;
 	}
 
 	public void setProbability(double probability) {
