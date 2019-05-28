@@ -385,6 +385,9 @@ public class DataBaseConnection {
 			headerCellCause = headerCause.createCell(13);
 			headerCellCause.setCellValue("Risk");
 			headerCellCause.setCellStyle(headerStyle);
+			headerCellCause = headerCause.createCell(14);
+			headerCellCause.setCellValue("Default Sorting");
+			headerCellCause.setCellStyle(headerStyle);
 			for (int j = 0; j < causeAndMitList.size(); j++) {
 				Row causes = sheetCauses.createRow(rowIndex);
 				rowIndex++;
@@ -456,6 +459,10 @@ public class DataBaseConnection {
 				}
 				cellCauses.setCellValue(risk);
 				cellCauses.setCellStyle(stylePostRisk);
+				
+				cellCauses = causes.createCell(14);
+				cellCauses.setCellValue(j);
+				cellCauses.setCellStyle(style);
 			}
 			sheetCauses.autoSizeColumn(0);
 			sheetCauses.autoSizeColumn(1);
@@ -471,6 +478,7 @@ public class DataBaseConnection {
 			sheetCauses.autoSizeColumn(11);
 			sheetCauses.autoSizeColumn(12);
 			sheetCauses.autoSizeColumn(13);
+			sheetCauses.autoSizeColumn(14);
 			PrintSetup ps = sheet.getPrintSetup();
 			ps.setFitWidth((short) 1);
 			ps.setFitHeight((short) 1);

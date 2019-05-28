@@ -5,7 +5,7 @@ public class Cause extends Play {
 	private int hazardID;
 	private String risk, postRisk;
 	private String mitigation;
-	private double severity, probability, riskevaluation, postSeverity, postProbability, postRiskevaluation;;
+	private double severity, probability, riskevaluation, postSeverity, postProbability, postRiskevaluation;
 
 	public Cause(int id, String cause, int hazardID) {
 		super(id);
